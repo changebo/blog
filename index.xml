@@ -6,10 +6,20 @@
     <description>Recent content on Bo&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Nov 2018 12:29:57 -0800</lastBuildDate>
+    <lastBuildDate>Sun, 04 Nov 2018 13:14:09 -0800</lastBuildDate>
     
         <atom:link href="http://bochang.me/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>About</title>
+      <link>http://bochang.me/blog/about/</link>
+      <pubDate>Sun, 04 Nov 2018 13:14:09 -0800</pubDate>
+      
+      <guid>http://bochang.me/blog/about/</guid>
+      <description>&lt;p&gt;something about me&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Hello</title>

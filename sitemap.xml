@@ -3,13 +3,18 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://bochang.me/blog/about/</loc>
+    <lastmod>2018-11-04T13:14:09-08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://bochang.me/blog/posts/hello/</loc>
     <lastmod>2018-11-04T12:29:57-08:00</lastmod>
   </url>
   
   <url>
     <loc>http://bochang.me/blog/</loc>
-    <lastmod>2018-11-04T12:29:57-08:00</lastmod>
+    <lastmod>2018-11-04T13:14:09-08:00</lastmod>
     <priority>0</priority>
   </url>
   
