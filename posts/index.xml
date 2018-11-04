@@ -19,6 +19,9 @@
       <guid>http://bochang.me/blog/posts/hello/</guid>
       <description>&lt;p&gt;test
 $$\int e^{-x} dx$$&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[x + 1 for x in range(10)]
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
