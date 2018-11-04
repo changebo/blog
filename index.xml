@@ -6,20 +6,10 @@
     <description>Recent content on Bo&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Nov 2018 13:14:09 -0800</lastBuildDate>
+    <lastBuildDate>Sun, 04 Nov 2018 12:29:57 -0800</lastBuildDate>
     
         <atom:link href="http://bochang.me/blog/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>About</title>
-      <link>http://bochang.me/blog/about/</link>
-      <pubDate>Sun, 04 Nov 2018 13:14:09 -0800</pubDate>
-      
-      <guid>http://bochang.me/blog/about/</guid>
-      <description>&lt;p&gt;something about me&lt;/p&gt;
-</description>
-    </item>
     
     <item>
       <title>Hello</title>
@@ -29,9 +19,16 @@
       <guid>http://bochang.me/blog/posts/hello/</guid>
       <description>&lt;p&gt;test
 $$\int e^{-x} dx$$&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;[x + 1 for x in range(10)]
-&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;[x + 1 for x in range(10)]&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>http://bochang.me/blog/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://bochang.me/blog/about/</guid>
+      <description>&lt;p&gt;something about me&lt;/p&gt;
 </description>
     </item>
     

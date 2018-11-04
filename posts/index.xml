@@ -19,10 +19,7 @@
       <guid>http://bochang.me/blog/posts/hello/</guid>
       <description>&lt;p&gt;test
 $$\int e^{-x} dx$$&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;[x + 1 for x in range(10)]
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;[x + 1 for x in range(10)]&lt;/pre&gt;&lt;/div&gt;</description>
     </item>
     
   </channel>
