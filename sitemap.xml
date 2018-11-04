@@ -8,13 +8,13 @@
   </url>
   
   <url>
-    <loc>http://bochang.me/blog/categories/</loc>
+    <loc>http://bochang.me/blog/</loc>
+    <lastmod>2018-11-04T12:29:57-08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://bochang.me/blog/</loc>
-    <lastmod>2018-11-04T12:29:57-08:00</lastmod>
+    <loc>http://bochang.me/blog/categories/</loc>
     <priority>0</priority>
   </url>
   
