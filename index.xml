@@ -17,10 +17,13 @@
       <pubDate>Sun, 04 Nov 2018 12:29:57 -0800</pubDate>
       
       <guid>http://bochang.me/blog/posts/hello/</guid>
-      <description>&lt;p&gt;test
-$$\int e^{-x^2} dx$$&lt;/p&gt;
+      <description>&lt;p&gt;test&lt;/p&gt;
+
+&lt;p&gt;$$\int e^{-x^2} dx$$&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;for x in range(10):
-	print(x)&lt;/pre&gt;&lt;/div&gt;</description>
+	print(x)&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&#34;http://bochang.me/blog/images/partly_cloudy.png&#34; alt=&#34;alt text&#34; /&gt;&lt;/p&gt;
+</description>
     </item>
     
     <item>
