@@ -20,9 +20,13 @@
       <description>&lt;p&gt;test&lt;/p&gt;
 
 &lt;p&gt;$$\int e^{-x^2} dx$$&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;for x in range(10):
-	print(x)&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&#34;http://bochang.me/blog/blog/images/partly_cloudy.png&#34; alt=&#34;alt text&#34; /&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;for&lt;/span&gt; x &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#008000&#34;&gt;range&lt;/span&gt;(&lt;span style=&#34;color:#666&#34;&gt;10&lt;/span&gt;):
+	&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;print&lt;/span&gt;(x)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-latex&#34; data-lang=&#34;latex&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;\exp&lt;/span&gt;(i &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;\theta&lt;/span&gt;) = &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;\cos&lt;/span&gt;(&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;\theta&lt;/span&gt;) + i &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;\sin&lt;/span&gt;(&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;\theta&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;$$
+\exp(i \theta) = \cos(\theta) + i \sin(\theta)
+$$&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;partly_cloudy.png&#34; alt=&#34;alt text&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
