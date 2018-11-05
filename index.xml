@@ -6,17 +6,17 @@
     <description>Recent content on Bo&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Nov 2018 12:29:57 -0800</lastBuildDate>
+    <lastBuildDate>Sun, 04 Nov 2018 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="http://bochang.me/blog/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Hello</title>
-      <link>http://bochang.me/blog/posts/hello/</link>
-      <pubDate>Sun, 04 Nov 2018 12:29:57 -0800</pubDate>
+      <title>Test</title>
+      <link>http://bochang.me/blog/posts/test/</link>
+      <pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://bochang.me/blog/posts/hello/</guid>
+      <guid>http://bochang.me/blog/posts/test/</guid>
       <description>&lt;p&gt;test&lt;/p&gt;
 
 &lt;p&gt;$$\int e^{-x^2} dx$$&lt;/p&gt;
