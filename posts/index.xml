@@ -172,7 +172,7 @@ This one is somewhat controversial. In some fields, italic type seems more commo
 &lt;/table&gt;
 
 &lt;p&gt;&lt;strong&gt;d) Sub and superscripts that do not represent mathematical variables should be set in roman type.&lt;/strong&gt;
-The first line is correct because \(n\) represents a variable here.&lt;/p&gt;
+The first row is correct because \(n\) represents a variable here.&lt;/p&gt;
 
 &lt;table&gt;
 &lt;thead&gt;
