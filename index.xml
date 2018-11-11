@@ -186,8 +186,8 @@ The first line is correct because \(n\) represents a variable here.&lt;/p&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;Correct&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;S_n = \sum_{i=1}^n X_i&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;\(S&lt;em&gt;n = \sum&lt;/em&gt;{i=1}^n X_i\)&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;S_n = \sum X_i&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;\(S_n = \sum X_i\)&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
