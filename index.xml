@@ -208,13 +208,14 @@ The first line is correct because \(n\) represents a variable here.&lt;/p&gt;
 
 &lt;p&gt;Most conferences have strict page limits. More often than not, eight pages are not enough to fully present a brilliant idea. If only Fermat got more space in the margin!&lt;/p&gt;
 
-&lt;p&gt;A common trick is to use &lt;code&gt;\vspace&lt;/code&gt;. It can reduce the length of a vertical space before or after a section, figure or table. However, this essentially involves altering the style template. Many formatting instructions explicitly forbid the use of &lt;code&gt;\vspace&lt;/code&gt;. It might even result in the rejection of the paper. From the formatting instructions for AAAI 2019:&lt;/p&gt;
+&lt;p&gt;A common trick is to use &lt;code&gt;\vspace&lt;/code&gt;. It can reduce the length of a vertical space before or after a section, figure or table. However, this essentially alters the style template. Many formatting instructions explicitly forbid the use of &lt;code&gt;\vspace&lt;/code&gt;. It might even result in the rejection of the paper. From the formatting instructions for AAAI 2019:&lt;/p&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;if your paper is obviously “squeezed” it is not going to be accepted.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;Reducing the vertical spaces also makes the paper less readable for the reviewers, so it is obviously not advisable.&lt;/p&gt;
+&lt;p&gt;Reducing the vertical spaces also makes the paper less readable for the reviewers, so it is obviously not advisable.
+Many conferences support the submission of supplementary material. If your paper is too long, consider reorganizing it and moving some sections to the supplementary material.&lt;/p&gt;
 </description>
     </item>
     
