@@ -125,16 +125,21 @@ p {
 	line-height: 1.45;
 }
 
-ul,
+ul {
+	margin-bottom: 1em;
+	padding-left: 1em;
+	list-style-type: circle;
+}
+
 ol {
 	margin-bottom: 1em;
 	padding-left: 1em;
+	list-style-type: decimal;
 }
 
 li {
 	line-height: 1.75em;
 	margin-left: .75em;
-	list-style-type: circle;
 }
 
 table {
