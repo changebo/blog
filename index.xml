@@ -54,7 +54,7 @@
 &lt;p&gt;The command &lt;code&gt;\cite&lt;/code&gt; should be avoided because its behavior depends on the citation format and might cause inconsistency. According to the &lt;code&gt;natbib&lt;/code&gt; documentation:&lt;/p&gt;
 
 &lt;blockquote&gt;
-&lt;p&gt;The standard LaTeX command &lt;code&gt;\cite&lt;/code&gt; should be avoided, because it behaves like &lt;code&gt;\citet&lt;/code&gt; for author–year citations, but like &lt;code&gt;\citep&lt;/code&gt; for numerical ones.&lt;/p&gt;
+&lt;p&gt;The standard LaTeX command &lt;code&gt;\cite&lt;/code&gt; should be avoided, because it behaves like &lt;code&gt;\citet&lt;/code&gt; for author-year citations, but like &lt;code&gt;\citep&lt;/code&gt; for numerical ones.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;h2 id=&#34;3-mathematical-symbols&#34;&gt;3. Mathematical symbols&lt;/h2&gt;
