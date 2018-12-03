@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Bo&#39;s Blog</title>
-    <link>http://bochang.me/blog/</link>
+    <link>https://bochang.me/blog/</link>
     <description>Recent content on Bo&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 10 Nov 2018 00:00:00 +0000</lastBuildDate>
     
-        <atom:link href="http://bochang.me/blog/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://bochang.me/blog/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>A Few LaTeX Tips</title>
-      <link>http://bochang.me/blog/posts/latex/</link>
+      <link>https://bochang.me/blog/posts/latex/</link>
       <pubDate>Sat, 10 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://bochang.me/blog/posts/latex/</guid>
+      <guid>https://bochang.me/blog/posts/latex/</guid>
       <description>
 
 &lt;p&gt;LaTeX is a high-quality typesetting system and the de facto standard for publication of scientific documents. However, I never got a chance to formally learn how to use it. Most of my LaTeX knowledge comes from learning by doing. As I&amp;rsquo;m working on my Ph.D. thesis, I would like to share a few LaTeX tips that I wish I had known earlier. I got most of them from working with my advisors, internship hosts, and collaborators. There is still a lot for me to learn about LaTeX. Any comments and suggestions are welcome!&lt;/p&gt;

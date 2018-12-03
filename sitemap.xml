@@ -3,29 +3,29 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://bochang.me/blog/posts/latex/</loc>
+    <loc>https://bochang.me/blog/posts/latex/</loc>
     <lastmod>2018-11-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://bochang.me/blog/</loc>
-    <lastmod>2018-11-10T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://bochang.me/blog/categories/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://bochang.me/blog/posts/</loc>
+    <loc>https://bochang.me/blog/</loc>
     <lastmod>2018-11-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://bochang.me/blog/tags/</loc>
+    <loc>https://bochang.me/blog/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://bochang.me/blog/posts/</loc>
+    <lastmod>2018-11-10T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://bochang.me/blog/tags/</loc>
     <priority>0</priority>
   </url>
   
