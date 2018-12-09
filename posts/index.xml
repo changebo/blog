@@ -93,7 +93,7 @@ $$&lt;/p&gt;
 
 &lt;p&gt;To facilitate our analysis, we define the &lt;strong&gt;clean event&lt;/strong&gt; \(C\) to be the event that \(\bar\mu(a)\) is close to \(\mu(a)\) for all arms:
 $$
-C = \{ |\bar\mu(a) - \mu(a)| \leq r, \forall a \in [k] \},
+C = \{ |\bar\mu(a) - \mu(a)| \leq r, \forall a \in [K] \},
 $$
 where \(r\) is called the &lt;strong&gt;confidence radius&lt;/strong&gt;.
 The &lt;strong&gt;bad event&lt;/strong&gt; \(\bar{C}\) is the complement of the clean event.
@@ -112,12 +112,12 @@ In other words, the average reward \(\bar\mu(a)\) should be a good estimate of t
 By Hoeffding&amp;rsquo;s inequality, the deviation of the average reward from the true expected reward can be quantified as follows:&lt;/p&gt;
 
 &lt;p&gt;$$
-\mathbb{P}( |\bar\mu(a) - \mu(a)| &amp;gt; r) \leq 2 \exp (-2Nr^2), \quad \forall a \in [k].
+\mathbb{P}( |\bar\mu(a) - \mu(a)| &amp;gt; r) \leq 2 \exp (-2Nr^2), \quad \forall a \in [K].
 $$&lt;/p&gt;
 
 &lt;p&gt;We want to bound this probability by a sufficiently small number, say \(2/T^4\). This can be achieved by setting the confidence radius \(r = \sqrt{\frac{2 \log T}{N}}\):
 $$
-\mathbb{P}( |\bar\mu(a) - \mu(a)| &amp;gt; r) \leq \frac{2}{T^4}, \quad \forall a \in [k].
+\mathbb{P}( |\bar\mu(a) - \mu(a)| &amp;gt; r) \leq \frac{2}{T^4}, \quad \forall a \in [K].
 $$
 Note that the choice of \(T^4\) is somewhat arbitrary; the exponent only affects the multiplicative constant of \(r\).&lt;/p&gt;
 
@@ -250,7 +250,7 @@ The idea of the analysis is the same as before: define a clean event \(C\), obta
 
 &lt;p&gt;Since the confidence radius now depends on \(t\) as well, we need a more refined definition of the &lt;strong&gt;clean event&lt;/strong&gt;:
 $$
-C = \{|\bar\mu_t(a) - \mu(a)| \leq r_t(a), \forall a \in [k], \forall t \in [T] \}.
+C = \{|\bar\mu_t(a) - \mu(a)| \leq r_t(a), \forall a \in [K], \forall t \in [T] \}.
 $$
 Applying Hoeffding&amp;rsquo;s inequality and a union bound (and ignoring some technicalities),
 $$
