@@ -20,11 +20,11 @@
       <description>
 
 &lt;p&gt;In our recent paper &lt;em&gt;Vine Copula Structure Learning via Monte Carlo Tree Search&lt;/em&gt; &lt;small&gt;(under review at AISTATS 2019)&lt;/small&gt;, we apply the UCT &lt;small&gt;(Upper Confidence bounds applied to Trees)&lt;/small&gt; algorithm to find an approximate solution to an NP-hard structure learning problem in statistics.
-The UCT algorithm is based on the UCB1 &lt;small&gt;(Upper Confidence Bound)&lt;/small&gt;  algorithm for the stochastic bandit problem.
-However, the theoretical properties of the UCB1 algorithm were obscure to me.&lt;/p&gt;
+The UCT algorithm is based on the UCB1 &lt;small&gt;(Upper Confidence Bound)&lt;/small&gt;  algorithm for the stochastic bandit problem.&lt;/p&gt;
 
-&lt;p&gt;Fortunately, I audited &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/&#34;&gt;Prof. Nick Harvey&lt;/a&gt;&amp;rsquo;s &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/F18-531/&#34;&gt;learning theory course&lt;/a&gt; this semester.
+&lt;p&gt;Thankfully, I audited &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/&#34;&gt;Prof. Nick Harvey&lt;/a&gt;&amp;rsquo;s &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/F18-531/&#34;&gt;learning theory course&lt;/a&gt; this semester.
 In one lecture, he gave a remarkably clear exposition of the multi-armed bandit problem and algorithms.
+It deepened my understanding of the theoretical properties of the UCB1 algorithm.
 This blog post is largely a transcription of the lecture; it gives an overview of the regret bound analysis of the explore-first algorithm and UCB1 algorithm. The material is also based on the first chapter of Slivkins (2017).&lt;/p&gt;
 
 &lt;h2 id=&#34;1-problem-formulation&#34;&gt;1. Problem formulation&lt;/h2&gt;
@@ -61,8 +61,7 @@ The goal of the algorithm is to minimize the regret.
 Note that \(a_s\) is a random quantity, since it may depend on the randomness in rewards and/or the algorithm.
 Therefore the regret \(R(t)\) is also random and we are interested in the expected regret \(\mathbb{E}[R(t)]\) or \(\mathbb{E}[R(T)]\).&lt;/p&gt;
 
-&lt;p&gt;We frequently use &lt;a href=&#34;https://en.wikipedia.org/wiki/Hoeffding%27s_inequality&#34;&gt;Hoeffding&amp;rsquo;s inequality&lt;/a&gt; in the theoretical analysis.
-It is an important concentration inequality and is widely used in machine learning theory.&lt;/p&gt;
+&lt;p&gt;It may be a good time now to review the &lt;a href=&#34;https://en.wikipedia.org/wiki/Hoeffding%27s_inequality&#34;&gt;Hoeffding&amp;rsquo;s inequality&lt;/a&gt;, an important concentration inequality widely used in machine learning theory.&lt;/p&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Hoeffding&amp;rsquo;s inequality&lt;/strong&gt;&lt;br /&gt;
@@ -110,11 +109,13 @@ $$&lt;/p&gt;
 
 &lt;p&gt;First of all, we want to make sure \(\mathbb{P}[\bar{C}]\) is small.
 In other words, the average reward \(\bar\mu(a)\) should be a good estimate of the true expected reward \(\mu(a)\).
-Applying Hoeffding&amp;rsquo;s inequality to \(\bar\mu(a)\), we can quantify the deviation of the average reward from the true expected reward:
-$$
+By Hoeffding&amp;rsquo;s inequality, the deviation of the average reward from the true expected reward can be quantified as follows:&lt;/p&gt;
+
+&lt;p&gt;$$
 \mathbb{P}( |\bar\mu(a) - \mu(a)| &amp;gt; r) \leq 2 \exp (-2Nr^2), \quad \forall a \in [k].
-$$
-We want this probability to be small enough, say \(2/T^4\). If we set the confidence radius \(r = \sqrt{\frac{2 \log T}{N}}\), then
+$$&lt;/p&gt;
+
+&lt;p&gt;We want to bound this probability by a sufficiently small number, say \(2/T^4\). This can be achieved by setting the confidence radius \(r = \sqrt{\frac{2 \log T}{N}}\):
 $$
 \mathbb{P}( |\bar\mu(a) - \mu(a)| &amp;gt; r) \leq \frac{2}{T^4}, \quad \forall a \in [k].
 $$
@@ -143,7 +144,8 @@ The last inequality is because each arm is explored at least once, &lt;em&gt;i.e
 
 &lt;p&gt;Next, we focus on \(\mathbb{E}[R(T) | C]\).
 By definition, \(\bar\mu(\hat{a}) \geq \bar\mu(a^*)\).
-Given the clean event happens, we can obtain an upper bound of \(\mu(a^*) - \mu(\hat{a}) \):
+Given the clean event happens,
+an upper bound of \(\mu(a^*) - \mu(\hat{a}) \) can be obtained:
 $$
 \begin{align}
 \mu(a^*) - \mu(\hat{a})
@@ -246,7 +248,7 @@ $$
 $$
 The idea of the analysis is the same as before: define a clean event \(C\), obtain upper bounds of \(\mathbb{P}[\bar{C}]\) and \(\mathbb{E}[R(t)|C]\), and finally bound \(\mathbb{E}[R(t)]\).&lt;/p&gt;
 
-&lt;p&gt;Since the confidence radius now depends on \(t\) as well, we now need a more refined definition of the &lt;strong&gt;clean event&lt;/strong&gt;:
+&lt;p&gt;Since the confidence radius now depends on \(t\) as well, we need a more refined definition of the &lt;strong&gt;clean event&lt;/strong&gt;:
 $$
 C = \{|\bar\mu_t(a) - \mu(a)| \leq r_t(a), \forall a \in [k], \forall t \in [T] \}.
 $$
