@@ -375,7 +375,7 @@ O(\log T)
 $$&lt;/p&gt;
 
 &lt;p&gt;This regret bound is logarithmic in \(T\), with a constant that can be arbitrarily large depending on a problem instance.
-This type of regret bound is called &lt;strong&gt;instance-dependent&lt;/strong&gt;. The existence of a logarithmic regret bound is a benefit of the UCB1 algorithm compared to the explore-first algorithm.&lt;/p&gt;
+This type of regret bound is called &lt;strong&gt;instance-dependent&lt;/strong&gt;. The existence of a logarithmic regret bound is a benefit of the UCB1 algorithm compared to the explore-first algorithm, whose regret bound is polynomial in \(T\).&lt;/p&gt;
 
 &lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
 
