@@ -61,7 +61,7 @@ The goal of the algorithm is to minimize the regret.
 Note that \(a_s\) is a random quantity, since it may depend on the randomness in rewards and/or the algorithm.
 Therefore the regret \(R(t)\) is also random and we are interested in the expected regret \(\mathbb{E}[R(t)]\) or \(\mathbb{E}[R(T)]\).&lt;/p&gt;
 
-&lt;p&gt;It may be a good time now to review the &lt;a href=&#34;https://en.wikipedia.org/wiki/Hoeffding%27s_inequality&#34;&gt;Hoeffding&amp;rsquo;s inequality&lt;/a&gt;, an important concentration inequality widely used in machine learning theory.&lt;/p&gt;
+&lt;p&gt;It may be a good time now to review &lt;a href=&#34;https://en.wikipedia.org/wiki/Hoeffding%27s_inequality&#34;&gt;Hoeffding&amp;rsquo;s inequality&lt;/a&gt;, an important concentration inequality widely used in machine learning theory.&lt;/p&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Hoeffding&amp;rsquo;s inequality&lt;/strong&gt;&lt;br /&gt;
@@ -121,7 +121,7 @@ $$
 $$
 Note that the choice of \(T^4\) is somewhat arbitrary; the exponent only affects the multiplicative constant of \(r\).&lt;/p&gt;
 
-&lt;p&gt;Using the &lt;a href=&#34;https://en.wikipedia.org/wiki/Boole%27s_inequality&#34;&gt;union bound&lt;/a&gt;, we can find an upper bound of the probability of the bad event.
+&lt;p&gt;Using a &lt;a href=&#34;https://en.wikipedia.org/wiki/Boole%27s_inequality&#34;&gt;union bound&lt;/a&gt;, we can find an upper bound of the probability of the bad event.
 $$
 \begin{align}
 \mathbb{P}(\bar{C})
@@ -252,7 +252,7 @@ The idea of the analysis is the same as before: define a clean event \(C\), obta
 $$
 C = \{|\bar\mu_t(a) - \mu(a)| \leq r_t(a), \forall a \in [k], \forall t \in [T] \}.
 $$
-Applying Hoeffding&amp;rsquo;s inequality and the union bound (and ignoring some technicalities),
+Applying Hoeffding&amp;rsquo;s inequality and a union bound (and ignoring some technicalities),
 $$
 \mathbb{P}[\bar{C}] \leq \frac{2KT}{T^4} \leq \frac{2}{T^2}.
 $$&lt;/p&gt;
