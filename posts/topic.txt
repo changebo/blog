@@ -1,0 +1,12 @@
+# potential topics
+
+- random matrix: the circular law
+- extreme value theory
+- determinantal point process
+- mathematics as a language
+	* Commonly used notations: Cartesian product, power sets.
+	* Use of brackets
+	* How to write expectations: 
+		1. Riemann integral with density.
+		2. Riemann-Stieltjes integral with cdf.
+		3. Lebesgue integral
