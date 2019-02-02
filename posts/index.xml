@@ -140,7 +140,7 @@ $$
 \frac{2}{T^3}.
 \end{align}
 $$
-The last inequality is because each arm is explored at least once, &lt;em&gt;i.e.&lt;/em&gt;, \(T \geq K\).&lt;/p&gt;
+The last inequality is because each arm is explored at least once, i.e., \(T \geq K\).&lt;/p&gt;
 
 &lt;p&gt;Next, we focus on \(\mathbb{E}[R(T) | C]\).
 By definition, \(\bar\mu(\hat{a}) \geq \bar\mu(a^*)\).
@@ -381,7 +381,9 @@ This type of regret bound is called &lt;strong&gt;instance-dependent&lt;/strong&
 
 &lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
 
-&lt;p&gt;Slivkins, A. (2017). Introduction to Multi-Armed Bandits. &lt;a href=&#34;http://slivkins.com/work/MAB-book.pdf&#34;&gt;http://slivkins.com/work/MAB-book.pdf&lt;/a&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Slivkins, A. (2017). Introduction to Multi-Armed Bandits. &lt;a href=&#34;http://slivkins.com/work/MAB-book.pdf&#34;&gt;http://slivkins.com/work/MAB-book.pdf&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
