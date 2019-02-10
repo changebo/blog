@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Traveling Salesman Problem and Approximation Algorithms</title>
+	
+	<meta name="description" content="">
+		
+	<meta name="keywords" content="Christofides’ Algorithm, Double-tree Algorithm, Traveling Salesman Problem, Approximation Algorithms, Bo Chang, Statistics, Machine Learning, Deep Learning">
+	
+	<meta itemprop="name" content="Traveling Salesman Problem and Approximation Algorithms">
+	<meta itemprop="description" content="">
+			
+	
+	<meta name="og:title" content="Traveling Salesman Problem and Approximation Algorithms">
+	<meta name="og:description" content="">
+	
+	<meta name="og:url" content="https://bochang.me/blog/posts/tsp/">
+	<meta name="og:site_name" content="Traveling Salesman Problem and Approximation Algorithms">
+	<meta name="og:type" content="article">
+	
+	<meta name="article:tag" content="">
+	<link rel="stylesheet" type="text/css" href="https://bochang.me/blog/css/style.css">
+	
+	
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-129064600-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body>
+
+<header>
+	
+	<a href="https://bochang.me/blog/" style="float: left;color:#ff3b30;">Bo&#39;s Blog</a>
+	
+	<a href="https://bochang.me/" style="color:#777;">&nbsp;&nbsp;About</a>	
+	&nbsp;&nbsp;
+	
+	
+</header>
+
+
+<div class="content">
+  <h1>Traveling Salesman Problem and Approximation Algorithms</h1>
+  <aside></aside>
+  <p>
+
+<p>One of my research interests is a graphical model structure learning problem in multivariate statistics.
+I have been recently studying and trying to borrow ideas from approximation algorithms, a research field that tackles difficult combinatorial optimization problems.
+This post gives a brief introduction to two approximation algorithms for the (metric) traveling salesman problem: the double-tree algorithm and Christofides’ algorithm.
+The materials are mainly based on &sect;2.4 of Williamson and Shmoys (2011).</p>
+
+<h2 id="1-approximation-algorithms">1. Approximation algorithms</h2>
+
+<p>In combinatorial optimization, most interesting problems are NP-hard and do not have polynomial-time algorithms to find optimal solutions (yet?).
+Approximation algorithms are efficient algorithms that find approximate solutions to such problems.
+Moreover, they give provable guarantees on the distance of the approximate solution to the optimal ones.</p>
+
+<p>We assume that there is an objective function associated with an optimization problem.
+An optimal solution to the problem is one that minimizes the value of this objective function. The value of the optimal solution is often denoted by \(\mathrm{OPT}\).</p>
+
+<p>An \(\alpha\)-approximation algorithm for an optimization problem is a polynomial-time algorithm that for all instances of the problem produces a solution, whose value is within a factor of \(\alpha\) of \(\mathrm{OPT}\), the value of an optimal solution. The factor \(\alpha\) is called the approximation ratio.</p>
+
+<h2 id="2-traveling-salesman-problem">2. Traveling salesman problem</h2>
+
+<p>The <a href="https://en.wikipedia.org/wiki/Travelling_salesman_problem">traveling salesman problem</a> (TSP) is NP-hard and one of the most well-studied combinatorial optimization problems.
+It has broad applications in logistics, planning, and DNA sequencing.
+In plain words, the TSP asks the following question:</p>
+
+<blockquote>
+<p>Given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city and returns to the origin city?</p>
+</blockquote>
+
+<p>Formally, for a set of cities \([n] = \{1, 2, \ldots, n \}\), an \(n\)-by-\(n\) matrix \(C = (c_{ij})\), where \(c_{ij} \geq 0 \) specifies the cost of traveling from city \(i\) to city \(j\).
+By convention, we assume \(c_{ii} = 0\) and \(c_{ij} = c_{ji}\), meaning that the cost of traveling from city \(i\) to city \(j\) is equal to the cost of traveling from city \(j\) to city \(i\).
+Furthermorew, we only consider the <strong>metric TSP</strong> in this article; that is,
+the <a href="https://en.wikipedia.org/wiki/Triangle_inequality">triangle inequality</a> holds for any \(i,j,k\):
+$$
+c_{ik} \leq c_{ij} + c_{jk}, \quad \forall i, j, k \in [n].
+$$</p>
+
+<p>Given a permutation \(\sigma\) of \([n]\), a tour traverses the cities in the order \(\sigma(1), \sigma(2), \ldots, \sigma(n)\).
+The goal is to find a tour with the lowest cost, which is equal to
+$$
+c_{\sigma(n) \sigma(1)} + \sum_{i=1}^{n-1} c_{\sigma(i) \sigma(i+1)}.
+$$</p>
+
+<h2 id="3-double-tree-algorithm">3. Double-tree algorithm</h2>
+
+<p>We first describe a simple algorithm called the double-tree algorithm and prove that it is a 2-approximation algorithm.</p>
+
+<blockquote>
+<p><strong>Double-tree algorithm</strong></p>
+
+<ol>
+<li>Find a minimum spanning tree \(T\).</li>
+<li>Duplicate the edges of \(T\). Find an Eulerian tour.</li>
+<li>Shortcut the Eulerian tour.</li>
+</ol>
+</blockquote>
+
+<p>Figure 1 shows the algorithm on a simple five-city instance.
+We will give a step-by-step explanation of the algorithm.
+<figure>
+    <img src="dbl_tree.jpg" alt="Double-tree algorithm" width="350"/>
+    <figcaption>Figure 1: Double-tree algorithm.</figcaption>
+</figure></p>
+
+<p>A <a href="https://en.wikipedia.org/wiki/Spanning_tree">spanning tree</a> of an undirected graph is a subgraph that is a tree and includes all of the vertices.
+A <a href="https://en.wikipedia.org/wiki/Minimum_spanning_tree">minimum spanning tree</a> of a weighted graph is a spanning tree for which the total edge cost is minimized.
+There are several polynomial-time algorithms for finding a minimum spanning tree, e.g., <a href="https://en.wikipedia.org/wiki/Prim%27s_algorithm">Prim&rsquo;s algorithm</a>, <a href="https://en.wikipedia.org/wiki/Kruskal%27s_algorithm">Kruskal&rsquo;s algorithm</a>, and the <a href="https://en.wikipedia.org/wiki/Reverse-delete_algorithm">reverse-delete algorithm</a>.
+Figure 1a shows a minimum spanning tree \(T\).</p>
+
+<p>There is an important relationship between the minimum spanning tree problem and the traveling salesman problem.</p>
+
+<blockquote>
+<p><strong>Lemma 1.</strong> For any input to the traveling salesman problem, the cost of the optimal tour is at least the cost of the minimum spanning tree on the same input.</p>
+</blockquote>
+
+<p>The proof is simple. Deleting any edge from the optimal tour results in a spanning tree, the cost of which is at least the cost of the minimum spanning tree.
+Therefore, the cost of the minimum spanning tree \(T\) in Figure 1(a) is at most \( \mathrm{OPT}\).</p>
+
+<p>Next, each edge in the minimum spanning tree is replaced by two copies of itself, as shown in Figure 1b.
+The resulting (multi)graph is Eulerian.
+A graph is said to be <a href="https://en.wikipedia.org/wiki/Eulerian_path">Eulerian</a> if there exists a tour that visits every edge exactly once.
+A graph is Eulerian if and only if it is connected and each node has even degree.
+Given an Eulerian graph, it is easy to construct a traversal of the edges.
+For example, a possible Eulerian tour in Figure 1b is 1&ndash;3&ndash;2&ndash;3&ndash;4&ndash;5&ndash;4&ndash;3&ndash;1.
+Moreover, since the edges are duplicated from the minimum spanning tree, the Eulerian tour has cost at most \(2 \, \mathrm{OPT}\).</p>
+
+<p>Finally, given the Eulerian tour, we remove all but the first occurrence of each node in the sequence; this step is called <strong>shortcutting</strong>.
+By the triangle inequality, the cost of the shortcut tour is at most the cost of the Eulerian tour, which is not greater than \(2 \, \mathrm{OPT}\).
+In Figure 1c, the shortcut tour is 1&ndash;3&ndash;2&ndash;4&ndash;5&ndash;1.
+When going from node 2 to node 4 by omitting node 3, we have \(c_{24} \leq c_{23} + c_{34}\).
+Similarly, when skipping nodes 4 and 3, \(c_{51} \leq c_{54} + c_{43} + c_{31}\).</p>
+
+<p>Therefore, we have analyzed the approximation ratio of the double-tree algorithm.</p>
+
+<blockquote>
+<p><strong>Theorem 1.</strong> The double-tree algorithm for the metric traveling salesman problem is a 2-approximation algorithm.</p>
+</blockquote>
+
+<h2 id="4-christofides-algorithm">4. Christofides&rsquo; algorithm</h2>
+
+<p>The basic strategy of the double-tree algorithm is to construct an Eulerian tour whose total cost is at most \(\alpha \, \mathrm{OPT}\), then shortcut it to get an \(\alpha\)-approximation solution.
+The same strategy can be carried out to yield a <sup>3</sup>&frasl;<sub>2</sub>-approximation algorithm.</p>
+
+<blockquote>
+<p><strong>Christofides&rsquo; algorithm</strong></p>
+
+<ol>
+<li>Find a minimum spanning tree \(T\).</li>
+<li>Let \(O\) be the set of nodes with odd degree in \(T\). Find a minimum-cost perfect matching \(M\) on \(O\).</li>
+<li>Add the set of edges of \(M\) to \(T\). Find an Eulerian tour.</li>
+<li>Shortcut the Eulerian tour.</li>
+</ol>
+</blockquote>
+
+<p>Figure 2 illustrates the algorithm on a simple five-city instance of TSP.
+<figure>
+    <img src="christofides.jpg" alt="Christofides' algorithm" width="350"/>
+    <figcaption>Figure 2: Christofides&rsquo; algorithm.</figcaption>
+</figure></p>
+
+<p>The algorithm starts again with the minimum spanning tree \(T\). The reason we cannot directly find an Eulerian tour is that its leaf nodes all have degree one.
+However, by the <a href="https://en.wikipedia.org/wiki/Handshaking_lemma">handshaking lemma</a>, there are an even number of odd-degree nodes.
+If these nodes can be paired up, then it becomes an Eulerian graph and can proceed as before.</p>
+
+<p>Let \(O\) be the set of odd-degree nodes in \(T\).
+To pair them up, we want to find a collection of edges that contain each node in \(O\) exactly once.
+This is called a <a href="https://en.wikipedia.org/wiki/Matching_(graph_theory)">perfect matching</a> in graph theory.
+Given a complete graph (on an even number of nodes) with edge costs,
+there is a polynomial-time algorithm to find the perfect matching of the minimum total cost, known as the <a href="https://en.wikipedia.org/wiki/Blossom_algorithm">blossom algorithm</a>.</p>
+
+<p>For the minimum spanning tree \(T\) in Figure 2a, \( O = \{1, 2, 3, 5\}\).
+The minimum-cost perfect matching \(M\) on the complete graph induced by \(O\) is shown in Figure 2b.
+Adding the edges of \(M\) to \(T\), the result is an Eulerian graph, since we have added a new edge incident to each odd-degree node in \(T\).
+The remaining steps are the same as in the double-tree algorithm.</p>
+
+<p>We want to show that the Eulerian graph has total cost of at most <sup>3</sup>&frasl;<sub>2</sub> \(\mathrm{OPT}\).
+Since the total cost of the minimum spanning tree \(T\) is at most \(\mathrm{OPT}\), we only need to show that the perfect matching \(M\) has cost at most <sup>1</sup>&frasl;<sub>2</sub> \(\mathrm{OPT}\).</p>
+
+<p>We start with the optimal tour on the entire set of cities, the cost of which is \(\mathrm{OPT}\) by definition.
+Figure 3a presents a simplified illustration of the optimal tour; the solid circles represent nodes in \(O\).
+By omitting the nodes that are not in \(O\) from the optimal tour, we get a tour on \(O\), as shown in Figure 3b.
+By the shortcutting argument again, the total cost of the tour on \(O\) is at most \(\mathrm{OPT}\).
+Next, color the edges yellow and green, alternating colors as the tour is traversed, as illustrated in Figure 3c.
+This partitions the edges into two sets: the yellow set and the green set; each is a perfect matching on \(O\).
+Since the total cost of the two matchings is at most \(\mathrm{OPT}\), the cheaper one has cost at most <sup>1</sup>&frasl;<sub>2</sub> \(\mathrm{OPT}\).
+In other words, there exists a perfect matching on \(O\) of cost at most <sup>1</sup>&frasl;<sub>2</sub> \(\mathrm{OPT}\).
+Therefore, the minimum-cost perfect matching must have cost not greater than <sup>1</sup>&frasl;<sub>2</sub> \(\mathrm{OPT}\).
+This completes the proof of the following theorem.</p>
+
+<blockquote>
+<p><strong>Theorem 2.</strong> Christofides&rsquo; algorithm for the metric traveling salesman problem is a <sup>3</sup>&frasl;<sub>2</sub>-approximation algorithm.</p>
+</blockquote>
+
+<figure>
+    <img src="matching.jpg" alt="minimum-cost perfect matching" width="350"/>
+    <figcaption>Figure 3: Minimum-cost perfect matching.</figcaption>
+</figure>
+
+<!-- 
+
+## Why metric TSP?
+
+Without the metric constraint, not only the TSP is hard, even finding an approximation algorithm for the TSP is hard.
+
+
+A [Hamiltonian cycle](https://en.wikipedia.org/wiki/Hamiltonian_path) in an undirected graph is a cycle that visits each node exactly once.
+It is NP-complete to decide whether a given undirected graph \\( G = (V, E) \\) has a Hamiltonian cycle.
+If there were to exist a 2-approximation algorithm for the TSP, then this algorithm could be used to decide whether a Hamiltonian cycle exists.
+
+Given an input to the Hamiltonian cycle problem \\( G = (V, E) \\), construct an input to the TSP by setting
+$$
+c_{ij}=
+\begin{cases}
+1   &\mbox{if } (i, j) \in E \newline
+n+2 &\mbox{otherwise}
+\end{cases}
+$$
+where \\(n = |V|\\) is the number of nodes in \\(G\\).
+If the is a Hamiltonian cycle in \\(G\\), then there is a tour of cost \\(n\\); otherwise each tour costs at least \\(2n+1\\), which consists of \\(n-1\\) edges in \\(E\\) and one edge not in \\(E\\).
+
+Run the 2-approximation algorithm on the new TSP input; 
+if the computed tour has cost at most \\(2n\\), then there exists a Hamiltonian cycle in \\(G\\), otherwise there does not.
+
+
+> **Theorem 3.** For any \\(\alpha > 1\\), there does not exist an \\(\alpha\\)-approximation algorithm for the traveling salesman problem, provided \\(\mathrm{P} \neq \mathrm{NP}\\). -->
+
+<h2 id="references">References</h2>
+
+<ul>
+<li>Williamson, D. P., &amp; Shmoys, D. B. (2011). The Design of Approximation Algorithms. Cambridge University Press.</li>
+</ul>
+</p>
+</div>
+
+
+  <p>Written on Feb 10, 2019.</p>
+
+
+<footer>
+	<p>&copy; 2019 All rights reserved.</p>
+</footer>
+</body>
+</html>
