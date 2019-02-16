@@ -80,7 +80,7 @@ We will give a step-by-step explanation of the algorithm.
     &lt;figcaption&gt;Figure 1: Double-tree algorithm.&lt;/figcaption&gt;
 &lt;/figure&gt;&lt;/p&gt;
 
-&lt;p&gt;A &lt;a href=&#34;https://en.wikipedia.org/wiki/Spanning_tree&#34;&gt;spanning tree&lt;/a&gt; of an undirected graph is a subgraph that is a tree and includes all of the vertices.
+&lt;p&gt;A &lt;a href=&#34;https://en.wikipedia.org/wiki/Spanning_tree&#34;&gt;spanning tree&lt;/a&gt; of an undirected graph is a subgraph that is a tree and includes all of the nodes.
 A &lt;a href=&#34;https://en.wikipedia.org/wiki/Minimum_spanning_tree&#34;&gt;minimum spanning tree&lt;/a&gt; of a weighted graph is a spanning tree for which the total edge cost is minimized.
 There are several polynomial-time algorithms for finding a minimum spanning tree, e.g., &lt;a href=&#34;https://en.wikipedia.org/wiki/Prim%27s_algorithm&#34;&gt;Prim&amp;rsquo;s algorithm&lt;/a&gt;, &lt;a href=&#34;https://en.wikipedia.org/wiki/Kruskal%27s_algorithm&#34;&gt;Kruskal&amp;rsquo;s algorithm&lt;/a&gt;, and the &lt;a href=&#34;https://en.wikipedia.org/wiki/Reverse-delete_algorithm&#34;&gt;reverse-delete algorithm&lt;/a&gt;.
 Figure 1a shows a minimum spanning tree \(T\).&lt;/p&gt;
