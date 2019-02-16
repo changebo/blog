@@ -47,7 +47,7 @@ In plain words, the TSP asks the following question:&lt;/p&gt;
 
 &lt;p&gt;Formally, for a set of cities \([n] = \{1, 2, \ldots, n \}\), an \(n\)-by-\(n\) matrix \(C = (c_{ij})\), where \(c_{ij} \geq 0 \) specifies the cost of traveling from city \(i\) to city \(j\).
 By convention, we assume \(c_{ii} = 0\) and \(c_{ij} = c_{ji}\), meaning that the cost of traveling from city \(i\) to city \(j\) is equal to the cost of traveling from city \(j\) to city \(i\).
-Furthermorew, we only consider the &lt;strong&gt;metric TSP&lt;/strong&gt; in this article; that is,
+Furthermore, we only consider the &lt;strong&gt;metric TSP&lt;/strong&gt; in this article; that is,
 the &lt;a href=&#34;https://en.wikipedia.org/wiki/Triangle_inequality&#34;&gt;triangle inequality&lt;/a&gt; holds for any \(i,j,k\):
 $$
 c_{ik} \leq c_{ij} + c_{jk}, \quad \forall i, j, k \in [n].
