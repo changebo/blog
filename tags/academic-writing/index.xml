@@ -19,11 +19,11 @@
       <guid>https://bochang.me/blog/posts/latex/</guid>
       <description>
 
-&lt;p&gt;LaTeX is a high-quality typesetting system and the de facto standard for publication of scientific documents. However, I never got a chance to formally learn how to use it. Most of my LaTeX knowledge comes from learning by doing. As I&amp;rsquo;m working on my Ph.D. thesis, I would like to share a few LaTeX tips that I wish I had known earlier. I got most of them from working with my advisors, internship hosts, and collaborators. There is still a lot for me to learn about LaTeX. Any comments and suggestions are welcome!&lt;/p&gt;
+&lt;p&gt;LaTeX is a high-quality typesetting system and the de facto standard for publication of scientific documents. However, I never got a chance to learn how to use it formally. Most of my LaTeX knowledge comes from learning by doing. As I&amp;rsquo;m working on my Ph.D. thesis, I would like to share a few LaTeX tips that I wish I had known earlier. I got most of them from working with my advisors, internship hosts, and collaborators. There is still a lot for me to learn about LaTeX. Any comments and suggestions are welcome!&lt;/p&gt;
 
 &lt;h2 id=&#34;1-non-breaking-spaces&#34;&gt;1. Non-breaking spaces&lt;/h2&gt;
 
-&lt;p&gt;In digital typesetting, a non-breaking space is a space character that prevents an automatic line break at its position. It is like invisible glue between two words. There are various situations where a non-breaking space is used. For example, if the phrase &amp;ldquo;100 km&amp;rdquo; does not fit at the end of a line, the word processor may insert a line break between &amp;ldquo;100&amp;rdquo; and &amp;ldquo;km&amp;rdquo;, which is not desirable.&lt;/p&gt;
+&lt;p&gt;In digital typesetting, a non-breaking space is a space character that prevents an automatic line break at its position. It is like an invisible glue between two words. There are various situations where a non-breaking space is used. For example, if the phrase &amp;ldquo;100 km&amp;rdquo; does not fit at the end of a line, the word processor may insert a line break between &amp;ldquo;100&amp;rdquo; and &amp;ldquo;km&amp;rdquo;, which is not desirable.&lt;/p&gt;
 
 &lt;p&gt;LaTeX uses the &lt;code&gt;~&lt;/code&gt; symbol as a non-breaking space. It is usually inserted before any numeric or alphabetic reference, for example, &lt;code&gt;Figure~\ref{fig:foo}&lt;/code&gt; and &lt;code&gt;Section~\ref{sec:bar}&lt;/code&gt;. Compare the following examples:&lt;/p&gt;
 
@@ -206,7 +206,7 @@ The first row is correct because \(n\) represents a variable here.&lt;/p&gt;
 
 &lt;h2 id=&#34;4-avoid-vspace&#34;&gt;4. Avoid &lt;code&gt;\vspace&lt;/code&gt;&lt;/h2&gt;
 
-&lt;p&gt;Most conferences have strict page limits. More often than not, eight pages are not enough to fully present a brilliant idea. If only Fermat got more space in the margin!&lt;/p&gt;
+&lt;p&gt;Most conferences have strict page limits. More often than not, eight pages are not enough to adequately present a brilliant idea. If only Fermat got more space in the margin!&lt;/p&gt;
 
 &lt;p&gt;A common trick is to use &lt;code&gt;\vspace&lt;/code&gt;. It can reduce the length of a vertical space before or after a section, figure or table. However, this essentially alters the style template. Many formatting instructions explicitly forbid the use of &lt;code&gt;\vspace&lt;/code&gt;. It might even result in the rejection of the paper. From the formatting instructions for AAAI 2019:&lt;/p&gt;
 
@@ -214,8 +214,8 @@ The first row is correct because \(n\) represents a variable here.&lt;/p&gt;
 &lt;p&gt;if your paper is obviously &amp;ldquo;squeezed&amp;rdquo; it is not going to be accepted.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;Reducing the vertical spaces also makes the paper less readable for the reviewers, so it is obviously not advisable.
-Many conferences support the submission of supplementary material. If your paper is too long, consider reorganizing it and moving some sections to the supplementary material.&lt;/p&gt;
+&lt;p&gt;Reducing the vertical spaces also makes the paper less readable for the reviewers, so it is definitely not advisable.
+Many conferences support the submission of supplementary material. If the paper is too long, consider reorganizing it and moving some sections to the supplementary material.&lt;/p&gt;
 </description>
     </item>
     

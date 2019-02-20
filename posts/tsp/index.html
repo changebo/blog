@@ -112,7 +112,7 @@ $$</p>
 </blockquote>
 
 <p>Figure 1 shows the algorithm on a simple five-city instance.
-We will give a step-by-step explanation of the algorithm.
+We give a step-by-step explanation of the algorithm.
 <figure>
     <img src="dbl_tree.jpg" alt="Double-tree algorithm" width="350"/>
     <figcaption>Figure 1: Double-tree algorithm.</figcaption>
@@ -175,7 +175,7 @@ The same strategy can be carried out to yield a <sup>3</sup>&frasl;<sub>2</sub>-
 </figure></p>
 
 <p>The algorithm starts again with the minimum spanning tree \(T\). The reason we cannot directly find an Eulerian tour is that its leaf nodes all have degree one.
-However, by the <a href="https://en.wikipedia.org/wiki/Handshaking_lemma">handshaking lemma</a>, there are an even number of odd-degree nodes.
+However, by the <a href="https://en.wikipedia.org/wiki/Handshaking_lemma">handshaking lemma</a>, there is an even number of odd-degree nodes.
 If these nodes can be paired up, then it becomes an Eulerian graph and we can proceed as before.</p>
 
 <p>Let \(O\) be the set of odd-degree nodes in \(T\).
@@ -235,7 +235,7 @@ where \\(n = |V|\\) is the number of nodes in \\(G\\).
 If the is a Hamiltonian cycle in \\(G\\), then there is a tour of cost \\(n\\); otherwise each tour costs at least \\(2n+1\\), which consists of \\(n-1\\) edges in \\(E\\) and one edge not in \\(E\\).
 
 Run the 2-approximation algorithm on the new TSP input; 
-if the computed tour has cost at most \\(2n\\), then there exists a Hamiltonian cycle in \\(G\\), otherwise there does not.
+if the computed tour has cost at most \\(2n\\), then there exists a Hamiltonian cycle in \\(G\\); otherwise, there does not.
 
 
 > **Theorem 3.** For any \\(\alpha > 1\\), there does not exist an \\(\alpha\\)-approximation algorithm for the traveling salesman problem, provided \\(\mathrm{P} \neq \mathrm{NP}\\). -->

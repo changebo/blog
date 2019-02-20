@@ -63,7 +63,7 @@ The UCT algorithm is based on the UCB1 <small>(Upper Confidence Bound)</small>  
 <p>Thankfully, I audited <a href="https://www.cs.ubc.ca/~nickhar/">Prof. Nick Harvey</a>&rsquo;s <a href="https://www.cs.ubc.ca/~nickhar/F18-531/">learning theory course</a> this semester.
 In one lecture, he gave a remarkably clear exposition of the multi-armed bandit problem and algorithms.
 It deepened my understanding of the theoretical properties of the UCB1 algorithm.
-This blog post is largely a transcription of the lecture; it gives an overview of the regret bound analysis of the explore-first algorithm and UCB1 algorithm. The material is also based on the first chapter of Slivkins (2017).</p>
+This blog post is mostly a transcription of the lecture; it gives an overview of the regret bound analysis of the explore-first algorithm and UCB1 algorithm. The material is also based on the first chapter of Slivkins (2017).</p>
 
 <h2 id="1-problem-formulation">1. Problem formulation</h2>
 
@@ -76,7 +76,7 @@ In the rest of the post, we use the term &ldquo;arm&rdquo; as a synonym for a sl
 <p>In this post, we focus on the <strong>stochastic bandit problem</strong>, where the rewards for each arm are i.i.d. from a probability distribution specific to that arm.
 Another variant of the multi-armed bandit problem is called the <strong>adversarial bandit problem</strong>, where an adversary chooses the reward for each arm while the player chooses an arm.</p>
 
-<p>The crucial tradeoff the gambler faces is between <strong>exploration</strong> and <strong>exploitation</strong>.
+<p>The fundamental tradeoff the gambler faces is between <strong>exploration</strong> and <strong>exploitation</strong>.
 In machine learning, exploration stands for the acquisition of new knowledge, and exploitation refers to an optimized decision based on existing knowledge.
 In the case of the multi-armed bandit problem, the gambler needs to decide between trying different arms to get more information about their rewards and playing the arm that has the highest average reward so far.</p>
 
@@ -95,7 +95,7 @@ In the case of the multi-armed bandit problem, the gambler needs to decide betwe
 $$ R(t) =  \mu^* t  - \sum_{s=1}^t \mu(a_s), $$
 where \(a_s\) is the chosen arm in round \(s\).
 The regret is the difference between the sum of rewards associated with the optimal arm and the sum of expected rewards by an algorithm.
-The goal of the algorithm is to minimize the regret.
+The goal of the algorithm is to minimize regret.
 Note that \(a_s\) is a random quantity, since it may depend on the randomness in rewards and/or the algorithm.
 Therefore the regret \(R(t)\) is also random and we are interested in the expected regret \(\mathbb{E}[R(t)]\) or \(\mathbb{E}[R(T)]\).</p>
 
@@ -198,7 +198,7 @@ $$
 $$
 Intuitively, it indicates that conditioning on the clean event, the chosen arm \(\hat{a}\) cannot be much worse than \(a^*\).</p>
 
-<p>There are \(NK\) rounds in the exploration phase and each round has at most regret of 1; there are \(T - NK\) rounds in the exploitation phase and the regret incurred in each round is bounded by \(2r\).
+<p>There are \(NK\) rounds in the exploration phase, and each round has at most regret of 1; there are \(T - NK\) rounds in the exploitation phase and the regret incurred in each round is bounded by \(2r\).
 As a result, the regret in round \(T\) can be bounded by
 $$
 \begin{align}
@@ -274,7 +274,7 @@ where \( r_t(a) = \sqrt{\frac{2 \log T}{n_t(a)}} \).</p>
 </ol>
 </blockquote>
 
-<p>Unlike the explore-first algorithm, there is no clear exploration/exploitation phase. However, the definition of the upper confidence bound manifests the exloration-exploitation tradeoff: \(\bar\mu_t(a)\) encourages the exploitation of high reward arms, while \(r_t(a)\) courages the exploration of less played arms.</p>
+<p>Unlike the explore-first algorithm, there is no clear exploration/exploitation phase. However, the definition of the upper confidence bound manifests the exploration-exploitation tradeoff: \(\bar\mu_t(a)\) encourages the exploitation of high reward arms, while \(r_t(a)\) encourages the exploration of less played arms.</p>
 
 <h3 id="3-1-regret-bound">3.1 Regret bound</h3>
 

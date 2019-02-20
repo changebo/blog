@@ -57,11 +57,11 @@ if (!doNotTrack) {
   <aside>tags: <a href="/blog/tags/academic-writing/">academic writing</a></a>&nbsp;&nbsp;&nbsp;</aside>
   <p>
 
-<p>LaTeX is a high-quality typesetting system and the de facto standard for publication of scientific documents. However, I never got a chance to formally learn how to use it. Most of my LaTeX knowledge comes from learning by doing. As I&rsquo;m working on my Ph.D. thesis, I would like to share a few LaTeX tips that I wish I had known earlier. I got most of them from working with my advisors, internship hosts, and collaborators. There is still a lot for me to learn about LaTeX. Any comments and suggestions are welcome!</p>
+<p>LaTeX is a high-quality typesetting system and the de facto standard for publication of scientific documents. However, I never got a chance to learn how to use it formally. Most of my LaTeX knowledge comes from learning by doing. As I&rsquo;m working on my Ph.D. thesis, I would like to share a few LaTeX tips that I wish I had known earlier. I got most of them from working with my advisors, internship hosts, and collaborators. There is still a lot for me to learn about LaTeX. Any comments and suggestions are welcome!</p>
 
 <h2 id="1-non-breaking-spaces">1. Non-breaking spaces</h2>
 
-<p>In digital typesetting, a non-breaking space is a space character that prevents an automatic line break at its position. It is like invisible glue between two words. There are various situations where a non-breaking space is used. For example, if the phrase &ldquo;100 km&rdquo; does not fit at the end of a line, the word processor may insert a line break between &ldquo;100&rdquo; and &ldquo;km&rdquo;, which is not desirable.</p>
+<p>In digital typesetting, a non-breaking space is a space character that prevents an automatic line break at its position. It is like an invisible glue between two words. There are various situations where a non-breaking space is used. For example, if the phrase &ldquo;100 km&rdquo; does not fit at the end of a line, the word processor may insert a line break between &ldquo;100&rdquo; and &ldquo;km&rdquo;, which is not desirable.</p>
 
 <p>LaTeX uses the <code>~</code> symbol as a non-breaking space. It is usually inserted before any numeric or alphabetic reference, for example, <code>Figure~\ref{fig:foo}</code> and <code>Section~\ref{sec:bar}</code>. Compare the following examples:</p>
 
@@ -244,7 +244,7 @@ The first row is correct because \(n\) represents a variable here.</p>
 
 <h2 id="4-avoid-vspace">4. Avoid <code>\vspace</code></h2>
 
-<p>Most conferences have strict page limits. More often than not, eight pages are not enough to fully present a brilliant idea. If only Fermat got more space in the margin!</p>
+<p>Most conferences have strict page limits. More often than not, eight pages are not enough to adequately present a brilliant idea. If only Fermat got more space in the margin!</p>
 
 <p>A common trick is to use <code>\vspace</code>. It can reduce the length of a vertical space before or after a section, figure or table. However, this essentially alters the style template. Many formatting instructions explicitly forbid the use of <code>\vspace</code>. It might even result in the rejection of the paper. From the formatting instructions for AAAI 2019:</p>
 
@@ -252,8 +252,8 @@ The first row is correct because \(n\) represents a variable here.</p>
 <p>if your paper is obviously &ldquo;squeezed&rdquo; it is not going to be accepted.</p>
 </blockquote>
 
-<p>Reducing the vertical spaces also makes the paper less readable for the reviewers, so it is obviously not advisable.
-Many conferences support the submission of supplementary material. If your paper is too long, consider reorganizing it and moving some sections to the supplementary material.</p>
+<p>Reducing the vertical spaces also makes the paper less readable for the reviewers, so it is definitely not advisable.
+Many conferences support the submission of supplementary material. If the paper is too long, consider reorganizing it and moving some sections to the supplementary material.</p>
 </p>
 </div>
 

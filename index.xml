@@ -74,7 +74,7 @@ $$&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;Figure 1 shows the algorithm on a simple five-city instance.
-We will give a step-by-step explanation of the algorithm.
+We give a step-by-step explanation of the algorithm.
 &lt;figure&gt;
     &lt;img src=&#34;dbl_tree.jpg&#34; alt=&#34;Double-tree algorithm&#34; width=&#34;350&#34;/&gt;
     &lt;figcaption&gt;Figure 1: Double-tree algorithm.&lt;/figcaption&gt;
@@ -137,7 +137,7 @@ The same strategy can be carried out to yield a &lt;sup&gt;3&lt;/sup&gt;&amp;fra
 &lt;/figure&gt;&lt;/p&gt;
 
 &lt;p&gt;The algorithm starts again with the minimum spanning tree \(T\). The reason we cannot directly find an Eulerian tour is that its leaf nodes all have degree one.
-However, by the &lt;a href=&#34;https://en.wikipedia.org/wiki/Handshaking_lemma&#34;&gt;handshaking lemma&lt;/a&gt;, there are an even number of odd-degree nodes.
+However, by the &lt;a href=&#34;https://en.wikipedia.org/wiki/Handshaking_lemma&#34;&gt;handshaking lemma&lt;/a&gt;, there is an even number of odd-degree nodes.
 If these nodes can be paired up, then it becomes an Eulerian graph and we can proceed as before.&lt;/p&gt;
 
 &lt;p&gt;Let \(O\) be the set of odd-degree nodes in \(T\).
@@ -197,7 +197,7 @@ where \\(n = |V|\\) is the number of nodes in \\(G\\).
 If the is a Hamiltonian cycle in \\(G\\), then there is a tour of cost \\(n\\); otherwise each tour costs at least \\(2n+1\\), which consists of \\(n-1\\) edges in \\(E\\) and one edge not in \\(E\\).
 
 Run the 2-approximation algorithm on the new TSP input; 
-if the computed tour has cost at most \\(2n\\), then there exists a Hamiltonian cycle in \\(G\\), otherwise there does not.
+if the computed tour has cost at most \\(2n\\), then there exists a Hamiltonian cycle in \\(G\\); otherwise, there does not.
 
 
 &gt; **Theorem 3.** For any \\(\alpha &gt; 1\\), there does not exist an \\(\alpha\\)-approximation algorithm for the traveling salesman problem, provided \\(\mathrm{P} \neq \mathrm{NP}\\). --&gt;
@@ -224,7 +224,7 @@ The UCT algorithm is based on the UCB1 &lt;small&gt;(Upper Confidence Bound)&lt;
 &lt;p&gt;Thankfully, I audited &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/&#34;&gt;Prof. Nick Harvey&lt;/a&gt;&amp;rsquo;s &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/F18-531/&#34;&gt;learning theory course&lt;/a&gt; this semester.
 In one lecture, he gave a remarkably clear exposition of the multi-armed bandit problem and algorithms.
 It deepened my understanding of the theoretical properties of the UCB1 algorithm.
-This blog post is largely a transcription of the lecture; it gives an overview of the regret bound analysis of the explore-first algorithm and UCB1 algorithm. The material is also based on the first chapter of Slivkins (2017).&lt;/p&gt;
+This blog post is mostly a transcription of the lecture; it gives an overview of the regret bound analysis of the explore-first algorithm and UCB1 algorithm. The material is also based on the first chapter of Slivkins (2017).&lt;/p&gt;
 
 &lt;h2 id=&#34;1-problem-formulation&#34;&gt;1. Problem formulation&lt;/h2&gt;
 
@@ -237,7 +237,7 @@ In the rest of the post, we use the term &amp;ldquo;arm&amp;rdquo; as a synonym 
 &lt;p&gt;In this post, we focus on the &lt;strong&gt;stochastic bandit problem&lt;/strong&gt;, where the rewards for each arm are i.i.d. from a probability distribution specific to that arm.
 Another variant of the multi-armed bandit problem is called the &lt;strong&gt;adversarial bandit problem&lt;/strong&gt;, where an adversary chooses the reward for each arm while the player chooses an arm.&lt;/p&gt;
 
-&lt;p&gt;The crucial tradeoff the gambler faces is between &lt;strong&gt;exploration&lt;/strong&gt; and &lt;strong&gt;exploitation&lt;/strong&gt;.
+&lt;p&gt;The fundamental tradeoff the gambler faces is between &lt;strong&gt;exploration&lt;/strong&gt; and &lt;strong&gt;exploitation&lt;/strong&gt;.
 In machine learning, exploration stands for the acquisition of new knowledge, and exploitation refers to an optimized decision based on existing knowledge.
 In the case of the multi-armed bandit problem, the gambler needs to decide between trying different arms to get more information about their rewards and playing the arm that has the highest average reward so far.&lt;/p&gt;
 
@@ -256,7 +256,7 @@ In the case of the multi-armed bandit problem, the gambler needs to decide betwe
 $$ R(t) =  \mu^* t  - \sum_{s=1}^t \mu(a_s), $$
 where \(a_s\) is the chosen arm in round \(s\).
 The regret is the difference between the sum of rewards associated with the optimal arm and the sum of expected rewards by an algorithm.
-The goal of the algorithm is to minimize the regret.
+The goal of the algorithm is to minimize regret.
 Note that \(a_s\) is a random quantity, since it may depend on the randomness in rewards and/or the algorithm.
 Therefore the regret \(R(t)\) is also random and we are interested in the expected regret \(\mathbb{E}[R(t)]\) or \(\mathbb{E}[R(T)]\).&lt;/p&gt;
 
@@ -359,7 +359,7 @@ $$
 $$
 Intuitively, it indicates that conditioning on the clean event, the chosen arm \(\hat{a}\) cannot be much worse than \(a^*\).&lt;/p&gt;
 
-&lt;p&gt;There are \(NK\) rounds in the exploration phase and each round has at most regret of 1; there are \(T - NK\) rounds in the exploitation phase and the regret incurred in each round is bounded by \(2r\).
+&lt;p&gt;There are \(NK\) rounds in the exploration phase, and each round has at most regret of 1; there are \(T - NK\) rounds in the exploitation phase and the regret incurred in each round is bounded by \(2r\).
 As a result, the regret in round \(T\) can be bounded by
 $$
 \begin{align}
@@ -435,7 +435,7 @@ where \( r_t(a) = \sqrt{\frac{2 \log T}{n_t(a)}} \).&lt;/p&gt;
 &lt;/ol&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;Unlike the explore-first algorithm, there is no clear exploration/exploitation phase. However, the definition of the upper confidence bound manifests the exloration-exploitation tradeoff: \(\bar\mu_t(a)\) encourages the exploitation of high reward arms, while \(r_t(a)\) courages the exploration of less played arms.&lt;/p&gt;
+&lt;p&gt;Unlike the explore-first algorithm, there is no clear exploration/exploitation phase. However, the definition of the upper confidence bound manifests the exploration-exploitation tradeoff: \(\bar\mu_t(a)\) encourages the exploitation of high reward arms, while \(r_t(a)\) encourages the exploration of less played arms.&lt;/p&gt;
 
 &lt;h3 id=&#34;3-1-regret-bound&#34;&gt;3.1 Regret bound&lt;/h3&gt;
 
@@ -594,11 +594,11 @@ This type of regret bound is called &lt;strong&gt;instance-dependent&lt;/strong&
       <guid>https://bochang.me/blog/posts/latex/</guid>
       <description>
 
-&lt;p&gt;LaTeX is a high-quality typesetting system and the de facto standard for publication of scientific documents. However, I never got a chance to formally learn how to use it. Most of my LaTeX knowledge comes from learning by doing. As I&amp;rsquo;m working on my Ph.D. thesis, I would like to share a few LaTeX tips that I wish I had known earlier. I got most of them from working with my advisors, internship hosts, and collaborators. There is still a lot for me to learn about LaTeX. Any comments and suggestions are welcome!&lt;/p&gt;
+&lt;p&gt;LaTeX is a high-quality typesetting system and the de facto standard for publication of scientific documents. However, I never got a chance to learn how to use it formally. Most of my LaTeX knowledge comes from learning by doing. As I&amp;rsquo;m working on my Ph.D. thesis, I would like to share a few LaTeX tips that I wish I had known earlier. I got most of them from working with my advisors, internship hosts, and collaborators. There is still a lot for me to learn about LaTeX. Any comments and suggestions are welcome!&lt;/p&gt;
 
 &lt;h2 id=&#34;1-non-breaking-spaces&#34;&gt;1. Non-breaking spaces&lt;/h2&gt;
 
-&lt;p&gt;In digital typesetting, a non-breaking space is a space character that prevents an automatic line break at its position. It is like invisible glue between two words. There are various situations where a non-breaking space is used. For example, if the phrase &amp;ldquo;100 km&amp;rdquo; does not fit at the end of a line, the word processor may insert a line break between &amp;ldquo;100&amp;rdquo; and &amp;ldquo;km&amp;rdquo;, which is not desirable.&lt;/p&gt;
+&lt;p&gt;In digital typesetting, a non-breaking space is a space character that prevents an automatic line break at its position. It is like an invisible glue between two words. There are various situations where a non-breaking space is used. For example, if the phrase &amp;ldquo;100 km&amp;rdquo; does not fit at the end of a line, the word processor may insert a line break between &amp;ldquo;100&amp;rdquo; and &amp;ldquo;km&amp;rdquo;, which is not desirable.&lt;/p&gt;
 
 &lt;p&gt;LaTeX uses the &lt;code&gt;~&lt;/code&gt; symbol as a non-breaking space. It is usually inserted before any numeric or alphabetic reference, for example, &lt;code&gt;Figure~\ref{fig:foo}&lt;/code&gt; and &lt;code&gt;Section~\ref{sec:bar}&lt;/code&gt;. Compare the following examples:&lt;/p&gt;
 
@@ -781,7 +781,7 @@ The first row is correct because \(n\) represents a variable here.&lt;/p&gt;
 
 &lt;h2 id=&#34;4-avoid-vspace&#34;&gt;4. Avoid &lt;code&gt;\vspace&lt;/code&gt;&lt;/h2&gt;
 
-&lt;p&gt;Most conferences have strict page limits. More often than not, eight pages are not enough to fully present a brilliant idea. If only Fermat got more space in the margin!&lt;/p&gt;
+&lt;p&gt;Most conferences have strict page limits. More often than not, eight pages are not enough to adequately present a brilliant idea. If only Fermat got more space in the margin!&lt;/p&gt;
 
 &lt;p&gt;A common trick is to use &lt;code&gt;\vspace&lt;/code&gt;. It can reduce the length of a vertical space before or after a section, figure or table. However, this essentially alters the style template. Many formatting instructions explicitly forbid the use of &lt;code&gt;\vspace&lt;/code&gt;. It might even result in the rejection of the paper. From the formatting instructions for AAAI 2019:&lt;/p&gt;
 
@@ -789,8 +789,8 @@ The first row is correct because \(n\) represents a variable here.&lt;/p&gt;
 &lt;p&gt;if your paper is obviously &amp;ldquo;squeezed&amp;rdquo; it is not going to be accepted.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;Reducing the vertical spaces also makes the paper less readable for the reviewers, so it is obviously not advisable.
-Many conferences support the submission of supplementary material. If your paper is too long, consider reorganizing it and moving some sections to the supplementary material.&lt;/p&gt;
+&lt;p&gt;Reducing the vertical spaces also makes the paper less readable for the reviewers, so it is definitely not advisable.
+Many conferences support the submission of supplementary material. If the paper is too long, consider reorganizing it and moving some sections to the supplementary material.&lt;/p&gt;
 </description>
     </item>
     
