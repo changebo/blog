@@ -215,6 +215,7 @@ figcaption {
 	outline: 0;
 	z-index: 300;
 	text-align: center;
+	margin-bottom: 20px;	
 }
 
 blockquote {
