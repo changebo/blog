@@ -76,7 +76,7 @@ $$&lt;/p&gt;
 &lt;p&gt;Figure 1 shows the algorithm on a simple five-city instance.
 We give a step-by-step explanation of the algorithm.
 &lt;figure&gt;
-    &lt;img src=&#34;dbl_tree.jpg&#34; alt=&#34;Double-tree algorithm&#34; width=&#34;350&#34;/&gt;
+    &lt;img src=&#34;dbl_tree.jpg&#34; alt=&#34;Double-tree algorithm&#34; width=&#34;50%&#34;/&gt;
     &lt;figcaption&gt;Figure 1: Double-tree algorithm.&lt;/figcaption&gt;
 &lt;/figure&gt;&lt;/p&gt;
 
@@ -132,7 +132,7 @@ The same strategy can be carried out to yield a &lt;sup&gt;3&lt;/sup&gt;&amp;fra
 
 &lt;p&gt;Figure 2 illustrates the algorithm on a simple five-city instance of TSP.
 &lt;figure&gt;
-    &lt;img src=&#34;christofides.jpg&#34; alt=&#34;Christofides&#39; algorithm&#34; width=&#34;350&#34;/&gt;
+    &lt;img src=&#34;christofides.jpg&#34; alt=&#34;Christofides&#39; algorithm&#34; width=&#34;50%&#34;/&gt;
     &lt;figcaption&gt;Figure 2: Christofides&amp;rsquo; algorithm.&lt;/figcaption&gt;
 &lt;/figure&gt;&lt;/p&gt;
 
@@ -170,7 +170,7 @@ This completes the proof of the following theorem.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;figure&gt;
-    &lt;img src=&#34;matching.jpg&#34; alt=&#34;minimum-cost perfect matching&#34; width=&#34;350&#34;/&gt;
+    &lt;img src=&#34;matching.jpg&#34; alt=&#34;minimum-cost perfect matching&#34; width=&#34;50%&#34;/&gt;
     &lt;figcaption&gt;Figure 3: Minimum-cost perfect matching.&lt;/figcaption&gt;
 &lt;/figure&gt;
 
