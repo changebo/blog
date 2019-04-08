@@ -218,8 +218,8 @@ if the computed tour has cost at most \\(2n\\), then there exists a Hamiltonian 
       <guid>https://bochang.me/blog/posts/bandits/</guid>
       <description>
 
-&lt;p&gt;In our recent paper &lt;em&gt;Vine Copula Structure Learning via Monte Carlo Tree Search&lt;/em&gt; &lt;small&gt;(under review at AISTATS 2019)&lt;/small&gt;, we apply the UCT &lt;small&gt;(Upper Confidence bounds applied to Trees)&lt;/small&gt; algorithm to find an approximate solution to an NP-hard structure learning problem in statistics.
-The UCT algorithm is based on the UCB1 &lt;small&gt;(Upper Confidence Bound)&lt;/small&gt;  algorithm for the stochastic bandit problem.&lt;/p&gt;
+&lt;p&gt;In our recent paper &lt;em&gt;Vine Copula Structure Learning via Monte Carlo Tree Search&lt;/em&gt; (AISTATS 2019), we apply the UCT (Upper Confidence bounds applied to Trees) algorithm to find an approximate solution to an NP-hard structure learning problem in statistics.
+The UCT algorithm is based on the UCB1 (Upper Confidence Bound) algorithm for the stochastic bandit problem.&lt;/p&gt;
 
 &lt;p&gt;Thankfully, I audited &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/&#34;&gt;Prof. Nick Harvey&lt;/a&gt;&amp;rsquo;s &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/F18-531/&#34;&gt;learning theory course&lt;/a&gt; this semester.
 In one lecture, he gave a remarkably clear exposition of the multi-armed bandit problem and algorithms.
@@ -229,7 +229,7 @@ This blog post is mostly a transcription of the lecture; it gives an overview of
 &lt;h2 id=&#34;1-problem-formulation&#34;&gt;1. Problem formulation&lt;/h2&gt;
 
 &lt;p&gt;The &lt;a href=&#34;https://en.wikipedia.org/wiki/Multi-armed_bandit&#34;&gt;multi-armed bandit problem&lt;/a&gt; has many practical applications including clinical trials, financial portfolio design, and online advertising.
-The name comes from imagining a gambler at a row of slot machines &lt;small&gt;(sometimes known as &amp;ldquo;one-armed bandits&amp;rdquo;)&lt;/small&gt;, each with a lever.
+The name comes from imagining a gambler at a row of slot machines (sometimes known as &amp;ldquo;one-armed bandits&amp;rdquo;), each with a lever.
 In each round, the gambler picks a machine to play, then the reward for the chosen machine is observed.
 The objective of the gambler is to maximize the sum of rewards earned through a sequence of lever pulls.
 In the rest of the post, we use the term &amp;ldquo;arm&amp;rdquo; as a synonym for a slot machine.&lt;/p&gt;
@@ -244,10 +244,7 @@ In the case of the multi-armed bandit problem, the gambler needs to decide betwe
 &lt;p&gt;The following notations are used throughout the post.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;\(K\) is the total number of arms and \(T\) is the total number of rounds, both are known in advance. Arms are denoted by \(a \in [K]\), rounds by \(t \in [T]\).
-&lt;small&gt;
-(The bracket notation \([n]\) denotes the first \(n\) positive integers \([n] := \{1, 2, \ldots, n\}\).)
-&lt;/small&gt;&lt;/li&gt;
+&lt;li&gt;\(K\) is the total number of arms and \(T\) is the total number of rounds, both are known in advance. Arms are denoted by \(a \in [K]\), rounds by \(t \in [T]\). (The bracket notation \([n]\) denotes the first \(n\) positive integers \([n] := \{1, 2, \ldots, n\}\).)&lt;/li&gt;
 &lt;li&gt;The reward for arm \(a\) is i.i.d. from \(\mathcal{D}_a\), which is a distribution supported on \([0,1]\). The expected reward of arm \(a\) is denoted by \(\mu(a) := \int_0^1 x \, \mathrm{d}\mathcal{D}_a(x)\).&lt;/li&gt;
 &lt;li&gt;The best expected reward is denoted by \(\mu^* := \max_{a \in [K]} \mu(a)\), and the best arm is \(a^* = \operatorname{argmax}_{a \in [K]} \mu(a)\).&lt;/li&gt;
 &lt;/ul&gt;

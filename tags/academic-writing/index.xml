@@ -59,7 +59,7 @@
 
 &lt;h2 id=&#34;3-mathematical-symbols&#34;&gt;3. Mathematical symbols&lt;/h2&gt;
 
-&lt;p&gt;When writing mathematical formulas, people follow certain conventions of notations. In fact, there is an ISO standard &lt;a href=&#34;https://people.engr.ncsu.edu/jwilson/files/mathsigns.pdf&#34;&gt;ISO 80000-2&lt;/a&gt; that defines mathematical signs and symbols. I found an article titled &lt;a href=&#34;https://tug.org/TUGboat/tb18-1/tb54becc.pdf&#34;&gt;Typesetting mathematics for science and technology according to ISO 31/XI&lt;/a&gt; by Claudio Beccari. &lt;small&gt;(ISO 31/XI is the precursor of ISO 80000-2.)&lt;/small&gt; The recommendations below are excerpts of the article. The &amp;ldquo;roman type&amp;rdquo; refers to upright letters and the &amp;ldquo;italic type&amp;rdquo; refers to sloping letters.&lt;/p&gt;
+&lt;p&gt;When writing mathematical formulas, people follow certain conventions of notations. In fact, there is an ISO standard &lt;a href=&#34;https://people.engr.ncsu.edu/jwilson/files/mathsigns.pdf&#34;&gt;ISO 80000-2&lt;/a&gt; that defines mathematical signs and symbols. I found an article titled &lt;a href=&#34;https://tug.org/TUGboat/tb18-1/tb54becc.pdf&#34;&gt;Typesetting mathematics for science and technology according to ISO 31/XI&lt;/a&gt; by Claudio Beccari. (ISO 31/XI is the precursor of ISO 80000-2.) The recommendations below are excerpts of the article. The &amp;ldquo;roman type&amp;rdquo; refers to upright letters and the &amp;ldquo;italic type&amp;rdquo; refers to sloping letters.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;a) Variables and functions are represented by one italic letter with modifiers such as subscripts, superscripts, primes, etc.&lt;/strong&gt;&lt;/p&gt;
 
