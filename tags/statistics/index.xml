@@ -1,0 +1,413 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>statistics on Bo&#39;s Blog</title>
+    <link>https://bochang.me/blog/tags/statistics/</link>
+    <description>Recent content in statistics on Bo&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 08 May 2019 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://bochang.me/blog/tags/statistics/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Copula: A Very Short Introduction</title>
+      <link>https://bochang.me/blog/posts/copula/</link>
+      <pubDate>Wed, 08 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://bochang.me/blog/posts/copula/</guid>
+      <description>
+
+&lt;p&gt;You might have seen the following true/false questions in the final exam of your first statistics course.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;If \( (Z_1, Z_2) \) follows a bivariate Gaussian distribution, do \( Z_1 \) and \( Z_2 \) follow univariate Gaussian distributions?&lt;/li&gt;
+&lt;li&gt;If \( Z_1 \) and \( Z_2 \) follow univariate Gaussian distributions, does \( (Z_1, Z_2) \) follow a bivariate Gaussian distribution?&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The answer to the first question is &lt;em&gt;true&lt;/em&gt; and to the second is &lt;em&gt;false&lt;/em&gt;.
+“What could the joint distribution of \( (Z_1, Z_2) \) be, if \( Z_1 \) and \( Z_2 \) are univariate Gaussians?”, you may ask.&lt;/p&gt;
+
+&lt;p&gt;Figure 1 shows the contour plots for different bivariate distributions where \(Z_1\) and \(Z_2\) follow standard Gaussian distributions. All of them are constructed using &lt;strong&gt;copulas&lt;/strong&gt;, which are a flexible tool to model the dependence among random variables.
+In this post, I will give a short introduction to (bivariate) copulas.
+Other references on this topic include an introduction by &lt;a href=&#34;http://www.angelfire.com/falcon/isinotes/mult/cop1.pdf&#34;&gt;Schmidt (2007)&lt;/a&gt; and a monograph by my PhD advisor &lt;a href=&#34;https://www.crcpress.com/Dependence-Modeling-with-Copulas/Joe/p/book/9781466583221&#34;&gt;Joe (2014)&lt;/a&gt;.&lt;/p&gt;
+
+&lt;figure&gt;
+    &lt;img src=&#34;normal_plots.png&#34; alt=&#34;Contour plots of the density function.&#34; width=&#34;600&#34;/&gt;
+    &lt;figcaption&gt;Figure 1: Contour plots of the density functions.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;1-copula-a-first-glance&#34;&gt;1. Copula&amp;ndash;a first glance&lt;/h2&gt;
+
+&lt;p&gt;Consider a continuous random vector \((X_1, X_2)\).
+Let \(F_j\) be the marginal cumulative distribution function (CDF) of \(X_j\) for \(j=1,2\), and \(F\) be the joint CDF.
+We apply the probability integral transform and define \(U_j := F_j(X_j)\).
+Since \(X_j\) is assumed to be continuous, \(U_j \sim \mathcal{U}(0,1) \) follows a uniform distribution.
+Then the CDF of \((U_1, U_2)\) is the &lt;strong&gt;copula&lt;/strong&gt; of \((X_1, X_2)\), denoted by \(C\).
+$$C(u_1, u_2) = \mathbb{P}(U_1 \leq u_1, U_2 \leq u_2).$$
+The joint distribution can be then decomposed into two components: the copula and marginals:
+\begin{align}
+F(x_1, x_2)
+&amp;amp;= \mathbb{P}(X_1 \leq x_1, X_2 \leq x_2)
+\newline
+&amp;amp;= \mathbb{P}(U_1 \leq F_1(x_1), U_2 \leq F_2(x_2))
+\newline
+&amp;amp;= C(F_1(x_1), F_2(x_2)).
+\end{align}&lt;/p&gt;
+
+&lt;p&gt;The name &amp;ldquo;copula&amp;rdquo; comes from the Latin for &amp;ldquo;link&amp;rdquo;.
+It links the marginals to the joint distribution.&lt;/p&gt;
+
+&lt;h2 id=&#34;2-simple-examples&#34;&gt;2. Simple examples&lt;/h2&gt;
+
+&lt;p&gt;We first consider a few simple copulas.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Example 1&lt;/strong&gt; (Independence copula). Let \(X_1\) and \(X_2\) be independent random variables. The corresponding copula is
+\begin{align}
+C(u_1, u_2)
+&amp;amp;=
+\mathbb{P}(U_1 \leq u_1, U_2 \leq u_2)
+\newline
+&amp;amp;=
+\mathbb{P}(U_1 \leq u_1) \mathbb{P}(U_2 \leq u_2)
+\newline
+&amp;amp;=
+u_1 u_2.
+\end{align}
+The second equality is due to independence of \(U_1\) and \(U_2\), and the last equality is because \(U_1\) and \(U_2\) follow uniform distributions.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Example 2&lt;/strong&gt; (Comonotonicity copula). Let \(X_2 = 2X_1\); that is, \(X_1\) and \(X_2\) have a deterministic and positive relationship.
+We can derive the relation between the CDFs:
+$$F_1(x) = \mathbb{P}(X_1 \leq x) = \mathbb{P}(2 X_1 \leq 2 x) = \mathbb{P}(X_2 \leq 2x) = F_2(2x),$$
+which leads to the fact that \(U_1\) is equal to \(U_2\):
+$$U_1 = F_1(X_1) = F_2(2 X_1) = F_2(X_2) = U_2.$$
+The copula is
+\begin{align}
+C(u_1, u_2)
+&amp;amp;=
+\mathbb{P}(U_1 \leq u_1, U_2 \leq u_2)
+\newline
+&amp;amp;=
+\mathbb{P}(U_1 \leq u_1, U_1 \leq u_2)
+\newline
+&amp;amp;=
+\mathbb{P}(U_1 \leq \min \{u_1, u_2\})
+\newline
+&amp;amp;=
+\min \{u_1, u_2\}.
+\end{align}
+The comonotonicity copula has perfect positive dependence.
+Note that \(X_2 = 2X_1\) can be replaced by \(X_2 = T(X_1)\) for any strictly increasing transformation \(T\).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Example 3&lt;/strong&gt; (Countermonotonicity copula).
+Similar to the previous example, we consider perfect negative dependence.
+Let \(X_2 = -2X_1\), then
+$$F_1(x) = \mathbb{P}(X_1 \leq x) = \mathbb{P}(-2 X_1 \geq -2x) = \mathbb{P}(X_2 \geq -2x) = 1 - F_2(-2x),$$
+and
+$$U_1 = F_1(X_1) = 1-F_2(-2X_1) = 1-F_2(X_2) = 1-U_2.$$
+The copula is
+\begin{align}
+C(u_1, u_2)
+&amp;amp;=
+\mathbb{P}(U_1 \leq u_1, U_2 \leq u_2)
+\newline
+&amp;amp;=
+\mathbb{P}(U_1 \leq u_1, 1-U_1 \leq u_2)
+\newline
+&amp;amp;=
+\mathbb{P}(1 - u_2 \leq U_1 \leq u_1)
+\newline
+&amp;amp;=
+\max \{u_1 + u_2 - 1, 0\}.
+\end{align}
+The countermonotonicity copula is the copula of \(X_2 = T(X_1)\) for any strictly decreasing transformation \(T\).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Example 4&lt;/strong&gt; (Bivariate Gaussian copula).
+The previous examples are all extreme cases, with either perfect dependence or independence.
+We now introduce a copula that is derived from the bivariate Gaussian distribution.
+Consider
+$$\begin{pmatrix}
+X_1 \newline
+X_2
+\end{pmatrix}  \sim \mathcal{N} \left( \begin{pmatrix}
+0 \newline
+0
+\end{pmatrix} , \begin{pmatrix}
+1 &amp;amp; \rho \newline
+\rho &amp;amp; 1
+\end{pmatrix} \right).$$
+The copula is
+\begin{align}
+C(u_1, u_2)
+&amp;amp;=
+\mathbb{P}(U_1 \leq u_1, U_2 \leq u_2)
+\newline
+&amp;amp;=
+\mathbb{P}(X_1 \leq \Phi^{-1}(u_1), X_2 \leq \Phi^{-1}(u_2))
+\newline
+&amp;amp;=
+\Phi_2(\Phi^{-1}(u_1), \Phi^{-1}(u_2); \rho),
+\end{align}
+where \(\Phi\) is the CDF of a standard normal distribution and \(\Phi_2(\cdot; \rho)\) is the joint CDF of \((X_1, X_2)\).
+Also different from the previous example, this is the first parametric copula family we have introduced.
+Just like other parametric distribution families, the Gaussian copula has a parameter \(\rho\) controlling the strength of dependence.&lt;/p&gt;
+
+&lt;h2 id=&#34;3-common-parametric-copula-families&#34;&gt;3. Common parametric copula families&lt;/h2&gt;
+
+&lt;p&gt;We now give a more general definition of bivariate copulas.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Definition 1.&lt;/strong&gt;
+A bivariate copula \(C: [0,1]^2 \to [0,1]\) is a function which is a bivariate cumulative distribution function with uniform marginals.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The copulas we have introduced so far are all derived from bivariate distributions. In other words, it goes from the joint distribution \(F\) on the left-hand side of the following equation to the copula \(C\) and marginals \(F_j\) on the right-hand side.
+$$F(x_1, x_2) = C(F_1(x_1), F_2(x_2)).$$&lt;/p&gt;
+
+&lt;p&gt;Given the general definition of copula, some copula families \(C\) can further be defined explicitly.
+This allows us to go from the right-hand side to the left-hand side; that is, linking two marginals using a copula to get a joint distribution.&lt;/p&gt;
+
+&lt;p&gt;Below are shown some commonly used parametric bivariate copula families, where \(\rho, \nu\) and \(\delta\) are the parameters.&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Copula family&lt;/th&gt;
+&lt;th&gt;Copula CDF&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Gaussian&lt;/td&gt;
+&lt;td&gt;\(\Phi_2 \left( \Phi^{-1}(u_1), \Phi^{-1}(u_2); \rho \right)\)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;t&lt;/td&gt;
+&lt;td&gt;\( T_{2, \nu} \left(T_{1, \nu}^{-1}(u_1), T_{1, \nu}^{-1}(u_2); \rho \right) \)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Frank&lt;/td&gt;
+&lt;td&gt;\( -\delta^{-1} \log \left( \frac{1 - e^{-\delta} - (1 - e^{-\delta u_1}) (1 - e^{-\delta u_2})} {1-e^{-\delta}} \right) \)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;MTCJ&lt;/td&gt;
+&lt;td&gt;\( (u_1^{-\delta} + u_2^{-\delta} - 1)^{-1/\delta} \)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Joe&lt;/td&gt;
+&lt;td&gt;\( 1 - \left( (1-u_1)^{\delta} + (1-u_2)^{\delta} - (1-u_1)^{\delta} (1-u_2)^{\delta} \right)^{1/\delta} \)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Gumbel&lt;/td&gt;
+&lt;td&gt;\( \exp \left( -\left( (-\log u_1)^{\delta} + (-\log u_2)^{\delta} \right)^{1/\delta} \right) \)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Figure 1 shows the constructed bivariate joint distributions using the copula families above and univariate standard normal distributions (i.e., \(F_1 = F_2 = \Phi\)).&lt;/p&gt;
+
+&lt;h2 id=&#34;4-fréchet-hoeffding-bounds&#34;&gt;4. Fréchet&amp;ndash;Hoeffding bounds&lt;/h2&gt;
+
+&lt;p&gt;As hinted before, the comonotonicity and countermonotonicity copulas are two extreme cases: perfect positive dependence and perfect negative dependence.
+This is further stated by the following theorem.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Theorem 1&lt;/strong&gt; (Fréchet&amp;ndash;Hoeffding bounds).&lt;br /&gt;
+For any copula \( C:[0,1]^2 \to [0,1] \) and any \( (u_1, u_2) \in [0,1]^2 \), the following bounds hold:
+$$\max \{ u_1+u_2-1, 0 \} \leq C(u_1, u_2) \leq \min \{ u_1, u_2 \}.$$&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Figure 2 shows the upper and lower bounds in green and blue respectively.
+By the theorem, every copula lies between the two surfaces.&lt;/p&gt;
+
+&lt;p&gt;&lt;div id=&#34;fh_bounds&#34;&gt;&lt;/div&gt;
+&lt;figcaption&gt;Figure 2: Fréchet&amp;ndash;Hoeffding bounds. The figure is interactive. &lt;/figcaption&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;5-reflected-copula&#34;&gt;5. Reflected copula&lt;/h2&gt;
+
+&lt;p&gt;Given \( (U_1, U_2) \sim C \), the reflected copula \(\widehat{C}\) is defined as the copula of \( (1-U_1, 1-U_2) \). That is,
+\begin{align}
+\widehat{C}(u_1, u_2) &amp;amp;=
+\mathbb{P}(1 - U_1 \leq u_1, 1 - U_2 &amp;gt; u_2)
+\newline
+&amp;amp;=
+\mathbb{P}(U_1 \geq 1 - u_1, U_2 \geq 1 - u_2).
+\end{align}&lt;/p&gt;
+
+&lt;p&gt;The reflected copula \(\widehat{C}\) is handy when studying the upper and lower tail properties of a copula, as we will see later.
+To facilitate the analysis, we calculate the following probability (survival function):
+\begin{align}
+\mathbb{P}(U_1 &amp;gt; v_1, U_2 &amp;gt; v_2)
+&amp;amp;=
+1 - \mathbb{P}(U_1 \leq v_1 \mbox{ or } U_2 \leq v_2)
+\newline
+&amp;amp;=
+1 - \mathbb{P}(U_1 \leq v_1) - \mathbb{P}(U_2 \leq v_2) + \mathbb{P}(U_1 \leq v_1, U_2 \leq v_2)
+\newline
+&amp;amp;=
+1 -  v_1 - v_2 + C(v_1, v_2).
+\end{align}
+The second equality is due to the &lt;a href=&#34;https://en.wikipedia.org/wiki/Inclusion%E2%80%93exclusion_principle&#34;&gt;inclusion–exclusion principle&lt;/a&gt;.
+Finally, we have
+$$\widehat{C}(u_1, u_2) = u_1 + u_2 - 1 + C(1-u_1, 1-u_2).$$&lt;/p&gt;
+
+&lt;h2 id=&#34;6-rank-correlation&#34;&gt;6. Rank correlation&lt;/h2&gt;
+
+&lt;p&gt;Correlation coefficients are useful in summarizing the dependence structure between two variables using a single number.
+&lt;a href=&#34;https://en.wikipedia.org/wiki/Pearson_correlation_coefficient&#34;&gt;Pearson&amp;rsquo;s correlation&lt;/a&gt; is probably the most commonly used one.
+However, it is known that Pearson&amp;rsquo;s correlation between \(X\) and \(X^2\) is zero for \(X \sim \mathcal{N} (0, 1)\).
+This is often used as an example to illustrate that Pearson&amp;rsquo;s correlation only measures linear correlation; it is not invariant under increasing transformations.&lt;/p&gt;
+
+&lt;p&gt;In nonparametric statistics, rank correlations, such as &lt;a href=&#34;https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient&#34;&gt;Spearman&amp;rsquo;s rho&lt;/a&gt; and &lt;a href=&#34;https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient&#34;&gt;Kendall&amp;rsquo;s tau&lt;/a&gt;, are defined by the ranks of the data rather than the data itself.
+As a result, they are invariant under increasing transformations.
+Since copulas are also independent of marginals, there should be a natural connection between copulas and rank correlations.
+In fact, both Spearman&amp;rsquo;s rho and Kendall&amp;rsquo;s tau can be defined directly as functionals of the copula.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Spearman&amp;rsquo;s rho:
+$$
+\rho_S( C ) = \iint_{[0,1]^2}
+uv \, \mathrm{d} C(u, v)
+-3.
+$$&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Kendall&amp;rsquo;s tau:
+$$
+\rho_\tau( C ) = \iint_{[0,1]^2}
+C(u, v) \, \mathrm{d} C(u, v).
+$$&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The integrals are &lt;a href=&#34;https://en.wikipedia.org/wiki/Riemann%E2%80%93Stieltjes_integral&#34;&gt;Riemann&amp;ndash;Stieltjes integrals&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The parameters of bivariate copulas in Figure 1 are chosen such that their Kendall&amp;rsquo;s tau all equals 0.5.&lt;/p&gt;
+
+&lt;h2 id=&#34;7-tail-dependence&#34;&gt;7. Tail dependence&lt;/h2&gt;
+
+&lt;p&gt;Apart from correlation coefficients, the coefficient of tail dependence is also an essential measure of dependence. It characterizes the dependence of a bivariate distribution in the extremes, which is important in many financial applications.&lt;/p&gt;
+
+&lt;p&gt;Consider the following bivariate Gaussian distribution
+$$\begin{pmatrix}
+X_1 \newline
+X_2
+\end{pmatrix}  \sim \mathcal{N} \left( \begin{pmatrix}
+0 \newline
+0
+\end{pmatrix} , \begin{pmatrix}
+1 &amp;amp; 0.5 \newline
+0.5 &amp;amp; 1
+\end{pmatrix} \right).$$
+We are interested in the conditional probability \(\mathbb{P}(X_2&amp;gt;t | X_1&amp;gt;t)\); that is, given the event that \(X_1\) is greater than a threshold \(t\), what is the probability that \(X_2\) is also greater than \(t\).&lt;/p&gt;
+
+&lt;!-- ```r
+rmvnorm(10000, sigma = matrix(c(1, 0.5, 0.5, 1), nrow = 2)) %&gt;% 
+    data.frame() %&gt;% 
+    ggplot(aes(x = X1, y = X2)) +
+    geom_point(alpha = 0.2) +
+    geom_hline(yintercept = c(1, 2, 3), color = &#34;red&#34;, alpha = 0.8) +
+    geom_vline(xintercept = c(1, 2, 3), color = &#34;red&#34;, alpha = 0.8) +
+    xlab(latex2exp::TeX(&#34;X_1&#34;)) +
+    ylab(latex2exp::TeX(&#34;X_2&#34;))
+ggsave(&#34;gaussian_tail_dep.png&#34;, width = 4, height = 4)    
+``` --&gt;
+
+&lt;figure&gt;
+    &lt;img src=&#34;gaussian_tail_dep.png&#34; alt=&#34;Tail independence of bivariate Gaussian distributions.&#34; width=&#34;350&#34;/&gt;
+    &lt;figcaption&gt;Figure 3: Tail independence of bivariate Gaussian distributions. Adapted from Donnelly and Embrechts (2010).&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;!-- ```
+sigma &lt;- matrix(c(1, 0.5, 0.5, 1), nrow = 2)
+pmvnorm(lower = c(1, 1), sigma = sigma) / pnorm(1, lower.tail = F)
+pmvnorm(lower = c(2, 2), sigma = sigma) / pnorm(2, lower.tail = F)
+pmvnorm(lower = c(3, 3), sigma = sigma) / pnorm(3, lower.tail = F)
+``` --&gt;
+
+&lt;p&gt;Figure 3 shows 10,000 random samples from the distribution.
+For \(t \in \{1,2,3\}\), the probability can be visually estimated: among the points to the right of \(x=t\), how many of them are above \(y=t\).
+It appears that the probability decreases as \(t\) increases.
+A further numerical calculation gives&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;\(\mathbb{P}(X_2&amp;gt;1 | X_1&amp;gt;1) = 0.39, \)&lt;/li&gt;
+&lt;li&gt;\(\mathbb{P}(X_2&amp;gt;2 | X_1&amp;gt;2) = 0.18, \)&lt;/li&gt;
+&lt;li&gt;\(\mathbb{P}(X_2&amp;gt;3 | X_1&amp;gt;3) = 0.06. \)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In fact, it can be shown that
+$$\lim_{t \to +\infty}\mathbb{P}(X_2&amp;gt;t | X_1&amp;gt;t) = 0. $$&lt;/p&gt;
+
+&lt;p&gt;Interestingly, although \(X_1\) and \(X_2\) are correlated, they behave like independent random variables in the extremes.
+This behavior is called (upper) tail independence.&lt;/p&gt;
+
+&lt;p&gt;Formally, the coefficients of lower and upper tail dependence are defined as follows.
+\begin{align}
+\lambda_l &amp;amp;=
+\lim_{q \to 0^+}
+\mathbb{P} (X_2 \leq F_2^{-1}(q) | X_1 \leq F_1^{-1}(q)),
+\newline
+\lambda_u &amp;amp;=
+\lim_{q \to 1^-}
+\mathbb{P} (X_2 &amp;gt; F_2^{-1}(q) | X_1 &amp;gt; F_1^{-1}(q)),
+\end{align}
+where \( F_j^{-1} \) is the quantile function of \(X_j\).
+A simple derivation shows that the coefficient of lower tail dependence can be expressed by the copula:
+\begin{align}
+\lambda_l
+&amp;amp;=
+\lim_{q \to 0^+}
+\mathbb{P} (U_2 \leq q | U_1 \leq q)
+\newline
+&amp;amp;=
+\lim_{q \to 0^+}
+\frac
+{\mathbb{P} (U_1 \leq q, U_2 \leq q)}
+{\mathbb{P} (U_1 \leq q)}
+\newline
+&amp;amp;=
+\lim_{q \to 0^+}
+\frac{C(q, q)}{q}.
+\end{align}
+Similarly for the upper tail:
+$$
+\lambda_u =
+\lim_{q \to 0^+}
+\frac{\widehat{C}(q, q)}{q}.
+$$
+In Figure 1, t, Joe, and Gumbel copulas have upper tail dependence; t and MTCJ copulas have lower tail dependence.&lt;/p&gt;
+
+&lt;p&gt;As a digression, the &lt;a href=&#34;https://en.wikipedia.org/wiki/Financial_crisis_of_2007%E2%80%932008&#34;&gt;2007&amp;ndash;2008 financial crisis&lt;/a&gt; is partially caused by the misuse of the Gaussian copula model.
+See &lt;a href=&#34;https://www.wired.com/2009/02/wp-quant/&#34;&gt;Salmon (2009)&lt;/a&gt; and &lt;a href=&#34;http://www.macs.hw.ac.uk/~cd134/2010/donemb.pdf&#34;&gt;Donnelly and Embrechts (2010)&lt;/a&gt; for details.
+One of the main disadvantages of the model is that it does not adequately model the occurrence
+of defaults in the underlying portfolio of corporate bonds.
+In times of crisis, corporate defaults occur in clusters, so that if one company defaults then it is likely that other companies also default within a short time period.
+However, under the Gaussian copula model, company defaults become
+independent as their size of default increases, which leads to model inadequacy.&lt;/p&gt;
+
+&lt;!-- ## Multivariate copula construction
+
+Multivariate Gaussian and t copulas, Archimedean copulas, and vine copulas.
+ --&gt;
+
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+
+&lt;p&gt;Donnelly, C., &amp;amp; Embrechts, P. (2010). The devil is in the tails: actuarial mathematics and the subprime mortgage crisis. ASTIN Bulletin: The Journal of the IAA, 40(1), 1-33.&lt;/p&gt;
+
+&lt;p&gt;Joe, H. (2014). Dependence modeling with copulas. Chapman and Hall/CRC.&lt;/p&gt;
+
+&lt;p&gt;Salmon, F. (2009). Recipe for disaster: the formula that killed Wall Street. February 23 2009, Wired Magazine.&lt;/p&gt;
+
+&lt;p&gt;Schmidt, T. (2007). Coping with copulas. Copulas-From theory to application in finance, 3-34.&lt;/p&gt;
+
+&lt;script src=&#34;plotly_figure.js&#34;&gt;&lt;/script&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
