@@ -18,7 +18,7 @@
       <guid>https://bochang.me/blog/posts/latex/</guid>
       <description>
 
-&lt;p&gt;LaTeX is a high-quality typesetting system and the de facto standard for publication of scientific documents. However, I never got a chance to learn how to use it formally. Most of my LaTeX knowledge comes from learning by doing. As I&amp;rsquo;m working on my Ph.D. thesis, I would like to share a few LaTeX tips that I wish I had known earlier. I got most of them from working with my advisors, internship hosts, and collaborators. There is still a lot for me to learn about LaTeX. Any comments and suggestions are welcome!&lt;/p&gt;
+&lt;p&gt;LaTeX is a high-quality typesetting system and the de facto standard for the publication of scientific documents. However, I never got a chance to learn how to use it formally. Most of my LaTeX knowledge comes from learning by doing. As I&amp;rsquo;m working on my Ph.D. thesis, I would like to share a few LaTeX tips that I wish I had known earlier. I got most of them from working with my advisors, internship hosts, and collaborators. There is still a lot for me to learn about LaTeX. Any comments and suggestions are welcome!&lt;/p&gt;
 
 &lt;h2 id=&#34;1-non-breaking-spaces&#34;&gt;1. Non-breaking spaces&lt;/h2&gt;
 
@@ -35,7 +35,7 @@
 
 &lt;h2 id=&#34;2-citations-using-citet-and-citep&#34;&gt;2. Citations using &lt;code&gt;\citet&lt;/code&gt; and &lt;code&gt;\citep&lt;/code&gt;&lt;/h2&gt;
 
-&lt;p&gt;The &lt;code&gt;natbib&lt;/code&gt; package is commonly used for handling references in LaTeX. It is included in the style files by default for many conferences including ICML, NIPS, ICLR, etc. See &lt;a href=&#34;https://gking.harvard.edu/files/natnotes2.pdf&#34; title=&#34;Reference sheet for natbib usage&#34;&gt;here&lt;/a&gt; for a reference sheet for &lt;code&gt;natbib&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;natbib&lt;/code&gt; package is commonly used for handling references in LaTeX. It is included in the style files by default for many conferences including ICML, NIPS, ICLR, etc. See &lt;a href=&#34;https://gking.harvard.edu/files/natnotes2.pdf&#34;&gt;here&lt;/a&gt; for a reference sheet for &lt;code&gt;natbib&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;The two basic citation commands in &lt;code&gt;natbib&lt;/code&gt; are&lt;/p&gt;
 
@@ -207,7 +207,7 @@ The first row is correct because \(n\) represents a variable here.&lt;/p&gt;
 
 &lt;p&gt;Most conferences have strict page limits. More often than not, eight pages are not enough to adequately present a brilliant idea. If only Fermat got more space in the margin!&lt;/p&gt;
 
-&lt;p&gt;A common trick is to use &lt;code&gt;\vspace&lt;/code&gt;. It can reduce the length of a vertical space before or after a section, figure or table. However, this essentially alters the style template. Many formatting instructions explicitly forbid the use of &lt;code&gt;\vspace&lt;/code&gt;. It might even result in the rejection of the paper. From the formatting instructions for AAAI 2019:&lt;/p&gt;
+&lt;p&gt;A common trick is to use &lt;code&gt;\vspace&lt;/code&gt;. It can reduce the length of vertical space before or after a section, figure or table. However, this essentially alters the style template. Many formatting instructions explicitly forbid the use of &lt;code&gt;\vspace&lt;/code&gt;. It might even result in the rejection of the paper. From the formatting instructions for AAAI 2019:&lt;/p&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;if your paper is obviously &amp;ldquo;squeezed&amp;rdquo; it is not going to be accepted.&lt;/p&gt;
