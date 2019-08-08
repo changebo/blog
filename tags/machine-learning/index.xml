@@ -22,7 +22,7 @@
 The UCT algorithm is based on the UCB1 (Upper Confidence Bound) algorithm for the stochastic bandit problem.&lt;/p&gt;
 
 &lt;p&gt;Thankfully, I audited &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/&#34;&gt;Prof. Nick Harvey&lt;/a&gt;&amp;rsquo;s &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/F18-531/&#34;&gt;learning theory course&lt;/a&gt; this semester.
-In one lecture, he gave a remarkably clear exposition of the multi-armed bandit problem and algorithms.
+In one lecture, he gave a clear exposition of the multi-armed bandit problem and algorithms.
 It deepened my understanding of the theoretical properties of the UCB1 algorithm.
 This blog post is mostly a transcription of the lecture; it gives an overview of the regret bound analysis of the explore-first algorithm and UCB1 algorithm. The material is also based on the first chapter of Slivkins (2017).&lt;/p&gt;
 

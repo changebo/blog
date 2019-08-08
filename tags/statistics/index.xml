@@ -401,6 +401,10 @@ Multivariate Gaussian and t copulas, Archimedean copulas, and vine copulas.
 
 &lt;p&gt;Schmidt, T. (2007). Coping with copulas. Copulas-From theory to application in finance, 3-34.&lt;/p&gt;
 
+&lt;script&gt;
+   window.PlotlyConfig = {MathJaxConfig: &#39;local&#39;}
+&lt;/script&gt;
+&lt;script src=&#34;https://cdn.plot.ly/plotly-latest.min.js&#34;&gt;&lt;/script&gt;
 &lt;script src=&#34;plotly_figure.js&#34;&gt;&lt;/script&gt;
 </description>
     </item>

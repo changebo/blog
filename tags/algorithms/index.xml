@@ -96,7 +96,7 @@ Therefore, the cost of the minimum spanning tree \(T\) in Figure 1(a) is at most
 &lt;p&gt;Next, each edge in the minimum spanning tree is replaced by two copies of itself, as shown in Figure 1b.
 The resulting (multi)graph is Eulerian.
 A graph is said to be &lt;a href=&#34;https://en.wikipedia.org/wiki/Eulerian_path&#34;&gt;Eulerian&lt;/a&gt; if there exists a tour that visits every edge exactly once.
-A graph is Eulerian if and only if it is connected and each node has even degree.
+A graph is Eulerian if and only if it is connected and each node has an even degree.
 Given an Eulerian graph, it is easy to construct a traversal of the edges.
 For example, a possible Eulerian tour in Figure 1b is 1&amp;ndash;3&amp;ndash;2&amp;ndash;3&amp;ndash;4&amp;ndash;5&amp;ndash;4&amp;ndash;3&amp;ndash;1.
 Moreover, since the edges are duplicated from the minimum spanning tree, the Eulerian tour has cost at most \(2 \, \mathrm{OPT}\).&lt;/p&gt;
@@ -135,7 +135,7 @@ The same strategy can be carried out to yield a &lt;sup&gt;3&lt;/sup&gt;&amp;fra
     &lt;figcaption&gt;Figure 2: Christofides&amp;rsquo; algorithm.&lt;/figcaption&gt;
 &lt;/figure&gt;&lt;/p&gt;
 
-&lt;p&gt;The algorithm starts again with the minimum spanning tree \(T\). The reason we cannot directly find an Eulerian tour is that its leaf nodes all have degree one.
+&lt;p&gt;The algorithm starts again with the minimum spanning tree \(T\). The reason we cannot directly find an Eulerian tour is that its leaf nodes all have degrees of one.
 However, by the &lt;a href=&#34;https://en.wikipedia.org/wiki/Handshaking_lemma&#34;&gt;handshaking lemma&lt;/a&gt;, there is an even number of odd-degree nodes.
 If these nodes can be paired up, then it becomes an Eulerian graph and we can proceed as before.&lt;/p&gt;
 
@@ -221,7 +221,7 @@ if the computed tour has cost at most \\(2n\\), then there exists a Hamiltonian 
 The UCT algorithm is based on the UCB1 (Upper Confidence Bound) algorithm for the stochastic bandit problem.&lt;/p&gt;
 
 &lt;p&gt;Thankfully, I audited &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/&#34;&gt;Prof. Nick Harvey&lt;/a&gt;&amp;rsquo;s &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/F18-531/&#34;&gt;learning theory course&lt;/a&gt; this semester.
-In one lecture, he gave a remarkably clear exposition of the multi-armed bandit problem and algorithms.
+In one lecture, he gave a clear exposition of the multi-armed bandit problem and algorithms.
 It deepened my understanding of the theoretical properties of the UCB1 algorithm.
 This blog post is mostly a transcription of the lecture; it gives an overview of the regret bound analysis of the explore-first algorithm and UCB1 algorithm. The material is also based on the first chapter of Slivkins (2017).&lt;/p&gt;
 
