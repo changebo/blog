@@ -393,13 +393,15 @@ Multivariate Gaussian and t copulas, Archimedean copulas, and vine copulas.
 
 &lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
 
-&lt;p&gt;Donnelly, C., &amp;amp; Embrechts, P. (2010). The devil is in the tails: actuarial mathematics and the subprime mortgage crisis. ASTIN Bulletin: The Journal of the IAA, 40(1), 1-33.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Donnelly, C., &amp;amp; Embrechts, P. (2010). The devil is in the tails: actuarial mathematics and the subprime mortgage crisis. ASTIN Bulletin: The Journal of the IAA, 40(1), 1-33.&lt;/p&gt;&lt;/li&gt;
 
-&lt;p&gt;Joe, H. (2014). Dependence modeling with copulas. Chapman and Hall/CRC.&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;Joe, H. (2014). Dependence modeling with copulas. Chapman and Hall/CRC.&lt;/p&gt;&lt;/li&gt;
 
-&lt;p&gt;Salmon, F. (2009). Recipe for disaster: the formula that killed Wall Street. February 23 2009, Wired Magazine.&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;Salmon, F. (2009). Recipe for disaster: the formula that killed Wall Street. February 23 2009, Wired Magazine.&lt;/p&gt;&lt;/li&gt;
 
-&lt;p&gt;Schmidt, T. (2007). Coping with copulas. Copulas-From theory to application in finance, 3-34.&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;Schmidt, T. (2007). Coping with copulas. Copulas-From theory to application in finance, 3-34.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;script&gt;
    window.PlotlyConfig = {MathJaxConfig: &#39;local&#39;}
