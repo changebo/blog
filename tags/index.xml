@@ -5,15 +5,24 @@
     <description>Recent content in Tags on Bo&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 08 May 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 10 Aug 2019 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="https://bochang.me/blog/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>machine learning</title>
+      <link>https://bochang.me/blog/tags/machine-learning/</link>
+      <pubDate>Sat, 10 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://bochang.me/blog/tags/machine-learning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>statistics</title>
       <link>https://bochang.me/blog/tags/statistics/</link>
-      <pubDate>Wed, 08 May 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 10 Aug 2019 00:00:00 +0000</pubDate>
       
       <guid>https://bochang.me/blog/tags/statistics/</guid>
       <description></description>
@@ -25,15 +34,6 @@
       <pubDate>Sun, 10 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>https://bochang.me/blog/tags/algorithms/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>machine learning</title>
-      <link>https://bochang.me/blog/tags/machine-learning/</link>
-      <pubDate>Sat, 08 Dec 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://bochang.me/blog/tags/machine-learning/</guid>
       <description></description>
     </item>
     

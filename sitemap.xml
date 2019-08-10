@@ -4,31 +4,42 @@
   
   <url>
     <loc>https://bochang.me/blog/</loc>
-    <lastmod>2019-05-08T00:00:00+00:00</lastmod>
+    <lastmod>2019-08-10T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://bochang.me/blog/posts/iwae/</loc>
+    <lastmod>2019-08-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bochang.me/blog/posts/</loc>
+    <lastmod>2019-08-10T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://bochang.me/blog/tags/</loc>
+    <lastmod>2019-08-10T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://bochang.me/blog/tags/machine-learning/</loc>
+    <lastmod>2019-08-10T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://bochang.me/blog/tags/statistics/</loc>
+    <lastmod>2019-08-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://bochang.me/blog/posts/copula/</loc>
     <lastmod>2019-05-08T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://bochang.me/blog/posts/</loc>
-    <lastmod>2019-05-08T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://bochang.me/blog/tags/</loc>
-    <lastmod>2019-05-08T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://bochang.me/blog/tags/statistics/</loc>
-    <lastmod>2019-05-08T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -45,12 +56,6 @@
   <url>
     <loc>https://bochang.me/blog/posts/bandits/</loc>
     <lastmod>2018-12-08T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://bochang.me/blog/tags/machine-learning/</loc>
-    <lastmod>2018-12-08T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
