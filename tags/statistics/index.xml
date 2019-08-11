@@ -93,7 +93,7 @@ It is obvious that the estimator is unbiased, i.e., $\mathbb{E}_{z_i \sim q(z|x)
 
 &lt;h2 id=&#34;importance-weighted-autoencoders&#34;&gt;Importance weighted autoencoders&lt;/h2&gt;
 
-&lt;p&gt;What we have done so far is first to define the ELBO $\mathcal{L}$ as a lower bound of $\log p(x)$, and then to estimate it by $\widehat{\mathcal{L}}_k^{\mathrm{ELBO}}$.
+&lt;p&gt;What we have described so far is first to define the ELBO $\mathcal{L}$ as a lower bound of $\log p(x)$, and then to estimate it by $\widehat{\mathcal{L}}_k^{\mathrm{ELBO}}$.
 An alternative approach is to approximate the expectation (inside the logarithm function) in Equation \ref{eq:marginal} by Monte Carlo, which leads to the importance weighted autoencoders (IWAE) estimator:
 $$
 \widehat{\mathcal{L}}_k^{\mathrm{IWAE}} :=
