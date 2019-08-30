@@ -249,7 +249,7 @@ In this post, I give a short introduction to (bivariate) copulas.
 Other references on this topic include an introduction by &lt;a href=&#34;http://www.angelfire.com/falcon/isinotes/mult/cop1.pdf&#34;&gt;Schmidt (2007)&lt;/a&gt; and a monograph by my Ph.D. advisor &lt;a href=&#34;https://www.crcpress.com/Dependence-Modeling-with-Copulas/Joe/p/book/9781466583221&#34;&gt;Joe (2014)&lt;/a&gt;.&lt;/p&gt;
 
 &lt;figure&gt;
-    &lt;img src=&#34;normal_plots.png&#34; alt=&#34;Contour plots of density function.&#34; width=&#34;600&#34;/&gt;
+    &lt;img src=&#34;normal_plots.png&#34; alt=&#34;Contour plots of density function.&#34; width=&#34;600&#34;&gt;
     &lt;figcaption&gt;Figure 1: Contour plots of density functions.&lt;/figcaption&gt;
 &lt;/figure&gt;
 
