@@ -5,7 +5,6 @@
   <url>
     <loc>https://bochang.me/blog/</loc>
     <lastmod>2019-08-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -14,27 +13,23 @@
   </url>
   
   <url>
-    <loc>https://bochang.me/blog/posts/</loc>
-    <lastmod>2019-08-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://bochang.me/blog/tags/</loc>
-    <lastmod>2019-08-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://bochang.me/blog/tags/machine-learning/</loc>
     <lastmod>2019-08-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://bochang.me/blog/posts/</loc>
+    <lastmod>2019-08-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://bochang.me/blog/tags/statistics/</loc>
     <lastmod>2019-08-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://bochang.me/blog/tags/</loc>
+    <lastmod>2019-08-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -43,14 +38,13 @@
   </url>
   
   <url>
-    <loc>https://bochang.me/blog/posts/tsp/</loc>
+    <loc>https://bochang.me/blog/tags/algorithms/</loc>
     <lastmod>2019-02-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://bochang.me/blog/tags/algorithms/</loc>
+    <loc>https://bochang.me/blog/posts/tsp/</loc>
     <lastmod>2019-02-10T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -66,12 +60,10 @@
   <url>
     <loc>https://bochang.me/blog/tags/academic-writing/</loc>
     <lastmod>2018-11-10T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>https://bochang.me/blog/categories/</loc>
-    <priority>0</priority>
   </url>
   
 </urlset>
