@@ -5,10 +5,472 @@
     <description>Recent content in Posts on Bo&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 09 Aug 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 20 Oct 2019 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="https://bochang.me/blog/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Understanding Shapes in PyTorch Distributions Package</title>
+      <link>https://bochang.me/blog/posts/pytorch-distributions/</link>
+      <pubDate>Sun, 20 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://bochang.me/blog/posts/pytorch-distributions/</guid>
+      <description>
+
+&lt;p&gt;The &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html&#34;&gt;&lt;code&gt;torch.distributions&lt;/code&gt;&lt;/a&gt; package implements various probability distributions, as well as methods for sampling and computing statistics.
+It generally follows the design of the &lt;a href=&#34;https://www.tensorflow.org/probability/api_docs/python/tfp/distributions/Distribution&#34;&gt;TensorFlow distributions&lt;/a&gt; package (Dillon et al. 2017).&lt;/p&gt;
+
+&lt;p&gt;There are three types of &amp;ldquo;shapes&amp;rdquo;, sample shape, batch shape, and event shape, that are crucial to understanding the &lt;code&gt;torch.distributions&lt;/code&gt; package.
+The same definition of shapes is also used in other packages, including &lt;a href=&#34;https://gluon-ts.mxnet.io/api/gluonts/gluonts.distribution.html&#34;&gt;GluonTS&lt;/a&gt;, &lt;a href=&#34;http://docs.pyro.ai/en/stable/distributions.html&#34;&gt;Pyro&lt;/a&gt;, etc.&lt;/p&gt;
+
+&lt;p&gt;In this blog post, we describe the different types of shapes and illustrate the differences among them by code examples.
+On top of that, we try to answer a few questions related to the shapes in &lt;code&gt;torch.distributions&lt;/code&gt;.
+All code examples are compatible with PyTorch v1.3.0.&lt;/p&gt;
+
+&lt;h2 id=&#34;three-types-of-shapes&#34;&gt;Three types of shapes&lt;/h2&gt;
+
+&lt;p&gt;The three types of shapes are defined as follows and illustrated in Figure&amp;nbsp;1.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Sample shape&lt;/strong&gt; describes independent, identically distributed draws from the distribution.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Batch shape&lt;/strong&gt; describes independent, not identically distributed draws. Namely, we may have a set of (different) parameterizations to the same distribution. This enables the common use case in machine learning of a batch of examples, each modeled by its own distribution.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Event shape&lt;/strong&gt; describes the shape of a single draw (event space) from the distribution; it may be dependent across dimensions.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;figure&gt;
+    &lt;img src=&#34;shape_sementics.png&#34; alt=&#34;Shape semantics.&#34; width=&#34;500&#34;&gt;
+    &lt;figcaption&gt;Figure 1: Three groups of shapes. Reproduced from Dillon et al. (2017).&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;The definitions above might be difficult to understand.
+We take the Monte Carlo estimation of the evidence lower bound (ELBO) in the variational autoencoder (VAE) as an example to illustrate their differences.
+The average ELBO over a batch of $b$ observations, $x_i$ for $i=1,\ldots,b$, is
+$$
+\mathcal{L} =
+\frac{1}{b}
+\sum_{i=1}^b
+\mathbb{E}_{q(z|x_i)}
+\log\left[ \frac{p(x_i | z) p(z)}{q(z | x_i)} \right],
+$$
+where $z \in \mathbb{R}^s$ is an $s$-dimensional latent vector.
+The ELBO can be estimated by Monte Carlo samples; specifically, for each $x_i$, $n$ samples are drawn from $z_{ij} \overset{\text{i.i.d.}}{\sim} q(z|x_i)$ for $j = 1, \ldots, n$.
+The estimate is then
+$$
+\widehat{\mathcal{L}} =
+\frac{1}{bn}
+\sum_{i=1}^b
+\sum_{j=1}^n
+\log\left[ \frac{p(x_i | z_{ij}) p(z_{ij})}{q(z_{ij} | x_i)} \right].
+$$
+All the Monte Carlos samples $z_{ij}$ can be compactly represented as a tensor of shape $(n, b, s)$ or, correspondingly, &lt;code&gt;[sample_shape, batch_shape, event_shape]&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We also provide mathematical notations for a few combinations of shapes in Table&amp;nbsp;1, for Gaussian random variables/vectors.
+Ignoring subscripts, $X$ represents a random variable, $\mu$ and $\sigma$ are scalars;
+$\mathbf{X}$ denotes a two-dimensional random vector, $\boldsymbol\mu$ is a two-dimensional vector, and $\boldsymbol\Sigma$ is a $2 \times 2$ (not necessarily diagonal) matrix.
+Moreover, &lt;code&gt;[]&lt;/code&gt; and &lt;code&gt;[2]&lt;/code&gt; denote &lt;code&gt;torch.Size([])&lt;/code&gt; and &lt;code&gt;torch.Size([2])&lt;/code&gt;, respectively.
+For each row, the link to a PyTorch code example is also given.&lt;/p&gt;
+
+&lt;div id=&#34;table&#34;&gt;&lt;/div&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;no.&lt;/th&gt;
+&lt;th&gt;sample shape&lt;/th&gt;
+&lt;th&gt;batch shape&lt;/th&gt;
+&lt;th&gt;event shape&lt;/th&gt;
+&lt;th&gt;mathematical notation&lt;/th&gt;
+&lt;th&gt;code&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$X \sim \mathcal{N}(\mu, \sigma^2)$&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#row-1&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$X_1, X_2 \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu, \sigma^2)$&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#row-2&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$X_1 \sim \mathcal{N}(\mu_1, \sigma_1^2)$&lt;br/&gt;$X_2 \sim \mathcal{N}(\mu_2, \sigma_2^2)$&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#row-3&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$\mathbf{X} \sim \mathcal{N}(\boldsymbol\mu, \boldsymbol\Sigma)$&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#row-4&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$\mathbf{X}_1 \sim \mathcal{N}(\boldsymbol\mu_1, \boldsymbol\Sigma_1)$&lt;br/&gt;$\mathbf{X}_2 \sim \mathcal{N}(\boldsymbol\mu_2, \boldsymbol\Sigma_2)$&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#row-5&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$\mathbf{X}_1, \mathbf{X}_2 \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\boldsymbol\mu, \boldsymbol\Sigma)$&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#row-6&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$X_{11}, X_{12} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu_1, \sigma_1^2)$&lt;br/&gt;$X_{21}, X_{22} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu_2, \sigma_2^2)$&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#row-7&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;$\mathbf{X}_{11}, \mathbf{X}_{12} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\boldsymbol\mu_1, \boldsymbol\Sigma_1)$&lt;br/&gt;$\mathbf{X}_{21}, \mathbf{X}_{22} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\boldsymbol\mu_2, \boldsymbol\Sigma_2)$&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#row-8&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;figcaption&gt;Table 1: Examples of various combinations of shapes.&lt;/figcaption&gt;
+
+&lt;p&gt;This table is adapted from &lt;a href=&#34;https://ericmjl.github.io/blog/2019/5/29/reasoning-about-shapes-and-probability-distributions/&#34;&gt;this blog post&lt;/a&gt;; you might find the visualization in that post helpful.&lt;/p&gt;
+
+&lt;p&gt;Every &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html#torch.distributions.distribution.Distribution&#34;&gt;&lt;code&gt;Distribution&lt;/code&gt;&lt;/a&gt; class has instance attributes &lt;code&gt;batch_shape&lt;/code&gt; and &lt;code&gt;event_shape&lt;/code&gt;.
+Furthermore, each class also has a method &lt;code&gt;.sample&lt;/code&gt;, which takes &lt;code&gt;sample_shape&lt;/code&gt; as an argument and generates samples from the distribution.
+Note that &lt;code&gt;sample_shape&lt;/code&gt; is not an instance attribute because, conceptually, it is not associated with a distribution.&lt;/p&gt;
+
+&lt;h2 id=&#34;what-is-the-difference-between-normal-and-multivariatenormal&#34;&gt;What is the difference between &lt;code&gt;Normal&lt;/code&gt; and &lt;code&gt;MultivariateNormal&lt;/code&gt;?&lt;/h2&gt;
+
+&lt;p&gt;There are two distribution classes that correspond to normal distributions: the univariate normal&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;torch.distributions.normal.Normal(loc, scale, validate_args=None)&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and the multivariate normal&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;torch.distributions.multivariate_normal.MultivariateNormal(loc, 
+covariance_matrix=None, precision_matrix=None, scale_tril=None, 
+validate_args=None)&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Since the &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html#normal&#34;&gt;&lt;code&gt;Normal&lt;/code&gt;&lt;/a&gt; class represents univariate normal distributions, the &lt;code&gt;event_shape&lt;/code&gt; of a &lt;code&gt;Normal&lt;/code&gt; instance is always &lt;code&gt;torch.Size([])&lt;/code&gt;.
+Even if the &lt;code&gt;loc&lt;/code&gt; or &lt;code&gt;scale&lt;/code&gt; arguments are high-order tensors, their &amp;ldquo;shapes&amp;rdquo; will go to &lt;code&gt;batch_shape&lt;/code&gt;.
+For example,&lt;/p&gt;
+
+&lt;!-- ```
+normal = Normal(torch.randn(5, 3, 2), torch.ones(5, 3, 2))
+(normal.batch_shape, normal.event_shape)
+```
+ --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; normal = Normal(torch.randn(5, 3, 2), torch.ones(5, 3, 2))
+&amp;gt;&amp;gt;&amp;gt; (normal.batch_shape, normal.event_shape)
+(torch.Size([5, 3, 2]), torch.Size([]))&lt;/pre&gt;&lt;/div&gt;
+&lt;!-- ```
+mvn = MultivariateNormal(torch.randn(5, 3, 2), torch.eye(2))
+(mvn.batch_shape, mvn.event_shape)
+``` --&gt;
+
+&lt;p&gt;In contrast, for &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html#multivariatenormal&#34;&gt;&lt;code&gt;MultivariateNormal&lt;/code&gt;&lt;/a&gt;, the &lt;code&gt;batch_shape&lt;/code&gt; and &lt;code&gt;event_shape&lt;/code&gt; can be inferred from the shape of &lt;code&gt;covariance_matrix&lt;/code&gt;.
+In the following example, the covariance matrix &lt;code&gt;torch.eye(2)&lt;/code&gt; is $2 \times 2$ matrix, so it can be inferred that the &lt;code&gt;event_shape&lt;/code&gt; should be &lt;code&gt;[2]&lt;/code&gt; and the &lt;code&gt;batch_shape&lt;/code&gt; is &lt;code&gt;[5, 3]&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; mvn = MultivariateNormal(torch.randn(5, 3, 2), torch.eye(2))
+&amp;gt;&amp;gt;&amp;gt; (mvn.batch_shape, mvn.event_shape)
+(torch.Size([5, 3]), torch.Size([2]))&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;what-does-expand-do&#34;&gt;What does &lt;code&gt;.expand&lt;/code&gt; do?&lt;/h2&gt;
+
+&lt;p&gt;Every &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html#torch.distributions.distribution.Distribution&#34;&gt;&lt;code&gt;Distribution&lt;/code&gt;&lt;/a&gt; instance has an &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html#torch.distributions.distribution.Distribution.expand&#34;&gt;&lt;code&gt;.expand&lt;/code&gt;&lt;/a&gt; method. Its docstring is as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#00f;font-weight:bold&#34;&gt;Distribution&lt;/span&gt;(&lt;span style=&#34;color:#008000&#34;&gt;object&lt;/span&gt;):
+
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#00f&#34;&gt;expand&lt;/span&gt;(self, batch_shape, _instance&lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt;None):
+        &lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Returns a new distribution instance (or populates an existing instance
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        provided by a derived class) with batch dimensions expanded to
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        `batch_shape`. This method calls :class:`~torch.Tensor.expand` on
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        the distribution&amp;#39;s parameters. As such, this does not allocate new
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        memory for the expanded distribution instance. Additionally,
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        this does not repeat any args checking or parameter broadcasting in
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        `__init__.py`, when an instance is first created.
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Args:
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            batch_shape (torch.Size): the desired expanded size.
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            _instance: new instance provided by subclasses that
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;                need to override `.expand`.
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Returns:
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            New distribution instance with batch dimensions expanded to
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            `batch_size`.
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;raise&lt;/span&gt; &lt;span style=&#34;color:#d2413a;font-weight:bold&#34;&gt;NotImplementedError&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;!-- ```
+mvn = MultivariateNormal(torch.randn(2), torch.eye(2))
+(mvn.batch_shape, mvn.event_shape)
+new_batch_shape = torch.Size([5])
+expanded_mvn = mvn.expand(new_batch_shape)
+(expanded_mvn.batch_shape, expanded_mvn.event_shape)
+expanded_mvn.loc
+batched_mvn = MultivariateNormal(torch.randn(5, 2), torch.eye(2))
+(batched_mvn.batch_shape, batched_mvn.event_shape)
+batched_mvn.loc
+``` --&gt;
+
+&lt;p&gt;In essentially creates a new distribution instance by expanding the &lt;code&gt;batch_shape&lt;/code&gt;.
+For example, if we define a &lt;code&gt;MultivariateNormal&lt;/code&gt; instance with a &lt;code&gt;batch_shape&lt;/code&gt; of &lt;code&gt;[]&lt;/code&gt; and an &lt;code&gt;event_shape&lt;/code&gt; of &lt;code&gt;[2]&lt;/code&gt;,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; mvn = MultivariateNormal(torch.randn(2), torch.eye(2))
+&amp;gt;&amp;gt;&amp;gt; (mvn.batch_shape, mvn.event_shape)
+(torch.Size([]), torch.Size([2]))&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;it can be expanded to a new instance that have a &lt;code&gt;batch_shape&lt;/code&gt; of &lt;code&gt;[5]&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; new_batch_shape = torch.Size([5])
+&amp;gt;&amp;gt;&amp;gt; expanded_mvn = mvn.expand(new_batch_shape)
+&amp;gt;&amp;gt;&amp;gt; (expanded_mvn.batch_shape, expanded_mvn.event_shape)
+(torch.Size([5]), torch.Size([2]))&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note that no new memory is allocated in this process; therefore, all batch dimensions have the same location parameter.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; expanded_mvn.loc
+tensor([[-2.2299,  0.0122],
+        [-2.2299,  0.0122],
+        [-2.2299,  0.0122],
+        [-2.2299,  0.0122],
+        [-2.2299,  0.0122]])&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This can be compared with the following example with the same &lt;code&gt;batch_shape&lt;/code&gt; of &lt;code&gt;[5]&lt;/code&gt; and &lt;code&gt;event_shape&lt;/code&gt; of &lt;code&gt;[2]&lt;/code&gt;.
+However, the batch dimensions have different location parameters.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; batched_mvn = MultivariateNormal(torch.randn(5, 2), torch.eye(2))
+&amp;gt;&amp;gt;&amp;gt; (batched_mvn.batch_shape, batched_mvn.event_shape)
+(torch.Size([5]), torch.Size([2]))
+&amp;gt;&amp;gt;&amp;gt; batched_mvn.loc
+tensor([[-0.3935, -0.7844],
+        [ 0.3310,  0.9311],
+        [-0.8141, -0.2252],
+        [ 2.4199, -0.5444],
+        [ 0.5586,  1.0157]])&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;what-is-the-independent-class&#34;&gt;What is the &lt;code&gt;Independent&lt;/code&gt; class?&lt;/h2&gt;
+
+&lt;p&gt;The &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html#independent&#34;&gt;&lt;code&gt;Independent&lt;/code&gt;&lt;/a&gt; class does not represent any probability distribution.
+Instead, it creates a new distribution instance by &amp;ldquo;reinterpreting&amp;rdquo; some of the batch shapes of an existing distribution as event shapes.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;torch.distributions.independent.Independent(base_distribution, 
+reinterpreted_batch_ndims, validate_args=None)&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The first argument &lt;code&gt;base_distribution&lt;/code&gt; is self-explanatory; the second argument &lt;code&gt;reinterpreted_batch_ndims&lt;/code&gt; is the number of batch shapes to be reinterpreted as event shapes.&lt;/p&gt;
+
+&lt;p&gt;The usage of the &lt;code&gt;Independent&lt;/code&gt; class can be illustrated by the following example.
+We start with a &lt;code&gt;Normal&lt;/code&gt; instance with a &lt;code&gt;batch_shape&lt;/code&gt; of &lt;code&gt;[5, 3, 2]&lt;/code&gt; and an &lt;code&gt;event_shape&lt;/code&gt; of &lt;code&gt;[]&lt;/code&gt;.&lt;/p&gt;
+
+&lt;!-- ```
+loc = torch.zeros(5, 3, 2)
+scale = torch.ones(2)
+normal = Normal(loc, scale)
+[normal.batch_shape, normal.event_shape]
+``` --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; loc = torch.zeros(5, 3, 2)
+&amp;gt;&amp;gt;&amp;gt; scale = torch.ones(2)
+&amp;gt;&amp;gt;&amp;gt; normal = Normal(loc, scale)
+&amp;gt;&amp;gt;&amp;gt; [normal.batch_shape, normal.event_shape]
+[torch.Size([5, 3, 2]), torch.Size([])]&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;An &lt;code&gt;Independent&lt;/code&gt; instance can reinterpret the last &lt;code&gt;batch_shape&lt;/code&gt; as the &lt;code&gt;event_shape&lt;/code&gt;.
+As a result, the new &lt;code&gt;batch_shape&lt;/code&gt; is &lt;code&gt;[5, 3]&lt;/code&gt;, and the &lt;code&gt;event_shape&lt;/code&gt; now becomes &lt;code&gt;[2]&lt;/code&gt;.&lt;/p&gt;
+
+&lt;!-- ```
+normal_ind_1 = Independent(normal, 1)
+[normal_ind_1.batch_shape, normal_ind_1.event_shape]
+``` --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; normal_ind_1 = Independent(normal, 1)
+&amp;gt;&amp;gt;&amp;gt; [normal_ind_1.batch_shape, normal_ind_1.event_shape]
+[torch.Size([5, 3]), torch.Size([2])]&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The instance &lt;code&gt;normal_ind_1&lt;/code&gt; is essentially the same as the following &lt;code&gt;MultivariateNormal&lt;/code&gt; instance:&lt;/p&gt;
+
+&lt;!-- ```
+mvn = MultivariateNormal(loc, torch.diag(scale))
+[mvn.batch_shape, mvn.event_shape]
+``` --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; mvn = MultivariateNormal(loc, torch.diag(scale))
+&amp;gt;&amp;gt;&amp;gt; [mvn.batch_shape, mvn.event_shape]
+[torch.Size([5, 3]), torch.Size([2])]&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We can further reinterpret more batch shapes as event shapes:&lt;/p&gt;
+
+&lt;!-- ```
+normal_ind_1_ind_1 = Independent(normal_ind_1, 1)
+[normal_ind_1_ind_1.batch_shape, normal_ind_1_ind_1.event_shape]
+``` --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; normal_ind_1_ind_1 = Independent(normal_ind_1, 1)
+&amp;gt;&amp;gt;&amp;gt; [normal_ind_1_ind_1.batch_shape, normal_ind_1_ind_1.event_shape]
+[torch.Size([5]), torch.Size([3, 2])&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;or equivalently,&lt;/p&gt;
+
+&lt;!-- ```
+normal_ind_2 = Independent(normal, 2)
+[normal_ind_2.batch_shape, normal_ind_2.event_shape]
+``` --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; normal_ind_2 = Independent(normal, 2)
+&amp;gt;&amp;gt;&amp;gt; [normal_ind_2.batch_shape, normal_ind_2.event_shape]
+[torch.Size([5]), torch.Size([3, 2])]&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;pytorch-code-examples&#34;&gt;PyTorch code examples&lt;/h2&gt;
+
+&lt;p&gt;In this section, code examples for each row in the &lt;a href=&#34;#table&#34;&gt;Table&amp;nbsp;1&lt;/a&gt; are provided.
+The following &lt;code&gt;import&lt;/code&gt; statements are needed for the examples.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#00f;font-weight:bold&#34;&gt;torch&lt;/span&gt;
+&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;from&lt;/span&gt; &lt;span style=&#34;color:#00f;font-weight:bold&#34;&gt;torch.distributions.normal&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;import&lt;/span&gt; Normal
+&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;from&lt;/span&gt; &lt;span style=&#34;color:#00f;font-weight:bold&#34;&gt;torch.distributions.multivariate_normal&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;import&lt;/span&gt; MultivariateNormal&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;row-1&#34;&gt;Row 1: &lt;code&gt;[], [], []&lt;/code&gt;&lt;/h3&gt;
+
+&lt;!-- ```
+dist = Normal(0.0, 1.0)
+sample_shape = torch.Size([])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = Normal(0.0, 1.0)
+&amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([])
+&amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
+tensor(-1.3349)
+&amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
+(torch.Size([]), torch.Size([]), torch.Size([]))&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;row-2&#34;&gt;Row 2: &lt;code&gt;[2], [], []&lt;/code&gt;&lt;/h3&gt;
+
+&lt;!-- ```
+dist = Normal(0.0, 1.0)
+sample_shape = torch.Size([2])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = Normal(0.0, 1.0)
+&amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([2])
+&amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
+tensor([ 0.2786, -1.4113])
+&amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
+(torch.Size([2]), torch.Size([]), torch.Size([]))&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;row-3&#34;&gt;Row 3: &lt;code&gt;[], [2], []&lt;/code&gt;&lt;/h3&gt;
+
+&lt;!-- ```
+dist = Normal(torch.zeros(2), torch.ones(2))
+sample_shape = torch.Size([])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = Normal(torch.zeros(2), torch.ones(2))
+&amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([])
+&amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
+tensor([0.0101, 0.6976])
+&amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
+(torch.Size([]), torch.Size([2]), torch.Size([]))&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;row-4&#34;&gt;Row 4: &lt;code&gt;[], [], [2]&lt;/code&gt;&lt;/h3&gt;
+
+&lt;!-- ```
+dist = MultivariateNormal(torch.zeros(2), torch.eye(2))
+sample_shape = torch.Size([])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = MultivariateNormal(torch.zeros(2), torch.eye(2))
+&amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([])
+&amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
+tensor([ 0.2880, -1.6795])
+&amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
+(torch.Size([]), torch.Size([]), torch.Size([2]))&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;row-5&#34;&gt;Row 5: &lt;code&gt;[], [2], [2]&lt;/code&gt;&lt;/h3&gt;
+
+&lt;!-- ```
+dist = MultivariateNormal(torch.zeros(2, 2), torch.eye(2))
+sample_shape = torch.Size([])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = MultivariateNormal(torch.zeros(2, 2), torch.eye(2))
+&amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([])
+&amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
+tensor([[-0.4703,  0.4152],
+        [-1.6471, -0.6276]])
+&amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
+(torch.Size([]), torch.Size([2]), torch.Size([2]))&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;row-6&#34;&gt;Row 6: &lt;code&gt;[2], [], [2]&lt;/code&gt;&lt;/h3&gt;
+
+&lt;!-- ```
+dist = MultivariateNormal(torch.zeros(2), torch.eye(2))
+sample_shape = torch.Size([2])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = MultivariateNormal(torch.zeros(2), torch.eye(2))
+&amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([2])
+&amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
+tensor([[ 2.2040, -0.7195],
+        [-0.4787,  0.0895]])
+&amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
+(torch.Size([2]), torch.Size([]), torch.Size([2]))&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;row-7&#34;&gt;Row 7: &lt;code&gt;[2], [2], []&lt;/code&gt;&lt;/h3&gt;
+
+&lt;!-- ```
+dist = Normal(torch.zeros(2), torch.ones(2))
+sample_shape = torch.Size([2])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = Normal(torch.zeros(2), torch.ones(2))
+&amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([2])
+&amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
+tensor([[ 0.2639,  0.9083],
+        [-0.7536,  0.5296]])
+&amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
+(torch.Size([2]), torch.Size([2]), torch.Size([]))&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;row-8&#34;&gt;Row 8: &lt;code&gt;[2], [2], [2]&lt;/code&gt;&lt;/h3&gt;
+
+&lt;!-- ```
+dist = MultivariateNormal(torch.zeros(2, 2), torch.eye(2))
+sample_shape = torch.Size([2])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = MultivariateNormal(torch.zeros(2, 2), torch.eye(2))
+&amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([2])
+&amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
+tensor([[[ 0.4683,  0.6118],
+         [ 1.0697, -0.0856]],
+
+        [[-1.3001, -0.1734],
+         [ 0.4705, -0.0404]]])
+&amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
+(torch.Size([2]), torch.Size([2]), torch.Size([2]))&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dillon, J. V., Langmore, I., Tran, D., Brevdo, E., Vasudevan, S., Moore, D., &amp;hellip; &amp;amp; Saurous, R. A. (2017). Tensorflow distributions. arXiv preprint arXiv:1711.10604.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Importance Weighted Autoencoders and Jackknife Methods</title>
