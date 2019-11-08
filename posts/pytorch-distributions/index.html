@@ -263,7 +263,7 @@ batched_mvn = MultivariateNormal(torch.randn(5, 2), torch.eye(2))
 batched_mvn.loc
 ``` -->
 
-<p>In essentially creates a new distribution instance by expanding the <code>batch_shape</code>.
+<p>It essentially creates a new distribution instance by expanding the <code>batch_shape</code>.
 For example, if we define a <code>MultivariateNormal</code> instance with a <code>batch_shape</code> of <code>[]</code> and an <code>event_shape</code> of <code>[2]</code>,</p>
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4">&gt;&gt;&gt; mvn = MultivariateNormal(torch.randn(2), torch.eye(2))
 &gt;&gt;&gt; (mvn.batch_shape, mvn.event_shape)
