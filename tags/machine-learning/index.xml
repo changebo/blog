@@ -16,33 +16,21 @@
       <pubDate>Sun, 20 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>https://bochang.me/blog/posts/pytorch-distributions/</guid>
-      <description>
-
-&lt;p&gt;The &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html&#34;&gt;&lt;code&gt;torch.distributions&lt;/code&gt;&lt;/a&gt; package implements various probability distributions, as well as methods for sampling and computing statistics.
+      <description>&lt;p&gt;The &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html&#34;&gt;&lt;code&gt;torch.distributions&lt;/code&gt;&lt;/a&gt; package implements various probability distributions, as well as methods for sampling and computing statistics.
 It generally follows the design of the &lt;a href=&#34;https://www.tensorflow.org/probability/api_docs/python/tfp/distributions/Distribution&#34;&gt;TensorFlow distributions&lt;/a&gt; package (Dillon et al. 2017).&lt;/p&gt;
-
 &lt;p&gt;There are three types of &amp;ldquo;shapes&amp;rdquo;, sample shape, batch shape, and event shape, that are crucial to understanding the &lt;code&gt;torch.distributions&lt;/code&gt; package.
 The same definition of shapes is also used in other packages, including &lt;a href=&#34;https://gluon-ts.mxnet.io/api/gluonts/gluonts.distribution.html&#34;&gt;GluonTS&lt;/a&gt;, &lt;a href=&#34;http://docs.pyro.ai/en/stable/distributions.html&#34;&gt;Pyro&lt;/a&gt;, etc.&lt;/p&gt;
-
 &lt;p&gt;In this blog post, we describe the different types of shapes and illustrate the differences among them by code examples.
 On top of that, we try to answer a few questions related to the shapes in &lt;code&gt;torch.distributions&lt;/code&gt;.
 All code examples are compatible with PyTorch v1.3.0.&lt;/p&gt;
-
 &lt;h2 id=&#34;three-types-of-shapes&#34;&gt;Three types of shapes&lt;/h2&gt;
-
-&lt;p&gt;The three types of shapes are defined as follows and illustrated in Figure&amp;nbsp;1.&lt;/p&gt;
-
+&lt;p&gt;The three types of shapes are defined as follows and illustrated in Figure 1.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;strong&gt;Sample shape&lt;/strong&gt; describes independent, identically distributed draws from the distribution.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Batch shape&lt;/strong&gt; describes independent, not identically distributed draws. Namely, we may have a set of (different) parameterizations to the same distribution. This enables the common use case in machine learning of a batch of examples, each modeled by its own distribution.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Event shape&lt;/strong&gt; describes the shape of a single draw (event space) from the distribution; it may be dependent across dimensions.&lt;/li&gt;
 &lt;/ol&gt;
-
-&lt;figure&gt;
-    &lt;img src=&#34;shape_sementics.png&#34; alt=&#34;Shape semantics.&#34; width=&#34;500&#34;&gt;
-    &lt;figcaption&gt;Figure 1: Three groups of shapes. Reproduced from Dillon et al. (2017).&lt;/figcaption&gt;
-&lt;/figure&gt;
-
+&lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;The definitions above might be difficult to understand.
 We take the Monte Carlo estimation of the evidence lower bound (ELBO) in the variational autoencoder (VAE) as an example to illustrate their differences.
 The average ELBO over a batch of $b$ observations, $x_i$ for $i=1,\ldots,b$, is
@@ -64,15 +52,12 @@ $$
 \log\left[ \frac{p(x_i | z_{ij}) p(z_{ij})}{q(z_{ij} | x_i)} \right].
 $$
 All the Monte Carlos samples $z_{ij}$ can be compactly represented as a tensor of shape $(n, b, s)$ or, correspondingly, &lt;code&gt;[sample_shape, batch_shape, event_shape]&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;We also provide mathematical notations for a few combinations of shapes in Table&amp;nbsp;1, for Gaussian random variables/vectors.
+&lt;p&gt;We also provide mathematical notations for a few combinations of shapes in Table 1, for Gaussian random variables/vectors.
 Ignoring subscripts, $X$ represents a random variable, $\mu$ and $\sigma$ are scalars;
 $\mathbf{X}$ denotes a two-dimensional random vector, $\boldsymbol\mu$ is a two-dimensional vector, and $\boldsymbol\Sigma$ is a $2 \times 2$ (not necessarily diagonal) matrix.
 Moreover, &lt;code&gt;[]&lt;/code&gt; and &lt;code&gt;[2]&lt;/code&gt; denote &lt;code&gt;torch.Size([])&lt;/code&gt; and &lt;code&gt;torch.Size([2])&lt;/code&gt;, respectively.
 For each row, the link to a PyTorch code example is also given.&lt;/p&gt;
-
-&lt;div id=&#34;table&#34;&gt;&lt;/div&gt;
-
+&lt;!-- raw HTML omitted --&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -84,7 +69,6 @@ For each row, the link to a PyTorch code example is also given.&lt;/p&gt;
 &lt;th&gt;code&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
-
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;1&lt;/td&gt;
@@ -94,7 +78,6 @@ For each row, the link to a PyTorch code example is also given.&lt;/p&gt;
 &lt;td&gt;$X \sim \mathcal{N}(\mu, \sigma^2)$&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;#row-1&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;2&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
@@ -103,16 +86,14 @@ For each row, the link to a PyTorch code example is also given.&lt;/p&gt;
 &lt;td&gt;$X_1, X_2 \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu, \sigma^2)$&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;#row-2&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;3&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;$X_1 \sim \mathcal{N}(\mu_1, \sigma_1^2)$&lt;br/&gt;$X_2 \sim \mathcal{N}(\mu_2, \sigma_2^2)$&lt;/td&gt;
+&lt;td&gt;$X_1 \sim \mathcal{N}(\mu_1, \sigma_1^2)$&lt;!-- raw HTML omitted --&gt;$X_2 \sim \mathcal{N}(\mu_2, \sigma_2^2)$&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;#row-3&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;4&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
@@ -121,16 +102,14 @@ For each row, the link to a PyTorch code example is also given.&lt;/p&gt;
 &lt;td&gt;$\mathbf{X} \sim \mathcal{N}(\boldsymbol\mu, \boldsymbol\Sigma)$&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;#row-4&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;5&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;$\mathbf{X}_1 \sim \mathcal{N}(\boldsymbol\mu_1, \boldsymbol\Sigma_1)$&lt;br/&gt;$\mathbf{X}_2 \sim \mathcal{N}(\boldsymbol\mu_2, \boldsymbol\Sigma_2)$&lt;/td&gt;
+&lt;td&gt;$\mathbf{X}_1 \sim \mathcal{N}(\boldsymbol\mu_1, \boldsymbol\Sigma_1)$&lt;!-- raw HTML omitted --&gt;$\mathbf{X}_2 \sim \mathcal{N}(\boldsymbol\mu_2, \boldsymbol\Sigma_2)$&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;#row-5&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;6&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
@@ -139,122 +118,97 @@ For each row, the link to a PyTorch code example is also given.&lt;/p&gt;
 &lt;td&gt;$\mathbf{X}_1, \mathbf{X}_2 \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\boldsymbol\mu, \boldsymbol\Sigma)$&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;#row-6&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;7&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[]&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;$X_{11}, X_{12} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu_1, \sigma_1^2)$&lt;br/&gt;$X_{21}, X_{22} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu_2, \sigma_2^2)$&lt;/td&gt;
+&lt;td&gt;$X_{11}, X_{12} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu_1, \sigma_1^2)$&lt;!-- raw HTML omitted --&gt;$X_{21}, X_{22} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu_2, \sigma_2^2)$&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;#row-7&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;8&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;[2]&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;$\mathbf{X}_{11}, \mathbf{X}_{12} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\boldsymbol\mu_1, \boldsymbol\Sigma_1)$&lt;br/&gt;$\mathbf{X}_{21}, \mathbf{X}_{22} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\boldsymbol\mu_2, \boldsymbol\Sigma_2)$&lt;/td&gt;
+&lt;td&gt;$\mathbf{X}_{11}, \mathbf{X}_{12} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\boldsymbol\mu_1, \boldsymbol\Sigma_1)$&lt;!-- raw HTML omitted --&gt;$\mathbf{X}_{21}, \mathbf{X}_{22} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\boldsymbol\mu_2, \boldsymbol\Sigma_2)$&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;#row-8&#34;&gt;link&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-
-&lt;figcaption&gt;Table 1: Examples of various combinations of shapes.&lt;/figcaption&gt;
-
+&lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;This table is adapted from &lt;a href=&#34;https://ericmjl.github.io/blog/2019/5/29/reasoning-about-shapes-and-probability-distributions/&#34;&gt;this blog post&lt;/a&gt;; you might find the visualization in that post helpful.&lt;/p&gt;
-
 &lt;p&gt;Every &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html#torch.distributions.distribution.Distribution&#34;&gt;&lt;code&gt;Distribution&lt;/code&gt;&lt;/a&gt; class has instance attributes &lt;code&gt;batch_shape&lt;/code&gt; and &lt;code&gt;event_shape&lt;/code&gt;.
 Furthermore, each class also has a method &lt;code&gt;.sample&lt;/code&gt;, which takes &lt;code&gt;sample_shape&lt;/code&gt; as an argument and generates samples from the distribution.
 Note that &lt;code&gt;sample_shape&lt;/code&gt; is not an instance attribute because, conceptually, it is not associated with a distribution.&lt;/p&gt;
-
 &lt;h2 id=&#34;what-is-the-difference-between-normal-and-multivariatenormal&#34;&gt;What is the difference between &lt;code&gt;Normal&lt;/code&gt; and &lt;code&gt;MultivariateNormal&lt;/code&gt;?&lt;/h2&gt;
-
 &lt;p&gt;There are two distribution classes that correspond to normal distributions: the univariate normal&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;torch.distributions.normal.Normal(loc, scale, validate_args=None)&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;and the multivariate normal&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;torch.distributions.multivariate_normal.MultivariateNormal(loc, 
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;torch.distributions.normal.Normal(loc, scale, validate_args=None)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and the multivariate normal&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;torch.distributions.multivariate_normal.MultivariateNormal(loc, 
 covariance_matrix=None, precision_matrix=None, scale_tril=None, 
-validate_args=None)&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Since the &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html#normal&#34;&gt;&lt;code&gt;Normal&lt;/code&gt;&lt;/a&gt; class represents univariate normal distributions, the &lt;code&gt;event_shape&lt;/code&gt; of a &lt;code&gt;Normal&lt;/code&gt; instance is always &lt;code&gt;torch.Size([])&lt;/code&gt;.
+validate_args=None)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Since the &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html#normal&#34;&gt;&lt;code&gt;Normal&lt;/code&gt;&lt;/a&gt; class represents univariate normal distributions, the &lt;code&gt;event_shape&lt;/code&gt; of a &lt;code&gt;Normal&lt;/code&gt; instance is always &lt;code&gt;torch.Size([])&lt;/code&gt;.
 Even if the &lt;code&gt;loc&lt;/code&gt; or &lt;code&gt;scale&lt;/code&gt; arguments are high-order tensors, their &amp;ldquo;shapes&amp;rdquo; will go to &lt;code&gt;batch_shape&lt;/code&gt;.
 For example,&lt;/p&gt;
-
-&lt;!-- ```
-normal = Normal(torch.randn(5, 3, 2), torch.ones(5, 3, 2))
-(normal.batch_shape, normal.event_shape)
-```
- --&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; normal = Normal(torch.randn(5, 3, 2), torch.ones(5, 3, 2))
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; normal = Normal(torch.randn(5, 3, 2), torch.ones(5, 3, 2))
 &amp;gt;&amp;gt;&amp;gt; (normal.batch_shape, normal.event_shape)
-(torch.Size([5, 3, 2]), torch.Size([]))&lt;/pre&gt;&lt;/div&gt;
-&lt;!-- ```
-mvn = MultivariateNormal(torch.randn(5, 3, 2), torch.eye(2))
-(mvn.batch_shape, mvn.event_shape)
-``` --&gt;
-
+(torch.Size([5, 3, 2]), torch.Size([]))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;In contrast, for &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html#multivariatenormal&#34;&gt;&lt;code&gt;MultivariateNormal&lt;/code&gt;&lt;/a&gt;, the &lt;code&gt;batch_shape&lt;/code&gt; and &lt;code&gt;event_shape&lt;/code&gt; can be inferred from the shape of &lt;code&gt;covariance_matrix&lt;/code&gt;.
 In the following example, the covariance matrix &lt;code&gt;torch.eye(2)&lt;/code&gt; is $2 \times 2$ matrix, so it can be inferred that the &lt;code&gt;event_shape&lt;/code&gt; should be &lt;code&gt;[2]&lt;/code&gt; and the &lt;code&gt;batch_shape&lt;/code&gt; is &lt;code&gt;[5, 3]&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; mvn = MultivariateNormal(torch.randn(5, 3, 2), torch.eye(2))
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; mvn = MultivariateNormal(torch.randn(5, 3, 2), torch.eye(2))
 &amp;gt;&amp;gt;&amp;gt; (mvn.batch_shape, mvn.event_shape)
-(torch.Size([5, 3]), torch.Size([2]))&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&#34;what-does-expand-do&#34;&gt;What does &lt;code&gt;.expand&lt;/code&gt; do?&lt;/h2&gt;
-
+(torch.Size([5, 3]), torch.Size([2]))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;what-does-expand-do&#34;&gt;What does &lt;code&gt;.expand&lt;/code&gt; do?&lt;/h2&gt;
 &lt;p&gt;Every &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html#torch.distributions.distribution.Distribution&#34;&gt;&lt;code&gt;Distribution&lt;/code&gt;&lt;/a&gt; instance has an &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html#torch.distributions.distribution.Distribution.expand&#34;&gt;&lt;code&gt;.expand&lt;/code&gt;&lt;/a&gt; method. Its docstring is as follows:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#00f;font-weight:bold&#34;&gt;Distribution&lt;/span&gt;(&lt;span style=&#34;color:#008000&#34;&gt;object&lt;/span&gt;):
 
     &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#00f&#34;&gt;expand&lt;/span&gt;(self, batch_shape, _instance&lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt;None):
-        &lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;&amp;#34;&amp;#34;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Returns a new distribution instance (or populates an existing instance
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        provided by a derived class) with batch dimensions expanded to
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        `batch_shape`. This method calls :class:`~torch.Tensor.expand` on
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        the distribution&amp;#39;s parameters. As such, this does not allocate new
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        memory for the expanded distribution instance. Additionally,
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        this does not repeat any args checking or parameter broadcasting in
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        `__init__.py`, when an instance is first created.
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Args:
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            batch_shape (torch.Size): the desired expanded size.
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            _instance: new instance provided by subclasses that
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;                need to override `.expand`.
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Returns:
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            New distribution instance with batch dimensions expanded to
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            `batch_size`.
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
-        &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;raise&lt;/span&gt; &lt;span style=&#34;color:#d2413a;font-weight:bold&#34;&gt;NotImplementedError&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;!-- ```
-mvn = MultivariateNormal(torch.randn(2), torch.eye(2))
-(mvn.batch_shape, mvn.event_shape)
-new_batch_shape = torch.Size([5])
-expanded_mvn = mvn.expand(new_batch_shape)
-(expanded_mvn.batch_shape, expanded_mvn.event_shape)
-expanded_mvn.loc
-batched_mvn = MultivariateNormal(torch.randn(5, 2), torch.eye(2))
-(batched_mvn.batch_shape, batched_mvn.event_shape)
-batched_mvn.loc
-``` --&gt;
-
+        &lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Returns a new distribution instance (or populates an existing instance&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        provided by a derived class) with batch dimensions expanded to&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        `batch_shape`. This method calls :class:`~torch.Tensor.expand` on&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        the distribution&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;s parameters. As such, this does not allocate new&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        memory for the expanded distribution instance. Additionally,&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        this does not repeat any args checking or parameter broadcasting in&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        `__init__.py`, when an instance is first created.&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Args:&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            batch_shape (torch.Size): the desired expanded size.&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            _instance: new instance provided by subclasses that&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;                need to override `.expand`.&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Returns:&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            New distribution instance with batch dimensions expanded to&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            `batch_size`.&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;raise&lt;/span&gt; &lt;span style=&#34;color:#d2413a;font-weight:bold&#34;&gt;NotImplementedError&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;It essentially creates a new distribution instance by expanding the &lt;code&gt;batch_shape&lt;/code&gt;.
 For example, if we define a &lt;code&gt;MultivariateNormal&lt;/code&gt; instance with a &lt;code&gt;batch_shape&lt;/code&gt; of &lt;code&gt;[]&lt;/code&gt; and an &lt;code&gt;event_shape&lt;/code&gt; of &lt;code&gt;[2]&lt;/code&gt;,&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; mvn = MultivariateNormal(torch.randn(2), torch.eye(2))
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; mvn = MultivariateNormal(torch.randn(2), torch.eye(2))
 &amp;gt;&amp;gt;&amp;gt; (mvn.batch_shape, mvn.event_shape)
-(torch.Size([]), torch.Size([2]))&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;it can be expanded to a new instance that have a &lt;code&gt;batch_shape&lt;/code&gt; of &lt;code&gt;[5]&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; new_batch_shape = torch.Size([5])
+(torch.Size([]), torch.Size([2]))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;it can be expanded to a new instance that have a &lt;code&gt;batch_shape&lt;/code&gt; of &lt;code&gt;[5]&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; new_batch_shape = torch.Size([5])
 &amp;gt;&amp;gt;&amp;gt; expanded_mvn = mvn.expand(new_batch_shape)
 &amp;gt;&amp;gt;&amp;gt; (expanded_mvn.batch_shape, expanded_mvn.event_shape)
-(torch.Size([5]), torch.Size([2]))&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Note that no new memory is allocated in this process; therefore, all batch dimensions have the same location parameter.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; expanded_mvn.loc
+(torch.Size([5]), torch.Size([2]))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note that no new memory is allocated in this process; therefore, all batch dimensions have the same location parameter.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; expanded_mvn.loc
 tensor([[-2.2299,  0.0122],
         [-2.2299,  0.0122],
         [-2.2299,  0.0122],
         [-2.2299,  0.0122],
-        [-2.2299,  0.0122]])&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This can be compared with the following example with the same &lt;code&gt;batch_shape&lt;/code&gt; of &lt;code&gt;[5]&lt;/code&gt; and &lt;code&gt;event_shape&lt;/code&gt; of &lt;code&gt;[2]&lt;/code&gt;.
+        [-2.2299,  0.0122]])
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This can be compared with the following example with the same &lt;code&gt;batch_shape&lt;/code&gt; of &lt;code&gt;[5]&lt;/code&gt; and &lt;code&gt;event_shape&lt;/code&gt; of &lt;code&gt;[2]&lt;/code&gt;.
 However, the batch dimensions have different location parameters.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; batched_mvn = MultivariateNormal(torch.randn(5, 2), torch.eye(2))
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; batched_mvn = MultivariateNormal(torch.randn(5, 2), torch.eye(2))
 &amp;gt;&amp;gt;&amp;gt; (batched_mvn.batch_shape, batched_mvn.event_shape)
 (torch.Size([5]), torch.Size([2]))
 &amp;gt;&amp;gt;&amp;gt; batched_mvn.loc
@@ -262,197 +216,130 @@ tensor([[-0.3935, -0.7844],
         [ 0.3310,  0.9311],
         [-0.8141, -0.2252],
         [ 2.4199, -0.5444],
-        [ 0.5586,  1.0157]])&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&#34;what-is-the-independent-class&#34;&gt;What is the &lt;code&gt;Independent&lt;/code&gt; class?&lt;/h2&gt;
-
+        [ 0.5586,  1.0157]])
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;what-is-the-independent-class&#34;&gt;What is the &lt;code&gt;Independent&lt;/code&gt; class?&lt;/h2&gt;
 &lt;p&gt;The &lt;a href=&#34;https://pytorch.org/docs/1.3.0/distributions.html#independent&#34;&gt;&lt;code&gt;Independent&lt;/code&gt;&lt;/a&gt; class does not represent any probability distribution.
 Instead, it creates a new distribution instance by &amp;ldquo;reinterpreting&amp;rdquo; some of the batch shapes of an existing distribution as event shapes.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;torch.distributions.independent.Independent(base_distribution, 
-reinterpreted_batch_ndims, validate_args=None)&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The first argument &lt;code&gt;base_distribution&lt;/code&gt; is self-explanatory; the second argument &lt;code&gt;reinterpreted_batch_ndims&lt;/code&gt; is the number of batch shapes to be reinterpreted as event shapes.&lt;/p&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;torch.distributions.independent.Independent(base_distribution, 
+reinterpreted_batch_ndims, validate_args=None)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first argument &lt;code&gt;base_distribution&lt;/code&gt; is self-explanatory; the second argument &lt;code&gt;reinterpreted_batch_ndims&lt;/code&gt; is the number of batch shapes to be reinterpreted as event shapes.&lt;/p&gt;
 &lt;p&gt;The usage of the &lt;code&gt;Independent&lt;/code&gt; class can be illustrated by the following example.
 We start with a &lt;code&gt;Normal&lt;/code&gt; instance with a &lt;code&gt;batch_shape&lt;/code&gt; of &lt;code&gt;[5, 3, 2]&lt;/code&gt; and an &lt;code&gt;event_shape&lt;/code&gt; of &lt;code&gt;[]&lt;/code&gt;.&lt;/p&gt;
-
-&lt;!-- ```
-loc = torch.zeros(5, 3, 2)
-scale = torch.ones(2)
-normal = Normal(loc, scale)
-[normal.batch_shape, normal.event_shape]
-``` --&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; loc = torch.zeros(5, 3, 2)
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; loc = torch.zeros(5, 3, 2)
 &amp;gt;&amp;gt;&amp;gt; scale = torch.ones(2)
 &amp;gt;&amp;gt;&amp;gt; normal = Normal(loc, scale)
 &amp;gt;&amp;gt;&amp;gt; [normal.batch_shape, normal.event_shape]
-[torch.Size([5, 3, 2]), torch.Size([])]&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;An &lt;code&gt;Independent&lt;/code&gt; instance can reinterpret the last &lt;code&gt;batch_shape&lt;/code&gt; as the &lt;code&gt;event_shape&lt;/code&gt;.
+[torch.Size([5, 3, 2]), torch.Size([])]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;An &lt;code&gt;Independent&lt;/code&gt; instance can reinterpret the last &lt;code&gt;batch_shape&lt;/code&gt; as the &lt;code&gt;event_shape&lt;/code&gt;.
 As a result, the new &lt;code&gt;batch_shape&lt;/code&gt; is &lt;code&gt;[5, 3]&lt;/code&gt;, and the &lt;code&gt;event_shape&lt;/code&gt; now becomes &lt;code&gt;[2]&lt;/code&gt;.&lt;/p&gt;
-
-&lt;!-- ```
-normal_ind_1 = Independent(normal, 1)
-[normal_ind_1.batch_shape, normal_ind_1.event_shape]
-``` --&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; normal_ind_1 = Independent(normal, 1)
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; normal_ind_1 = Independent(normal, 1)
 &amp;gt;&amp;gt;&amp;gt; [normal_ind_1.batch_shape, normal_ind_1.event_shape]
-[torch.Size([5, 3]), torch.Size([2])]&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The instance &lt;code&gt;normal_ind_1&lt;/code&gt; is essentially the same as the following &lt;code&gt;MultivariateNormal&lt;/code&gt; instance:&lt;/p&gt;
-
-&lt;!-- ```
-mvn = MultivariateNormal(loc, torch.diag(scale))
-[mvn.batch_shape, mvn.event_shape]
-``` --&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; mvn = MultivariateNormal(loc, torch.diag(scale))
+[torch.Size([5, 3]), torch.Size([2])]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The instance &lt;code&gt;normal_ind_1&lt;/code&gt; is essentially the same as the following &lt;code&gt;MultivariateNormal&lt;/code&gt; instance:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; mvn = MultivariateNormal(loc, torch.diag(scale))
 &amp;gt;&amp;gt;&amp;gt; [mvn.batch_shape, mvn.event_shape]
-[torch.Size([5, 3]), torch.Size([2])]&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;We can further reinterpret more batch shapes as event shapes:&lt;/p&gt;
-
-&lt;!-- ```
-normal_ind_1_ind_1 = Independent(normal_ind_1, 1)
-[normal_ind_1_ind_1.batch_shape, normal_ind_1_ind_1.event_shape]
-``` --&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; normal_ind_1_ind_1 = Independent(normal_ind_1, 1)
+[torch.Size([5, 3]), torch.Size([2])]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can further reinterpret more batch shapes as event shapes:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; normal_ind_1_ind_1 = Independent(normal_ind_1, 1)
 &amp;gt;&amp;gt;&amp;gt; [normal_ind_1_ind_1.batch_shape, normal_ind_1_ind_1.event_shape]
-[torch.Size([5]), torch.Size([3, 2])&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;or equivalently,&lt;/p&gt;
-
-&lt;!-- ```
-normal_ind_2 = Independent(normal, 2)
-[normal_ind_2.batch_shape, normal_ind_2.event_shape]
-``` --&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; normal_ind_2 = Independent(normal, 2)
+[torch.Size([5]), torch.Size([3, 2])
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;or equivalently,&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; normal_ind_2 = Independent(normal, 2)
 &amp;gt;&amp;gt;&amp;gt; [normal_ind_2.batch_shape, normal_ind_2.event_shape]
-[torch.Size([5]), torch.Size([3, 2])]&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&#34;pytorch-code-examples&#34;&gt;PyTorch code examples&lt;/h2&gt;
-
-&lt;p&gt;In this section, code examples for each row in the &lt;a href=&#34;#table&#34;&gt;Table&amp;nbsp;1&lt;/a&gt; are provided.
+[torch.Size([5]), torch.Size([3, 2])]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;pytorch-code-examples&#34;&gt;PyTorch code examples&lt;/h2&gt;
+&lt;p&gt;In this section, code examples for each row in the &lt;a href=&#34;#table&#34;&gt;Table 1&lt;/a&gt; are provided.
 The following &lt;code&gt;import&lt;/code&gt; statements are needed for the examples.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#00f;font-weight:bold&#34;&gt;torch&lt;/span&gt;
 &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;from&lt;/span&gt; &lt;span style=&#34;color:#00f;font-weight:bold&#34;&gt;torch.distributions.normal&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;import&lt;/span&gt; Normal
-&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;from&lt;/span&gt; &lt;span style=&#34;color:#00f;font-weight:bold&#34;&gt;torch.distributions.multivariate_normal&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;import&lt;/span&gt; MultivariateNormal&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;row-1&#34;&gt;Row 1: &lt;code&gt;[], [], []&lt;/code&gt;&lt;/h3&gt;
-
-&lt;!-- ```
-dist = Normal(0.0, 1.0)
-sample_shape = torch.Size([])
-dist.sample(sample_shape)
-(sample_shape, dist.batch_shape, dist.event_shape)
-``` --&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = Normal(0.0, 1.0)
+&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;from&lt;/span&gt; &lt;span style=&#34;color:#00f;font-weight:bold&#34;&gt;torch.distributions.multivariate_normal&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;import&lt;/span&gt; MultivariateNormal
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;row-1&#34;&gt;Row 1: &lt;code&gt;[], [], []&lt;/code&gt;&lt;/h3&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = Normal(0.0, 1.0)
 &amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([])
 &amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
 tensor(-1.3349)
 &amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([]), torch.Size([]), torch.Size([]))&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
-
+(torch.Size([]), torch.Size([]), torch.Size([]))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table 1&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;row-2&#34;&gt;Row 2: &lt;code&gt;[2], [], []&lt;/code&gt;&lt;/h3&gt;
-
-&lt;!-- ```
-dist = Normal(0.0, 1.0)
-sample_shape = torch.Size([2])
-dist.sample(sample_shape)
-(sample_shape, dist.batch_shape, dist.event_shape)
-``` --&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = Normal(0.0, 1.0)
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = Normal(0.0, 1.0)
 &amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([2])
 &amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
 tensor([ 0.2786, -1.4113])
 &amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([2]), torch.Size([]), torch.Size([]))&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
-
+(torch.Size([2]), torch.Size([]), torch.Size([]))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table 1&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;row-3&#34;&gt;Row 3: &lt;code&gt;[], [2], []&lt;/code&gt;&lt;/h3&gt;
-
-&lt;!-- ```
-dist = Normal(torch.zeros(2), torch.ones(2))
-sample_shape = torch.Size([])
-dist.sample(sample_shape)
-(sample_shape, dist.batch_shape, dist.event_shape)
-``` --&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = Normal(torch.zeros(2), torch.ones(2))
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = Normal(torch.zeros(2), torch.ones(2))
 &amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([])
 &amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
 tensor([0.0101, 0.6976])
 &amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([]), torch.Size([2]), torch.Size([]))&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
-
+(torch.Size([]), torch.Size([2]), torch.Size([]))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table 1&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;row-4&#34;&gt;Row 4: &lt;code&gt;[], [], [2]&lt;/code&gt;&lt;/h3&gt;
-
-&lt;!-- ```
-dist = MultivariateNormal(torch.zeros(2), torch.eye(2))
-sample_shape = torch.Size([])
-dist.sample(sample_shape)
-(sample_shape, dist.batch_shape, dist.event_shape)
-``` --&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = MultivariateNormal(torch.zeros(2), torch.eye(2))
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = MultivariateNormal(torch.zeros(2), torch.eye(2))
 &amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([])
 &amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
 tensor([ 0.2880, -1.6795])
 &amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([]), torch.Size([]), torch.Size([2]))&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
-
+(torch.Size([]), torch.Size([]), torch.Size([2]))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table 1&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;row-5&#34;&gt;Row 5: &lt;code&gt;[], [2], [2]&lt;/code&gt;&lt;/h3&gt;
-
-&lt;!-- ```
-dist = MultivariateNormal(torch.zeros(2, 2), torch.eye(2))
-sample_shape = torch.Size([])
-dist.sample(sample_shape)
-(sample_shape, dist.batch_shape, dist.event_shape)
-``` --&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = MultivariateNormal(torch.zeros(2, 2), torch.eye(2))
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = MultivariateNormal(torch.zeros(2, 2), torch.eye(2))
 &amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([])
 &amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
 tensor([[-0.4703,  0.4152],
         [-1.6471, -0.6276]])
 &amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([]), torch.Size([2]), torch.Size([2]))&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
-
+(torch.Size([]), torch.Size([2]), torch.Size([2]))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table 1&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;row-6&#34;&gt;Row 6: &lt;code&gt;[2], [], [2]&lt;/code&gt;&lt;/h3&gt;
-
-&lt;!-- ```
-dist = MultivariateNormal(torch.zeros(2), torch.eye(2))
-sample_shape = torch.Size([2])
-dist.sample(sample_shape)
-(sample_shape, dist.batch_shape, dist.event_shape)
-``` --&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = MultivariateNormal(torch.zeros(2), torch.eye(2))
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = MultivariateNormal(torch.zeros(2), torch.eye(2))
 &amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([2])
 &amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
 tensor([[ 2.2040, -0.7195],
         [-0.4787,  0.0895]])
 &amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([2]), torch.Size([]), torch.Size([2]))&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
-
+(torch.Size([2]), torch.Size([]), torch.Size([2]))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table 1&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;row-7&#34;&gt;Row 7: &lt;code&gt;[2], [2], []&lt;/code&gt;&lt;/h3&gt;
-
-&lt;!-- ```
-dist = Normal(torch.zeros(2), torch.ones(2))
-sample_shape = torch.Size([2])
-dist.sample(sample_shape)
-(sample_shape, dist.batch_shape, dist.event_shape)
-``` --&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = Normal(torch.zeros(2), torch.ones(2))
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = Normal(torch.zeros(2), torch.ones(2))
 &amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([2])
 &amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
 tensor([[ 0.2639,  0.9083],
         [-0.7536,  0.5296]])
 &amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([2]), torch.Size([2]), torch.Size([]))&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
-
+(torch.Size([2]), torch.Size([2]), torch.Size([]))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table 1&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;row-8&#34;&gt;Row 8: &lt;code&gt;[2], [2], [2]&lt;/code&gt;&lt;/h3&gt;
-
-&lt;!-- ```
-dist = MultivariateNormal(torch.zeros(2, 2), torch.eye(2))
-sample_shape = torch.Size([2])
-dist.sample(sample_shape)
-(sample_shape, dist.batch_shape, dist.event_shape)
-``` --&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = MultivariateNormal(torch.zeros(2, 2), torch.eye(2))
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&amp;gt;&amp;gt;&amp;gt; dist = MultivariateNormal(torch.zeros(2, 2), torch.eye(2))
 &amp;gt;&amp;gt;&amp;gt; sample_shape = torch.Size([2])
 &amp;gt;&amp;gt;&amp;gt; dist.sample(sample_shape)
 tensor([[[ 0.4683,  0.6118],
@@ -461,11 +348,9 @@ tensor([[[ 0.4683,  0.6118],
         [[-1.3001, -0.1734],
          [ 0.4705, -0.0404]]])
 &amp;gt;&amp;gt;&amp;gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([2]), torch.Size([2]), torch.Size([2]))&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table&amp;nbsp;1&lt;/a&gt;&lt;/p&gt;
-
+(torch.Size([2]), torch.Size([2]), torch.Size([2]))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;#table&#34;&gt;back to Table 1&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
-
 &lt;ul&gt;
 &lt;li&gt;Dillon, J. V., Langmore, I., Tran, D., Brevdo, E., Vasudevan, S., Moore, D., &amp;hellip; &amp;amp; Saurous, R. A. (2017). Tensorflow distributions. arXiv preprint arXiv:1711.10604.&lt;/li&gt;
 &lt;/ul&gt;
@@ -478,16 +363,12 @@ tensor([[[ 0.4683,  0.6118],
       <pubDate>Fri, 09 Aug 2019 00:00:00 +0000</pubDate>
       
       <guid>https://bochang.me/blog/posts/iwae/</guid>
-      <description>
-
-&lt;p&gt;This blog post is a summary of two papers: Burda et al. (2015) and Nowozin (2018).
+      <description>&lt;p&gt;This blog post is a summary of two papers: Burda et al. (2015) and Nowozin (2018).
 We first give a quick overview of variational inference and variational autoencoders (VAE), which approximate the posterior distribution by a simpler distribution and maximize the evidence lower bound (ELBO).
 Blei et al. (2017) and Zhang et al. (2018) are among some excellent survey papers on variational inference.
 Next, the importance weighted autoencoder (IWAE) is introduced, and its properties are presented.
 Finally, we describe the jackknife variational inference (JVI) as a way to reduce the bias of IWAE estimators.&lt;/p&gt;
-
 &lt;h2 id=&#34;variational-autoencoders&#34;&gt;Variational autoencoders&lt;/h2&gt;
-
 &lt;p&gt;Consider a Bayesian model involving the (set of) latent variable $z$ and  observation $x$, where the joint density can be decomposed into
 $$
 p(x, z) = p(x | z) p(z),
@@ -495,11 +376,9 @@ $$
 where $p(x | z)$ is the likelihood and $p(z)$ is the prior distribution of the latent variable $z$.
 The posterior distribution $p(z|x)$ is of central interest in Bayesian inference.
 However, it is often intractable, and approximate inference is required.&lt;/p&gt;
-
 &lt;p&gt;Variational inference aims to approximate the posterior distribution by a variational distribution and to derive a lower bound of the marginal log-likelihood of data $\log p(x)$.
 Variational autoencoder (VAE) is a type of amortized variational inference method.
-Here, &amp;ldquo;amortized&amp;rdquo; means that the variational distribution $q(z|x)$ is parametrized by a function of $x$, whose parameters are shared across all observations.&lt;/p&gt;
-
+Here, &amp;lsquo;&amp;lsquo;amortized&amp;rsquo;&amp;rsquo; means that the variational distribution $q(z|x)$ is parametrized by a function of $x$, whose parameters are shared across all observations.&lt;/p&gt;
 &lt;p&gt;We first rewrite the marginal log-likelihood by introducing the variational distribution $q(z|x)$:
 \begin{align}
 \log p(x) &amp;amp;= \log \int p(x|z) p(z) \mathrm{d} z
@@ -520,7 +399,6 @@ $$
 $$
 The right-hand side is called the evidence lower bound (ELBO), denoted by $\mathcal{L}$.
 The inference problem then becomes an optimization problem that tries to find a variational distribution $q(z|x)$ that maximizes $\mathcal{L}$.&lt;/p&gt;
-
 &lt;p&gt;There are at least three ways of rewriting the ELBO:
 \begin{align}
 \mathcal{L} &amp;amp;=
@@ -530,21 +408,25 @@ The inference problem then becomes an optimization problem that tries to find a 
 \mathbb{E}_{q(z|x)} \log p(x,z) + \mathbb{E}_{q(z|x)} [-\log q(z|x)]
 \newline
 &amp;amp;=
-\mathbb{E}_{q(z|x)} \log p(x|z)
-- D_{\mathrm{KL}} ( q(z|x) \parallel p(z) )
-\end{align}&lt;/p&gt;
-
+\mathbb{E}_{q(z|x)} \log p(x|z)&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;The first equation shows that the difference between the marginal log-likelihood $\log p(x)$ and the ELBO $\mathcal{L}$ is the KL divergence between $q(z|x)$ and $p(z|x)$.
-When these two distributions are identical (almost everywhere), the marginal log-likelihood equals the ELBO.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;In the second equation, the first term represents the &amp;ldquo;energy&amp;rdquo; and the second term represents the entropy of $q(z|x)$. The energy term encourages $q(z|x)$ to focus probability mass on where the joint probability $p(x, z)$ is large. The entropy encourages $q(z|x)$ to spread the probability mass to avoid concentrating on one location.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The third equation is a more explicit representation of the standard architecture of a variational autoencoder.
-The variational distribution $q(z|x)$ and the likelihood function $p(x|z)$ are represented by an encoder network and a decoder network, respectively.
-Furthermore, $q(z|x)$ and $p(z)$ are often assumed to be multivariate independent Gaussian so that their KL divergence is of closed-form.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;D_{\mathrm{KL}} ( q(z|x) \parallel p(z) )
+\end{align}&lt;/li&gt;
 &lt;/ul&gt;
-
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The first equation shows that the difference between the marginal log-likelihood $\log p(x)$ and the ELBO $\mathcal{L}$ is the KL divergence between $q(z|x)$ and $p(z|x)$.
+When these two distributions are identical (almost everywhere), the marginal log-likelihood equals the ELBO.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the second equation, the first term represents the &amp;ldquo;energy&amp;rdquo; and the second term represents the entropy of $q(z|x)$. The energy term encourages $q(z|x)$ to focus probability mass on where the joint probability $p(x, z)$ is large. The entropy encourages $q(z|x)$ to spread the probability mass to avoid concentrating on one location.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The third equation is a more explicit representation of the standard architecture of a variational autoencoder.
+The variational distribution $q(z|x)$ and the likelihood function $p(x|z)$ are represented by an encoder network and a decoder network, respectively.
+Furthermore, $q(z|x)$ and $p(z)$ are often assumed to be multivariate independent Gaussian so that their KL divergence is of closed-form.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;p&gt;A simple Monte Carlo estimator of the ELBO $\mathcal{L}$ approximates the expectation in Equation \ref{eq:elbo} by the sample mean.
 Let $z_i$, for $i=1, \ldots, k$, be independent samples drawn from $q(z|x)$, then the estimator is
 $$
@@ -552,9 +434,7 @@ $$
 \frac{1}{k} \sum_{i=1}^k \log \left[ \frac{p(x|z_i) p(z_i)}{q(z_i|x)} \right].
 $$
 It is obvious that the estimator is unbiased, i.e., $\mathbb{E}_{z_i \sim q(z|x)} \widehat{\mathcal{L}}_k^{\mathrm{ELBO}} = \mathcal{L}$.&lt;/p&gt;
-
 &lt;h2 id=&#34;importance-weighted-autoencoders&#34;&gt;Importance weighted autoencoders&lt;/h2&gt;
-
 &lt;p&gt;What we have described so far is first to define the ELBO $\mathcal{L}$ as a lower bound of $\log p(x)$, and then to estimate it by $\widehat{\mathcal{L}}_k^{\mathrm{ELBO}}$.
 An alternative approach is to approximate the expectation (inside the logarithm function) in Equation \ref{eq:marginal} by Monte Carlo, which leads to the importance weighted autoencoders (IWAE) estimator:
 $$
@@ -562,7 +442,6 @@ $$
 \log \left[ \frac{1}{k} \sum_{i=1}^k  \frac{p(x|z_i) p(z_i)}{q(z_i|x)} \right].
 $$
 Note the difference between $\widehat{\mathcal{L}}_k^{\mathrm{ELBO}}$ and $\widehat{\mathcal{L}}_k^{\mathrm{IWAE}}$.&lt;/p&gt;
-
 &lt;p&gt;If we denote $\mathcal{L}_k := \mathbb{E}_{z_i \sim q(z|x)} \widehat{\mathcal{L}}_k^{\mathrm{IWAE}}$, then by Jensen&amp;rsquo;s inequality,
 $$
 \mathcal{L}_k
@@ -583,18 +462,17 @@ Unsurprisingly, $\widehat{\mathcal{L}}_k^{\mathrm{IWAE}}$ also converges in prob
 A more detailed asymptotic analysis shows that
 $$
 \mathcal{L}_k
-= \log p(x) - \frac{\mu_2}{2 \mu^2} \frac{1}{k}
-+ \left( \frac{\mu_3}{3\mu^2} - \frac{3\mu_2^2}{4\mu^4} \right) \frac{1}{k^2}
-+ O(k^{-3}),
+= \log p(x) - \frac{\mu_2}{2 \mu^2} \frac{1}{k}&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;\left( \frac{\mu_3}{3\mu^2} - \frac{3\mu_2^2}{4\mu^4} \right) \frac{1}{k^2}&lt;/li&gt;
+&lt;li&gt;O(k^{-3}),
 $$
-where $\mu$ and $\mu_j$ are the expectation and the $j$-th central moment of $p(x|z_i) p(z_i) / q(z_i|x)$ with $z_i \sim q(z|x)$, respectively.&lt;/p&gt;
-
+where $\mu$ and $\mu_j$ are the expectation and the $j$-th central moment of $p(x|z_i) p(z_i) / q(z_i|x)$ with $z_i \sim q(z|x)$, respectively.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;p&gt;An interesting perspective on the IWAE is that, $\widehat{\mathcal{L}}_k^{\mathrm{IWAE}}$ can be regarded as an estimator of $\log p(x)$.
 As shown above, the estimator is &lt;a href=&#34;https://en.wikipedia.org/wiki/Consistent_estimator&#34;&gt;consistent&lt;/a&gt; but &lt;a href=&#34;https://en.wikipedia.org/wiki/Bias_of_an_estimator&#34;&gt;biased&lt;/a&gt;, and the bias is in the order of $O(k^{-1})$.
 The remaining sections try to reduce the bias to a higher/smaller order so that the estimator is closer to the marginal log-likelihood when $k$ is large.&lt;/p&gt;
-
 &lt;h2 id=&#34;jackknife-resampling&#34;&gt;Jackknife resampling&lt;/h2&gt;
-
 &lt;p&gt;The &lt;a href=&#34;https://en.wikipedia.org/wiki/Jackknife_resampling&#34;&gt;jackknife&lt;/a&gt; is a resampling technique that can be used to estimate the bias of an estimator and further to reduce the bias.
 Let $\widehat{T}_n$ be a consistent but biased estimator of $T$, evaluated on $n$ samples.
 Assume the expectation $\mathbb{E} (\widehat{T}_n)$ can be written as an asymptotic expansion as $n \to \infty$:
@@ -602,7 +480,6 @@ $$
 \mathbb{E} (\widehat{T}_n) = T + \frac{a_1}{n} + \frac{a_2}{n^2} + O(n^{-3}).
 $$
 Then the bias of $\widehat{T}_n$ is in the order of $O(n^{-1})$.&lt;/p&gt;
-
 &lt;p&gt;A debiased estimator $\widetilde{T}_{n,1}$ can be defined as follows:
 $$
 \widetilde{T}_{n,1} := n \widehat{T}_n - (n-1) \widehat{T}_{n-1}.
@@ -622,16 +499,17 @@ The idea is that the first order term is canceled by calculating the difference.
 \end{align}
 The bias of $\widetilde{T}_{n,1}$ is in the order of $O(n^{-2})$ instead of $O(n^{-1})$.
 When $n$ is large, $\widetilde{T}_{n,1}$ has a lower bias than $\widehat{T}_n$.&lt;/p&gt;
-
 &lt;p&gt;The estimator $\widehat{T}_{n-1}$ can be calculated on any $n-1$ samples. In practice, given $n$ samples, it is evaluated on the $n$ &amp;ldquo;leave-one-out&amp;rdquo; subsets of size $n-1$, and the average of the $n$ estimates is used in place of $\widehat{T}_{n-1}$, which reduces the variance of the estimator.&lt;/p&gt;
-
 &lt;p&gt;The above debiasing method can be further generalized to higher orders.
 For example, let
 $$
 \widetilde{T}_{n,2}
-:= \frac{n^2}{2} \widehat{T}_n
-- (n-1)^2 \widehat{T}_{n-1}
-+ \frac{(n-2)^2}{2} \widehat{T}_{n-2},
+:= \frac{n^2}{2} \widehat{T}_n&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;(n-1)^2 \widehat{T}_{n-1}&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ul&gt;
+&lt;li&gt;\frac{(n-2)^2}{2} \widehat{T}_{n-2},
 $$
 then
 $$
@@ -648,24 +526,24 @@ where
 $$
 c(n, m, j) = (-1)^j \frac{(n-j)^m}{(m-j)! j!},
 $$
-the bias is in the order of $O(n^{-(m+1)})$.&lt;/p&gt;
-
+the bias is in the order of $O(n^{-(m+1)})$.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h2 id=&#34;jackknife-variational-inference&#34;&gt;Jackknife variational inference&lt;/h2&gt;
-
 &lt;p&gt;The application of the jackknife method to the IWAE estimator should be straightforward.
 The jackknife variational inference (JVI) estimator is defined as follows:
 $$
 \widehat{\mathcal{L}}_{k,1}^{\mathrm{JVI}}
-:= k \widehat{\mathcal{L}}_k^{\mathrm{IWAE}}
-- (k-1) \widehat{\mathcal{L}}_{k-1}^{\mathrm{IWAE}},
+:= k \widehat{\mathcal{L}}_k^{\mathrm{IWAE}}&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;(k-1) \widehat{\mathcal{L}}_{k-1}^{\mathrm{IWAE}},
 $$
 and more generally,
 $$
 \widehat{\mathcal{L}}_{k,m}^{\mathrm{JVI}}
 := \sum_{j=0}^m c(k, m, j) \widehat{\mathcal{L}}_{k-j}^{\mathrm{IWAE}}.
 $$
-The bias of $\widehat{\mathcal{L}}_{k,m}^{\mathrm{JVI}}$, as an estimator of $\log p(x)$, is thus in the order of $O(k^{-(m+1)})$.&lt;/p&gt;
-
+The bias of $\widehat{\mathcal{L}}_{k,m}^{\mathrm{JVI}}$, as an estimator of $\log p(x)$, is thus in the order of $O(k^{-(m+1)})$.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;p&gt;Again, the IWAE estimator $\widehat{\mathcal{L}}_{k-j}^{\mathrm{IWAE}}$ can be evaluated on a single subset of samples of size $k-j$, or by the average of that on all subsets of size $k-j$.
 In the latter case, the computational cost is significant since $\sum_{j=0}^m {k \choose j}$ could be large; the time complexity is bounded by
 $$
@@ -673,17 +551,20 @@ O \left( k e^m \left( \frac{k}{m} \right)^m \right).
 $$
 In practice, the algorithm is feasible only for small values of $m$.
 Other variations of JVI are also provided by Nowozin (2018), at the cost of higher variance of the estimator.&lt;/p&gt;
-
 &lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Blei, D. M., Kucukelbir, A., &amp;amp; McAuliffe, J. D. (2017). Variational inference: A review for statisticians. Journal of the American Statistical Association, 112(518), 859-877.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Burda, Y., Grosse, R., &amp;amp; Salakhutdinov, R. (2015). Importance weighted autoencoders. International Conference on Learning Representations.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Nowozin, S. (2018). Debiasing evidence approximations: On importance-weighted autoencoders and jackknife variational inference. International Conference on Learning Representations.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Zhang, C., Butepage, J., Kjellstrom, H., &amp;amp; Mandt, S. (2018). Advances in variational inference. IEEE transactions on pattern analysis and machine intelligence.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Blei, D. M., Kucukelbir, A., &amp;amp; McAuliffe, J. D. (2017). Variational inference: A review for statisticians. Journal of the American Statistical Association, 112(518), 859-877.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Burda, Y., Grosse, R., &amp;amp; Salakhutdinov, R. (2015). Importance weighted autoencoders. International Conference on Learning Representations.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Nowozin, S. (2018). Debiasing evidence approximations: On importance-weighted autoencoders and jackknife variational inference. International Conference on Learning Representations.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Zhang, C., Butepage, J., Kjellstrom, H., &amp;amp; Mandt, S. (2018). Advances in variational inference. IEEE transactions on pattern analysis and machine intelligence.&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
@@ -694,39 +575,29 @@ Other variations of JVI are also provided by Nowozin (2018), at the cost of high
       <pubDate>Sat, 08 Dec 2018 00:00:00 +0000</pubDate>
       
       <guid>https://bochang.me/blog/posts/bandits/</guid>
-      <description>
-
-&lt;p&gt;In our recent paper &lt;em&gt;Vine Copula Structure Learning via Monte Carlo Tree Search&lt;/em&gt; (AISTATS 2019), we apply the UCT (Upper Confidence bounds applied to Trees) algorithm to find an approximate solution to an NP-hard structure learning problem in statistics.
+      <description>&lt;p&gt;In our recent paper &lt;em&gt;Vine Copula Structure Learning via Monte Carlo Tree Search&lt;/em&gt; (AISTATS 2019), we apply the UCT (Upper Confidence bounds applied to Trees) algorithm to find an approximate solution to an NP-hard structure learning problem in statistics.
 The UCT algorithm is based on the UCB1 (Upper Confidence Bound) algorithm for the stochastic bandit problem.&lt;/p&gt;
-
-&lt;p&gt;Thankfully, I audited &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/&#34;&gt;Prof. Nick Harvey&lt;/a&gt;&amp;rsquo;s &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/F18-531/&#34;&gt;learning theory course&lt;/a&gt; this semester.
+&lt;p&gt;Thankfully, I audited &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/&#34;&gt;Prof. Nick Harvey&lt;/a&gt;&amp;lsquo;s &lt;a href=&#34;https://www.cs.ubc.ca/~nickhar/F18-531/&#34;&gt;learning theory course&lt;/a&gt; this semester.
 In one lecture, he gave a clear exposition of the multi-armed bandit problem and algorithms.
 It deepened my understanding of the theoretical properties of the UCB1 algorithm.
 This blog post is mostly a transcription of the lecture; it gives an overview of the regret bound analysis of the explore-first algorithm and UCB1 algorithm. The material is also based on the first chapter of Slivkins (2017).&lt;/p&gt;
-
 &lt;h2 id=&#34;1-problem-formulation&#34;&gt;1. Problem formulation&lt;/h2&gt;
-
 &lt;p&gt;The &lt;a href=&#34;https://en.wikipedia.org/wiki/Multi-armed_bandit&#34;&gt;multi-armed bandit problem&lt;/a&gt; has many practical applications including clinical trials, financial portfolio design, and online advertising.
 The name comes from imagining a gambler at a row of slot machines (sometimes known as &amp;ldquo;one-armed bandits&amp;rdquo;), each with a lever.
 In each round, the gambler picks a machine to play, then the reward for the chosen machine is observed.
 The objective of the gambler is to maximize the sum of rewards earned through a sequence of lever pulls.
 In the rest of the post, we use the term &amp;ldquo;arm&amp;rdquo; as a synonym for a slot machine.&lt;/p&gt;
-
 &lt;p&gt;In this post, we focus on the &lt;strong&gt;stochastic bandit problem&lt;/strong&gt;, where the rewards for each arm are i.i.d. from a probability distribution specific to that arm.
 Another variant of the multi-armed bandit problem is called the &lt;strong&gt;adversarial bandit problem&lt;/strong&gt;, where an adversary chooses the reward for each arm while the player chooses an arm.&lt;/p&gt;
-
 &lt;p&gt;The fundamental tradeoff the gambler faces is between &lt;strong&gt;exploration&lt;/strong&gt; and &lt;strong&gt;exploitation&lt;/strong&gt;.
 In machine learning, exploration stands for the acquisition of new knowledge, and exploitation refers to an optimized decision based on existing knowledge.
 In the case of the multi-armed bandit problem, the gambler needs to decide between trying different arms to get more information about their rewards and playing the arm that has the highest average reward so far.&lt;/p&gt;
-
 &lt;p&gt;The following notations are used throughout the post.&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;\(K\) is the total number of arms and \(T\) is the total number of rounds, both are known in advance. Arms are denoted by \(a \in [K]\), rounds by \(t \in [T]\). (The bracket notation \([n]\) denotes the first \(n\) positive integers \([n] := \{1, 2, \ldots, n\}\).)&lt;/li&gt;
-&lt;li&gt;The reward for arm \(a\) is i.i.d. from \(\mathcal{D}_a\), which is a distribution supported on \([0,1]\). The expected reward of arm \(a\) is denoted by \(\mu(a) := \int_0^1 x \, \mathrm{d}\mathcal{D}_a(x)\).&lt;/li&gt;
+&lt;li&gt;The reward for arm \(a\) is i.i.d. from \(\mathcal{D}_a\), which is a distribution supported on \([0,1]\). The expected reward of arm \(a\) is denoted by \(\mu(a) := \int_0^1 x , \mathrm{d}\mathcal{D}_a(x)\).&lt;/li&gt;
 &lt;li&gt;The best expected reward is denoted by \(\mu^* := \max_{a \in [K]} \mu(a)\), and the best arm is \(a^* = \operatorname{argmax}_{a \in [K]} \mu(a)\).&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;The (cumulative) &lt;strong&gt;regret&lt;/strong&gt; in round \(t\) is defined as
 $$ R(t) =  \mu^* t  - \sum_{s=1}^t \mu(a_s), $$
 where \(a_s\) is the chosen arm in round \(s\).
@@ -734,37 +605,27 @@ The regret is the difference between the sum of rewards associated with the opti
 The goal of the algorithm is to minimize regret.
 Note that \(a_s\) is a random quantity, since it may depend on the randomness in rewards and/or the algorithm.
 Therefore the regret \(R(t)\) is also random and we are interested in the expected regret \(\mathbb{E}[R(t)]\) or \(\mathbb{E}[R(T)]\).&lt;/p&gt;
-
 &lt;p&gt;It may be a good time now to review &lt;a href=&#34;https://en.wikipedia.org/wiki/Hoeffding%27s_inequality&#34;&gt;Hoeffding&amp;rsquo;s inequality&lt;/a&gt;, an important concentration inequality widely used in machine learning theory.&lt;/p&gt;
-
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;Hoeffding&amp;rsquo;s inequality&lt;/strong&gt;&lt;br /&gt;
+&lt;p&gt;&lt;strong&gt;Hoeffding&amp;rsquo;s inequality&lt;/strong&gt;&lt;br&gt;
 Let \(X_1, \ldots, X_n\) be independent random variables and let \(\bar{X}=\frac{1}{n}\sum_{i=1}^n X_i\). Assume \(0 \leq X_i \leq 1\) almost surely. Then, for any \(t&amp;gt;0\),
 $$\mathbb{P}(|\bar{X} - \mathbb{E}[\bar{X}]| &amp;gt; t) \leq 2 \exp (-2nt^2).$$&lt;/p&gt;
 &lt;/blockquote&gt;
-
 &lt;h2 id=&#34;2-explore-first-algorithm&#34;&gt;2. Explore-first algorithm&lt;/h2&gt;
-
 &lt;p&gt;A simple idea is to explore arms uniformly and pick an empirically best arm for exploitation.&lt;/p&gt;
-
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Explore-first algorithm&lt;/strong&gt;&lt;/p&gt;
-
 &lt;ol&gt;
-&lt;li&gt;Exploration phase:     Try each arm \(N\) times. Let \(\bar\mu(a)\) be the average reward for arm \(a\);&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;Exploration phase:     Try each arm \(N\) times. Let \(\bar\mu(a)\) be the average reward for arm \(a\);&lt;/li&gt;
 &lt;li&gt;Exploitation phase: Select arm \(\hat{a}\) with the highest average reward \(\hat{a} = \operatorname{argmax}_{a \in [K]} \bar\mu(a)\). Play arm \(\hat{a}\) in all remaining rounds.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/blockquote&gt;
-
 &lt;p&gt;The parameter \(N\) is fixed in advance; it will be chosen later as a function of \(T\) and \(K\).&lt;/p&gt;
-
-&lt;h3 id=&#34;2-1-regret-bound&#34;&gt;2.1 Regret bound&lt;/h3&gt;
-
+&lt;h3 id=&#34;21-regret-bound&#34;&gt;2.1 Regret bound&lt;/h3&gt;
 &lt;p&gt;Our goal is to give an upper bound of the expected regret \(\mathbb{E}[R(T)]\) as a function of \(K\) and \(T\):
 $$
 \mathbb{E}[R(T)]=O \big(T^{2 / 3} (K \log T)^{1 / 3} \big).
 $$&lt;/p&gt;
-
 &lt;p&gt;To facilitate our analysis, we define the &lt;strong&gt;clean event&lt;/strong&gt; \(C\) to be the event that \(\bar\mu(a)\) is close to \(\mu(a)\) for all arms:
 $$
 C = \{ |\bar\mu(a) - \mu(a)| \leq r, \forall a \in [K] \},
@@ -780,21 +641,17 @@ $$
 \mathbb{E}[R(T) | \bar{C}]
 \mathbb{P}[\bar{C}].
 $$&lt;/p&gt;
-
 &lt;p&gt;First of all, we want to make sure \(\mathbb{P}[\bar{C}]\) is small.
 In other words, the average reward \(\bar\mu(a)\) should be a good estimate of the true expected reward \(\mu(a)\).
 By Hoeffding&amp;rsquo;s inequality, the deviation of the average reward from the true expected reward can be quantified as follows:&lt;/p&gt;
-
 &lt;p&gt;$$
 \mathbb{P}( |\bar\mu(a) - \mu(a)| &amp;gt; r) \leq 2 \exp (-2Nr^2), \quad \forall a \in [K].
 $$&lt;/p&gt;
-
 &lt;p&gt;We want to bound this probability by a sufficiently small number, say \(2/T^4\). This can be achieved by setting the confidence radius \(r = \sqrt{\frac{2 \log T}{N}}\):
 $$
 \mathbb{P}( |\bar\mu(a) - \mu(a)| &amp;gt; r) \leq \frac{2}{T^4}, \quad \forall a \in [K].
 $$
 Note that the choice of \(T^4\) is somewhat arbitrary; the exponent only affects the multiplicative constant of \(r\).&lt;/p&gt;
-
 &lt;p&gt;Using a &lt;a href=&#34;https://en.wikipedia.org/wiki/Boole%27s_inequality&#34;&gt;union bound&lt;/a&gt;, we can find an upper bound of the probability of the bad event.
 $$
 \begin{align}
@@ -815,7 +672,6 @@ $$
 \end{align}
 $$
 The last inequality is because each arm is explored at least once, i.e., \(T \geq K\).&lt;/p&gt;
-
 &lt;p&gt;Next, we focus on \(\mathbb{E}[R(T) | C]\).
 By definition, \(\bar\mu(\hat{a}) \geq \bar\mu(a^*)\).
 Given the clean event happens,
@@ -833,7 +689,6 @@ $$
 \end{align}
 $$
 Intuitively, it indicates that conditioning on the clean event, the chosen arm \(\hat{a}\) cannot be much worse than \(a^*\).&lt;/p&gt;
-
 &lt;p&gt;There are \(NK\) rounds in the exploration phase, and each round has at most regret of 1; there are \(T - NK\) rounds in the exploitation phase and the regret incurred in each round is bounded by \(2r\).
 As a result, the regret in round \(T\) can be bounded by
 $$
@@ -855,9 +710,7 @@ $$
 \leq
 T^{2 / 3} (2K\log T)^{1 / 3}.
 $$&lt;/p&gt;
-
 &lt;p&gt;So far, we have&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;\(\mathbb{E}[R(T) | C]
 \leq
@@ -867,7 +720,6 @@ T^{2 / 3} (2K \log T)^{1 / 3}
 &lt;li&gt;\( \mathbb{E}[R(T) | \bar{C}] \leq T \), since there are in total \(T\) rounds, each round incurs at most regret of 1;&lt;/li&gt;
 &lt;li&gt;\(\mathbb{P}[\bar{C}] \leq 2 / T^4 \).&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;Putting everything together,
 $$
 \begin{align}
@@ -886,9 +738,7 @@ T \cdot \frac{2}{T^3}
 &amp;amp;= O \big(T^{2 / 3} (K \log T)^{1 / 3} \big).
 \end{align}
 $$&lt;/p&gt;
-
 &lt;h2 id=&#34;3-upper-confidence-bound-algorithm&#34;&gt;3. Upper confidence bound algorithm&lt;/h2&gt;
-
 &lt;p&gt;The problem with the explore-first algorithm is that each arm is explored for the same number of rounds, which causes inefficiency.
 In other words, the exploration schedule should depend on the history of the observed rewards.
 Instead of using the same confidence radius for any arm in any round, we denote the confidence radius for arm \(a\) at time \(t\) by \(r_t(a)\).
@@ -898,22 +748,16 @@ $$
 \mathrm{UCB}_t(a) = \bar\mu_t(a) + r_t(a),
 $$
 where \( r_t(a) = \sqrt{\frac{2 \log T}{n_t(a)}} \).&lt;/p&gt;
-
 &lt;p&gt;The UCB1 algorithm chooses the best arm based on an optimistic estimate. The algorithm is as follows.&lt;/p&gt;
-
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;UCB1 algorithm&lt;/strong&gt;&lt;/p&gt;
-
 &lt;ol&gt;
 &lt;li&gt;Try each arm once;&lt;/li&gt;
-&lt;li&gt;In round \(t\), pick \( a_t = \operatorname{argmax}_{a \in [K]} \mathrm{UCB}_t(a)\).&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;In round \(t\), pick \( a_t = \operatorname{argmax}_{a \in [K]} \mathrm{UCB}_t(a)\).&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/blockquote&gt;
-
 &lt;p&gt;Unlike the explore-first algorithm, there is no clear exploration/exploitation phase. However, the definition of the upper confidence bound manifests the exploration-exploitation tradeoff: \(\bar\mu_t(a)\) encourages the exploitation of high reward arms, while \(r_t(a)\) encourages the exploration of less played arms.&lt;/p&gt;
-
-&lt;h3 id=&#34;3-1-regret-bound&#34;&gt;3.1 Regret bound&lt;/h3&gt;
-
+&lt;h3 id=&#34;31-regret-bound&#34;&gt;3.1 Regret bound&lt;/h3&gt;
 &lt;p&gt;The regret bound of the UCB1 algorithm is
 $$
 \mathbb{E}[R(t)] = O \big(\sqrt{Kt \log T} \big),
@@ -921,7 +765,6 @@ $$
 \forall t \in [T].
 $$
 The idea of the analysis is the same as before: define a clean event \(C\), obtain upper bounds of \(\mathbb{P}[\bar{C}]\) and \(\mathbb{E}[R(t)|C]\), and finally bound \(\mathbb{E}[R(t)]\).&lt;/p&gt;
-
 &lt;p&gt;Since the confidence radius now depends on \(t\) as well, we need a more refined definition of the &lt;strong&gt;clean event&lt;/strong&gt;:
 $$
 C = \{|\bar\mu_t(a) - \mu(a)| \leq r_t(a), \forall a \in [K], \forall t \in [T] \}.
@@ -930,11 +773,9 @@ Applying Hoeffding&amp;rsquo;s inequality and a union bound (and ignoring some t
 $$
 \mathbb{P}[\bar{C}] \leq \frac{2KT}{T^4} \leq \frac{2}{T^2}.
 $$&lt;/p&gt;
-
 &lt;p&gt;Now we focus on \(\mathbb{E}[R(t)|C]\) and assume the clean event holds.
 By definition, \( \mathrm{UCB}_t(a_t) \geq \mathrm{UCB}_t(a^*) \) for any round \(t \in [T]\).
 As a result,&lt;/p&gt;
-
 &lt;p&gt;$$
 \begin{align}
 \mu(a^*) - \mu(a_t)
@@ -963,7 +804,6 @@ $$
 2 r_t(a_t)
 = 2 \sqrt{\frac{2 \log T}{n_t(a_t)}}.
 $$&lt;/p&gt;
-
 &lt;p&gt;For each arm \(a\) and a given time \(t \in [T]\), consider the last round \(t_0 \leq t\) when this arm is chosen.
 Since arm \(a\) is never played between round \(t_0\) and round \(t\), we have \(n_{t_0}(a) = n_t(a)\).
 Applying the above inequality to arm \(a\) and round \(t_0\),
@@ -973,7 +813,6 @@ $$
 \forall t \in [T].
 $$
 Intuitively it means that, under the clean event, if an arm is selected many times, it cannot be much worse than the best arm; or equivalently, if an arm is much worse than the best arm, it won&amp;rsquo;t be selected many times.&lt;/p&gt;
-
 &lt;p&gt;The regret in round \(t\) is thus bounded by
 $$
 R(t) = \sum_{a \in [K]}
@@ -998,7 +837,6 @@ Therefore,
 $$
 \mathbb{E}[R(t)|C] \leq 2 \sqrt{2 Kt \log T}.
 $$&lt;/p&gt;
-
 &lt;p&gt;Finally, much like what we did for the explore-first algorithm, the expected regret in round \(t\) can be bounded by
 $$
 \begin{align}
@@ -1019,9 +857,7 @@ t \cdot \frac{2}{T^2}
 \forall t \in [T].
 \end{align}
 $$&lt;/p&gt;
-
-&lt;h3 id=&#34;3-2-an-instance-dependent-regret-bound&#34;&gt;3.2 An instance-dependent regret bound&lt;/h3&gt;
-
+&lt;h3 id=&#34;32-an-instance-dependent-regret-bound&#34;&gt;3.2 An instance-dependent regret bound&lt;/h3&gt;
 &lt;p&gt;We can also obtain another regret bound using the inequality
 $$
 \mu(a^*) - \mu(a) \leq 2 \sqrt{\frac{2 \log T}{n_T(a)}}.
@@ -1049,12 +885,9 @@ O(\log T)
 \sum_{\{a \in [K]: \mu(a) &amp;lt; \mu(a^*)\}}
 \frac{1}{\mu(a^*) - \mu(a)}.
 $$&lt;/p&gt;
-
 &lt;p&gt;This regret bound is logarithmic in \(T\), with a constant that can be arbitrarily large depending on a problem instance.
 This type of regret bound is called &lt;strong&gt;instance-dependent&lt;/strong&gt;. The existence of a logarithmic regret bound is a benefit of the UCB1 algorithm compared to the explore-first algorithm, whose regret bound is polynomial in \(T\).&lt;/p&gt;
-
 &lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
-
 &lt;ul&gt;
 &lt;li&gt;Slivkins, A. (2017). Introduction to Multi-Armed Bandits. &lt;a href=&#34;http://slivkins.com/work/MAB-book.pdf&#34;&gt;http://slivkins.com/work/MAB-book.pdf&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;

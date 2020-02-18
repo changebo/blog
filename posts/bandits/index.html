@@ -25,8 +25,9 @@
   
   <meta name="article:tag" content="algorithms machine learning ">
   <link rel="stylesheet" type="text/css" href="https://bochang.me/blog/css/style.css">
-  <link rel="icon" type="image/png" href="https://bochang.me/blog/icons/code-2x.png" sizes="16x16">
-  <link rel="icon" type="image/png" href="https://bochang.me/blog/icons/code-4x.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/Users/bchang/Downloads/blog/static/icons/game-die.png">
+  
+  
 </head>
 
 <body>
@@ -44,39 +45,29 @@
   <p>
   <aside>tags: <a href="/blog/tags/algorithms/">algorithms</a></a>&nbsp;&nbsp;&nbsp;<a href="/blog/tags/machine-learning/">machine learning</a></a>&nbsp;&nbsp;&nbsp;</aside>
   </p>
-  <p>
-
-<p>In our recent paper <em>Vine Copula Structure Learning via Monte Carlo Tree Search</em> (AISTATS 2019), we apply the UCT (Upper Confidence bounds applied to Trees) algorithm to find an approximate solution to an NP-hard structure learning problem in statistics.
+  <p><p>In our recent paper <em>Vine Copula Structure Learning via Monte Carlo Tree Search</em> (AISTATS 2019), we apply the UCT (Upper Confidence bounds applied to Trees) algorithm to find an approximate solution to an NP-hard structure learning problem in statistics.
 The UCT algorithm is based on the UCB1 (Upper Confidence Bound) algorithm for the stochastic bandit problem.</p>
-
-<p>Thankfully, I audited <a href="https://www.cs.ubc.ca/~nickhar/">Prof. Nick Harvey</a>&rsquo;s <a href="https://www.cs.ubc.ca/~nickhar/F18-531/">learning theory course</a> this semester.
+<p>Thankfully, I audited <a href="https://www.cs.ubc.ca/~nickhar/">Prof. Nick Harvey</a>&lsquo;s <a href="https://www.cs.ubc.ca/~nickhar/F18-531/">learning theory course</a> this semester.
 In one lecture, he gave a clear exposition of the multi-armed bandit problem and algorithms.
 It deepened my understanding of the theoretical properties of the UCB1 algorithm.
 This blog post is mostly a transcription of the lecture; it gives an overview of the regret bound analysis of the explore-first algorithm and UCB1 algorithm. The material is also based on the first chapter of Slivkins (2017).</p>
-
 <h2 id="1-problem-formulation">1. Problem formulation</h2>
-
 <p>The <a href="https://en.wikipedia.org/wiki/Multi-armed_bandit">multi-armed bandit problem</a> has many practical applications including clinical trials, financial portfolio design, and online advertising.
 The name comes from imagining a gambler at a row of slot machines (sometimes known as &ldquo;one-armed bandits&rdquo;), each with a lever.
 In each round, the gambler picks a machine to play, then the reward for the chosen machine is observed.
 The objective of the gambler is to maximize the sum of rewards earned through a sequence of lever pulls.
 In the rest of the post, we use the term &ldquo;arm&rdquo; as a synonym for a slot machine.</p>
-
 <p>In this post, we focus on the <strong>stochastic bandit problem</strong>, where the rewards for each arm are i.i.d. from a probability distribution specific to that arm.
 Another variant of the multi-armed bandit problem is called the <strong>adversarial bandit problem</strong>, where an adversary chooses the reward for each arm while the player chooses an arm.</p>
-
 <p>The fundamental tradeoff the gambler faces is between <strong>exploration</strong> and <strong>exploitation</strong>.
 In machine learning, exploration stands for the acquisition of new knowledge, and exploitation refers to an optimized decision based on existing knowledge.
 In the case of the multi-armed bandit problem, the gambler needs to decide between trying different arms to get more information about their rewards and playing the arm that has the highest average reward so far.</p>
-
 <p>The following notations are used throughout the post.</p>
-
 <ul>
 <li>\(K\) is the total number of arms and \(T\) is the total number of rounds, both are known in advance. Arms are denoted by \(a \in [K]\), rounds by \(t \in [T]\). (The bracket notation \([n]\) denotes the first \(n\) positive integers \([n] := \{1, 2, \ldots, n\}\).)</li>
-<li>The reward for arm \(a\) is i.i.d. from \(\mathcal{D}_a\), which is a distribution supported on \([0,1]\). The expected reward of arm \(a\) is denoted by \(\mu(a) := \int_0^1 x \, \mathrm{d}\mathcal{D}_a(x)\).</li>
+<li>The reward for arm \(a\) is i.i.d. from \(\mathcal{D}_a\), which is a distribution supported on \([0,1]\). The expected reward of arm \(a\) is denoted by \(\mu(a) := \int_0^1 x , \mathrm{d}\mathcal{D}_a(x)\).</li>
 <li>The best expected reward is denoted by \(\mu^* := \max_{a \in [K]} \mu(a)\), and the best arm is \(a^* = \operatorname{argmax}_{a \in [K]} \mu(a)\).</li>
 </ul>
-
 <p>The (cumulative) <strong>regret</strong> in round \(t\) is defined as
 $$ R(t) =  \mu^* t  - \sum_{s=1}^t \mu(a_s), $$
 where \(a_s\) is the chosen arm in round \(s\).
@@ -84,37 +75,27 @@ The regret is the difference between the sum of rewards associated with the opti
 The goal of the algorithm is to minimize regret.
 Note that \(a_s\) is a random quantity, since it may depend on the randomness in rewards and/or the algorithm.
 Therefore the regret \(R(t)\) is also random and we are interested in the expected regret \(\mathbb{E}[R(t)]\) or \(\mathbb{E}[R(T)]\).</p>
-
 <p>It may be a good time now to review <a href="https://en.wikipedia.org/wiki/Hoeffding%27s_inequality">Hoeffding&rsquo;s inequality</a>, an important concentration inequality widely used in machine learning theory.</p>
-
 <blockquote>
-<p><strong>Hoeffding&rsquo;s inequality</strong><br />
+<p><strong>Hoeffding&rsquo;s inequality</strong><br>
 Let \(X_1, \ldots, X_n\) be independent random variables and let \(\bar{X}=\frac{1}{n}\sum_{i=1}^n X_i\). Assume \(0 \leq X_i \leq 1\) almost surely. Then, for any \(t&gt;0\),
 $$\mathbb{P}(|\bar{X} - \mathbb{E}[\bar{X}]| &gt; t) \leq 2 \exp (-2nt^2).$$</p>
 </blockquote>
-
 <h2 id="2-explore-first-algorithm">2. Explore-first algorithm</h2>
-
 <p>A simple idea is to explore arms uniformly and pick an empirically best arm for exploitation.</p>
-
 <blockquote>
 <p><strong>Explore-first algorithm</strong></p>
-
 <ol>
-<li>Exploration phase:     Try each arm \(N\) times. Let \(\bar\mu(a)\) be the average reward for arm \(a\);<br /></li>
+<li>Exploration phase:     Try each arm \(N\) times. Let \(\bar\mu(a)\) be the average reward for arm \(a\);</li>
 <li>Exploitation phase: Select arm \(\hat{a}\) with the highest average reward \(\hat{a} = \operatorname{argmax}_{a \in [K]} \bar\mu(a)\). Play arm \(\hat{a}\) in all remaining rounds.</li>
 </ol>
 </blockquote>
-
 <p>The parameter \(N\) is fixed in advance; it will be chosen later as a function of \(T\) and \(K\).</p>
-
-<h3 id="2-1-regret-bound">2.1 Regret bound</h3>
-
+<h3 id="21-regret-bound">2.1 Regret bound</h3>
 <p>Our goal is to give an upper bound of the expected regret \(\mathbb{E}[R(T)]\) as a function of \(K\) and \(T\):
 $$
 \mathbb{E}[R(T)]=O \big(T^{2 / 3} (K \log T)^{1 / 3} \big).
 $$</p>
-
 <p>To facilitate our analysis, we define the <strong>clean event</strong> \(C\) to be the event that \(\bar\mu(a)\) is close to \(\mu(a)\) for all arms:
 $$
 C = \{ |\bar\mu(a) - \mu(a)| \leq r, \forall a \in [K] \},
@@ -130,21 +111,17 @@ $$
 \mathbb{E}[R(T) | \bar{C}]
 \mathbb{P}[\bar{C}].
 $$</p>
-
 <p>First of all, we want to make sure \(\mathbb{P}[\bar{C}]\) is small.
 In other words, the average reward \(\bar\mu(a)\) should be a good estimate of the true expected reward \(\mu(a)\).
 By Hoeffding&rsquo;s inequality, the deviation of the average reward from the true expected reward can be quantified as follows:</p>
-
 <p>$$
 \mathbb{P}( |\bar\mu(a) - \mu(a)| &gt; r) \leq 2 \exp (-2Nr^2), \quad \forall a \in [K].
 $$</p>
-
 <p>We want to bound this probability by a sufficiently small number, say \(2/T^4\). This can be achieved by setting the confidence radius \(r = \sqrt{\frac{2 \log T}{N}}\):
 $$
 \mathbb{P}( |\bar\mu(a) - \mu(a)| &gt; r) \leq \frac{2}{T^4}, \quad \forall a \in [K].
 $$
 Note that the choice of \(T^4\) is somewhat arbitrary; the exponent only affects the multiplicative constant of \(r\).</p>
-
 <p>Using a <a href="https://en.wikipedia.org/wiki/Boole%27s_inequality">union bound</a>, we can find an upper bound of the probability of the bad event.
 $$
 \begin{align}
@@ -165,7 +142,6 @@ $$
 \end{align}
 $$
 The last inequality is because each arm is explored at least once, i.e., \(T \geq K\).</p>
-
 <p>Next, we focus on \(\mathbb{E}[R(T) | C]\).
 By definition, \(\bar\mu(\hat{a}) \geq \bar\mu(a^*)\).
 Given the clean event happens,
@@ -183,7 +159,6 @@ $$
 \end{align}
 $$
 Intuitively, it indicates that conditioning on the clean event, the chosen arm \(\hat{a}\) cannot be much worse than \(a^*\).</p>
-
 <p>There are \(NK\) rounds in the exploration phase, and each round has at most regret of 1; there are \(T - NK\) rounds in the exploitation phase and the regret incurred in each round is bounded by \(2r\).
 As a result, the regret in round \(T\) can be bounded by
 $$
@@ -205,9 +180,7 @@ $$
 \leq
 T^{2 / 3} (2K\log T)^{1 / 3}.
 $$</p>
-
 <p>So far, we have</p>
-
 <ul>
 <li>\(\mathbb{E}[R(T) | C]
 \leq
@@ -217,7 +190,6 @@ T^{2 / 3} (2K \log T)^{1 / 3}
 <li>\( \mathbb{E}[R(T) | \bar{C}] \leq T \), since there are in total \(T\) rounds, each round incurs at most regret of 1;</li>
 <li>\(\mathbb{P}[\bar{C}] \leq 2 / T^4 \).</li>
 </ul>
-
 <p>Putting everything together,
 $$
 \begin{align}
@@ -236,9 +208,7 @@ T \cdot \frac{2}{T^3}
 &amp;= O \big(T^{2 / 3} (K \log T)^{1 / 3} \big).
 \end{align}
 $$</p>
-
 <h2 id="3-upper-confidence-bound-algorithm">3. Upper confidence bound algorithm</h2>
-
 <p>The problem with the explore-first algorithm is that each arm is explored for the same number of rounds, which causes inefficiency.
 In other words, the exploration schedule should depend on the history of the observed rewards.
 Instead of using the same confidence radius for any arm in any round, we denote the confidence radius for arm \(a\) at time \(t\) by \(r_t(a)\).
@@ -248,22 +218,16 @@ $$
 \mathrm{UCB}_t(a) = \bar\mu_t(a) + r_t(a),
 $$
 where \( r_t(a) = \sqrt{\frac{2 \log T}{n_t(a)}} \).</p>
-
 <p>The UCB1 algorithm chooses the best arm based on an optimistic estimate. The algorithm is as follows.</p>
-
 <blockquote>
 <p><strong>UCB1 algorithm</strong></p>
-
 <ol>
 <li>Try each arm once;</li>
-<li>In round \(t\), pick \( a_t = \operatorname{argmax}_{a \in [K]} \mathrm{UCB}_t(a)\).<br /></li>
+<li>In round \(t\), pick \( a_t = \operatorname{argmax}_{a \in [K]} \mathrm{UCB}_t(a)\).</li>
 </ol>
 </blockquote>
-
 <p>Unlike the explore-first algorithm, there is no clear exploration/exploitation phase. However, the definition of the upper confidence bound manifests the exploration-exploitation tradeoff: \(\bar\mu_t(a)\) encourages the exploitation of high reward arms, while \(r_t(a)\) encourages the exploration of less played arms.</p>
-
-<h3 id="3-1-regret-bound">3.1 Regret bound</h3>
-
+<h3 id="31-regret-bound">3.1 Regret bound</h3>
 <p>The regret bound of the UCB1 algorithm is
 $$
 \mathbb{E}[R(t)] = O \big(\sqrt{Kt \log T} \big),
@@ -271,7 +235,6 @@ $$
 \forall t \in [T].
 $$
 The idea of the analysis is the same as before: define a clean event \(C\), obtain upper bounds of \(\mathbb{P}[\bar{C}]\) and \(\mathbb{E}[R(t)|C]\), and finally bound \(\mathbb{E}[R(t)]\).</p>
-
 <p>Since the confidence radius now depends on \(t\) as well, we need a more refined definition of the <strong>clean event</strong>:
 $$
 C = \{|\bar\mu_t(a) - \mu(a)| \leq r_t(a), \forall a \in [K], \forall t \in [T] \}.
@@ -280,11 +243,9 @@ Applying Hoeffding&rsquo;s inequality and a union bound (and ignoring some techn
 $$
 \mathbb{P}[\bar{C}] \leq \frac{2KT}{T^4} \leq \frac{2}{T^2}.
 $$</p>
-
 <p>Now we focus on \(\mathbb{E}[R(t)|C]\) and assume the clean event holds.
 By definition, \( \mathrm{UCB}_t(a_t) \geq \mathrm{UCB}_t(a^*) \) for any round \(t \in [T]\).
 As a result,</p>
-
 <p>$$
 \begin{align}
 \mu(a^*) - \mu(a_t)
@@ -313,7 +274,6 @@ $$
 2 r_t(a_t)
 = 2 \sqrt{\frac{2 \log T}{n_t(a_t)}}.
 $$</p>
-
 <p>For each arm \(a\) and a given time \(t \in [T]\), consider the last round \(t_0 \leq t\) when this arm is chosen.
 Since arm \(a\) is never played between round \(t_0\) and round \(t\), we have \(n_{t_0}(a) = n_t(a)\).
 Applying the above inequality to arm \(a\) and round \(t_0\),
@@ -323,7 +283,6 @@ $$
 \forall t \in [T].
 $$
 Intuitively it means that, under the clean event, if an arm is selected many times, it cannot be much worse than the best arm; or equivalently, if an arm is much worse than the best arm, it won&rsquo;t be selected many times.</p>
-
 <p>The regret in round \(t\) is thus bounded by
 $$
 R(t) = \sum_{a \in [K]}
@@ -348,7 +307,6 @@ Therefore,
 $$
 \mathbb{E}[R(t)|C] \leq 2 \sqrt{2 Kt \log T}.
 $$</p>
-
 <p>Finally, much like what we did for the explore-first algorithm, the expected regret in round \(t\) can be bounded by
 $$
 \begin{align}
@@ -369,9 +327,7 @@ t \cdot \frac{2}{T^2}
 \forall t \in [T].
 \end{align}
 $$</p>
-
-<h3 id="3-2-an-instance-dependent-regret-bound">3.2 An instance-dependent regret bound</h3>
-
+<h3 id="32-an-instance-dependent-regret-bound">3.2 An instance-dependent regret bound</h3>
 <p>We can also obtain another regret bound using the inequality
 $$
 \mu(a^*) - \mu(a) \leq 2 \sqrt{\frac{2 \log T}{n_T(a)}}.
@@ -399,12 +355,9 @@ O(\log T)
 \sum_{\{a \in [K]: \mu(a) &lt; \mu(a^*)\}}
 \frac{1}{\mu(a^*) - \mu(a)}.
 $$</p>
-
 <p>This regret bound is logarithmic in \(T\), with a constant that can be arbitrarily large depending on a problem instance.
 This type of regret bound is called <strong>instance-dependent</strong>. The existence of a logarithmic regret bound is a benefit of the UCB1 algorithm compared to the explore-first algorithm, whose regret bound is polynomial in \(T\).</p>
-
 <h2 id="references">References</h2>
-
 <ul>
 <li>Slivkins, A. (2017). Introduction to Multi-Armed Bandits. <a href="http://slivkins.com/work/MAB-book.pdf">http://slivkins.com/work/MAB-book.pdf</a>.</li>
 </ul>
@@ -415,7 +368,7 @@ This type of regret bound is called <strong>instance-dependent</strong>. The exi
 <p>Written on Dec 8, 2018.</p>
 
 <footer>
-	<p>&copy; 2019 All rights reserved.</p>
+	<p>&copy; 2020 All rights reserved.</p>
 </footer>
 </body>
 </html>
