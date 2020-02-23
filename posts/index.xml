@@ -408,11 +408,8 @@ The inference problem then becomes an optimization problem that tries to find a 
 \mathbb{E}_{q(z|x)} \log p(x,z) + \mathbb{E}_{q(z|x)} [-\log q(z|x)]
 \newline
 &amp;amp;=
-\mathbb{E}_{q(z|x)} \log p(x|z)&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;D_{\mathrm{KL}} ( q(z|x) \parallel p(z) )
-\end{align}&lt;/li&gt;
-&lt;/ul&gt;
+\mathbb{E}_{q(z|x)} \log p(x|z) - D_{\mathrm{KL}} ( q(z|x) \parallel p(z) )
+\end{align}&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;The first equation shows that the difference between the marginal log-likelihood $\log p(x)$ and the ELBO $\mathcal{L}$ is the KL divergence between $q(z|x)$ and $p(z|x)$.
@@ -462,13 +459,9 @@ Unsurprisingly, $\widehat{\mathcal{L}}_k^{\mathrm{IWAE}}$ also converges in prob
 A more detailed asymptotic analysis shows that
 $$
 \mathcal{L}_k
-= \log p(x) - \frac{\mu_2}{2 \mu^2} \frac{1}{k}&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;\left( \frac{\mu_3}{3\mu^2} - \frac{3\mu_2^2}{4\mu^4} \right) \frac{1}{k^2}&lt;/li&gt;
-&lt;li&gt;O(k^{-3}),
+= \log p(x) - \frac{\mu_2}{2 \mu^2} \frac{1}{k} + \left( \frac{\mu_3}{3\mu^2} - \frac{3\mu_2^2}{4\mu^4} \right) \frac{1}{k^2} + O(k^{-3}),
 $$
-where $\mu$ and $\mu_j$ are the expectation and the $j$-th central moment of $p(x|z_i) p(z_i) / q(z_i|x)$ with $z_i \sim q(z|x)$, respectively.&lt;/li&gt;
-&lt;/ul&gt;
+where $\mu$ and $\mu_j$ are the expectation and the $j$-th central moment of $p(x|z_i) p(z_i) / q(z_i|x)$ with $z_i \sim q(z|x)$, respectively.&lt;/p&gt;
 &lt;p&gt;An interesting perspective on the IWAE is that, $\widehat{\mathcal{L}}_k^{\mathrm{IWAE}}$ can be regarded as an estimator of $\log p(x)$.
 As shown above, the estimator is &lt;a href=&#34;https://en.wikipedia.org/wiki/Consistent_estimator&#34;&gt;consistent&lt;/a&gt; but &lt;a href=&#34;https://en.wikipedia.org/wiki/Bias_of_an_estimator&#34;&gt;biased&lt;/a&gt;, and the bias is in the order of $O(k^{-1})$.
 The remaining sections try to reduce the bias to a higher/smaller order so that the estimator is closer to the marginal log-likelihood when $k$ is large.&lt;/p&gt;
@@ -504,12 +497,7 @@ When $n$ is large, $\widetilde{T}_{n,1}$ has a lower bias than $\widehat{T}_n$.&
 For example, let
 $$
 \widetilde{T}_{n,2}
-:= \frac{n^2}{2} \widehat{T}_n&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;(n-1)^2 \widehat{T}_{n-1}&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ul&gt;
-&lt;li&gt;\frac{(n-2)^2}{2} \widehat{T}_{n-2},
+:= \frac{n^2}{2} \widehat{T}_n - (n-1)^2 \widehat{T}_{n-1} + \frac{(n-2)^2}{2} \widehat{T}_{n-2},
 $$
 then
 $$
@@ -526,24 +514,20 @@ where
 $$
 c(n, m, j) = (-1)^j \frac{(n-j)^m}{(m-j)! j!},
 $$
-the bias is in the order of $O(n^{-(m+1)})$.&lt;/li&gt;
-&lt;/ul&gt;
+the bias is in the order of $O(n^{-(m+1)})$.&lt;/p&gt;
 &lt;h2 id=&#34;jackknife-variational-inference&#34;&gt;Jackknife variational inference&lt;/h2&gt;
 &lt;p&gt;The application of the jackknife method to the IWAE estimator should be straightforward.
 The jackknife variational inference (JVI) estimator is defined as follows:
 $$
 \widehat{\mathcal{L}}_{k,1}^{\mathrm{JVI}}
-:= k \widehat{\mathcal{L}}_k^{\mathrm{IWAE}}&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;(k-1) \widehat{\mathcal{L}}_{k-1}^{\mathrm{IWAE}},
+:= k \widehat{\mathcal{L}}_k^{\mathrm{IWAE}} - (k-1) \widehat{\mathcal{L}}_{k-1}^{\mathrm{IWAE}},
 $$
 and more generally,
 $$
 \widehat{\mathcal{L}}_{k,m}^{\mathrm{JVI}}
 := \sum_{j=0}^m c(k, m, j) \widehat{\mathcal{L}}_{k-j}^{\mathrm{IWAE}}.
 $$
-The bias of $\widehat{\mathcal{L}}_{k,m}^{\mathrm{JVI}}$, as an estimator of $\log p(x)$, is thus in the order of $O(k^{-(m+1)})$.&lt;/li&gt;
-&lt;/ul&gt;
+The bias of $\widehat{\mathcal{L}}_{k,m}^{\mathrm{JVI}}$, as an estimator of $\log p(x)$, is thus in the order of $O(k^{-(m+1)})$.&lt;/p&gt;
 &lt;p&gt;Again, the IWAE estimator $\widehat{\mathcal{L}}_{k-j}^{\mathrm{IWAE}}$ can be evaluated on a single subset of samples of size $k-j$, or by the average of that on all subsets of size $k-j$.
 In the latter case, the computational cost is significant since $\sum_{j=0}^m {k \choose j}$ could be large; the time complexity is bounded by
 $$
