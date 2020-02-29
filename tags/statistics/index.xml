@@ -16,16 +16,12 @@
       <pubDate>Fri, 09 Aug 2019 00:00:00 +0000</pubDate>
       
       <guid>https://bochang.me/blog/posts/iwae/</guid>
-      <description>
-
-&lt;p&gt;This blog post is a summary of two papers: Burda et al. (2015) and Nowozin (2018).
+      <description>&lt;p&gt;This blog post is a summary of two papers: Burda et al. (2015) and Nowozin (2018).
 We first give a quick overview of variational inference and variational autoencoders (VAE), which approximate the posterior distribution by a simpler distribution and maximize the evidence lower bound (ELBO).
 Blei et al. (2017) and Zhang et al. (2018) are among some excellent survey papers on variational inference.
 Next, the importance weighted autoencoder (IWAE) is introduced, and its properties are presented.
 Finally, we describe the jackknife variational inference (JVI) as a way to reduce the bias of IWAE estimators.&lt;/p&gt;
-
 &lt;h2 id=&#34;variational-autoencoders&#34;&gt;Variational autoencoders&lt;/h2&gt;
-
 &lt;p&gt;Consider a Bayesian model involving the (set of) latent variable $z$ and  observation $x$, where the joint density can be decomposed into
 $$
 p(x, z) = p(x | z) p(z),
@@ -33,11 +29,9 @@ $$
 where $p(x | z)$ is the likelihood and $p(z)$ is the prior distribution of the latent variable $z$.
 The posterior distribution $p(z|x)$ is of central interest in Bayesian inference.
 However, it is often intractable, and approximate inference is required.&lt;/p&gt;
-
 &lt;p&gt;Variational inference aims to approximate the posterior distribution by a variational distribution and to derive a lower bound of the marginal log-likelihood of data $\log p(x)$.
 Variational autoencoder (VAE) is a type of amortized variational inference method.
-Here, &amp;ldquo;amortized&amp;rdquo; means that the variational distribution $q(z|x)$ is parametrized by a function of $x$, whose parameters are shared across all observations.&lt;/p&gt;
-
+Here, &amp;lsquo;&amp;lsquo;amortized&amp;rsquo;&amp;rsquo; means that the variational distribution $q(z|x)$ is parametrized by a function of $x$, whose parameters are shared across all observations.&lt;/p&gt;
 &lt;p&gt;We first rewrite the marginal log-likelihood by introducing the variational distribution $q(z|x)$:
 \begin{align}
 \log p(x) &amp;amp;= \log \int p(x|z) p(z) \mathrm{d} z
@@ -58,7 +52,6 @@ $$
 $$
 The right-hand side is called the evidence lower bound (ELBO), denoted by $\mathcal{L}$.
 The inference problem then becomes an optimization problem that tries to find a variational distribution $q(z|x)$ that maximizes $\mathcal{L}$.&lt;/p&gt;
-
 &lt;p&gt;There are at least three ways of rewriting the ELBO:
 \begin{align}
 \mathcal{L} &amp;amp;=
@@ -70,18 +63,20 @@ The inference problem then becomes an optimization problem that tries to find a 
 &amp;amp;=
 \mathbb{E}_{q(z|x)} \log p(x|z) - D_{\mathrm{KL}} ( q(z|x) \parallel p(z) )
 \end{align}&lt;/p&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;The first equation shows that the difference between the marginal log-likelihood $\log p(x)$ and the ELBO $\mathcal{L}$ is the KL divergence between $q(z|x)$ and $p(z|x)$.
-When these two distributions are identical (almost everywhere), the marginal log-likelihood equals the ELBO.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;In the second equation, the first term represents the &amp;ldquo;energy&amp;rdquo; and the second term represents the entropy of $q(z|x)$. The energy term encourages $q(z|x)$ to focus probability mass on where the joint probability $p(x, z)$ is large. The entropy encourages $q(z|x)$ to spread the probability mass to avoid concentrating on one location.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;The third equation is a more explicit representation of the standard architecture of a variational autoencoder.
+&lt;li&gt;
+&lt;p&gt;The first equation shows that the difference between the marginal log-likelihood $\log p(x)$ and the ELBO $\mathcal{L}$ is the KL divergence between $q(z|x)$ and $p(z|x)$.
+When these two distributions are identical (almost everywhere), the marginal log-likelihood equals the ELBO.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the second equation, the first term represents the &amp;ldquo;energy&amp;rdquo; and the second term represents the entropy of $q(z|x)$. The energy term encourages $q(z|x)$ to focus probability mass on where the joint probability $p(x, z)$ is large. The entropy encourages $q(z|x)$ to spread the probability mass to avoid concentrating on one location.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The third equation is a more explicit representation of the standard architecture of a variational autoencoder.
 The variational distribution $q(z|x)$ and the likelihood function $p(x|z)$ are represented by an encoder network and a decoder network, respectively.
-Furthermore, $q(z|x)$ and $p(z)$ are often assumed to be multivariate independent Gaussian so that their KL divergence is of closed-form.&lt;/p&gt;&lt;/li&gt;
+Furthermore, $q(z|x)$ and $p(z)$ are often assumed to be multivariate independent Gaussian so that their KL divergence is of closed-form.&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;A simple Monte Carlo estimator of the ELBO $\mathcal{L}$ approximates the expectation in Equation \ref{eq:elbo} by the sample mean.
 Let $z_i$, for $i=1, \ldots, k$, be independent samples drawn from $q(z|x)$, then the estimator is
 $$
@@ -89,9 +84,7 @@ $$
 \frac{1}{k} \sum_{i=1}^k \log \left[ \frac{p(x|z_i) p(z_i)}{q(z_i|x)} \right].
 $$
 It is obvious that the estimator is unbiased, i.e., $\mathbb{E}_{z_i \sim q(z|x)} \widehat{\mathcal{L}}_k^{\mathrm{ELBO}} = \mathcal{L}$.&lt;/p&gt;
-
 &lt;h2 id=&#34;importance-weighted-autoencoders&#34;&gt;Importance weighted autoencoders&lt;/h2&gt;
-
 &lt;p&gt;What we have described so far is first to define the ELBO $\mathcal{L}$ as a lower bound of $\log p(x)$, and then to estimate it by $\widehat{\mathcal{L}}_k^{\mathrm{ELBO}}$.
 An alternative approach is to approximate the expectation (inside the logarithm function) in Equation \ref{eq:marginal} by Monte Carlo, which leads to the importance weighted autoencoders (IWAE) estimator:
 $$
@@ -99,7 +92,6 @@ $$
 \log \left[ \frac{1}{k} \sum_{i=1}^k  \frac{p(x|z_i) p(z_i)}{q(z_i|x)} \right].
 $$
 Note the difference between $\widehat{\mathcal{L}}_k^{\mathrm{ELBO}}$ and $\widehat{\mathcal{L}}_k^{\mathrm{IWAE}}$.&lt;/p&gt;
-
 &lt;p&gt;If we denote $\mathcal{L}_k := \mathbb{E}_{z_i \sim q(z|x)} \widehat{\mathcal{L}}_k^{\mathrm{IWAE}}$, then by Jensen&amp;rsquo;s inequality,
 $$
 \mathcal{L}_k
@@ -123,13 +115,10 @@ $$
 = \log p(x) - \frac{\mu_2}{2 \mu^2} \frac{1}{k} + \left( \frac{\mu_3}{3\mu^2} - \frac{3\mu_2^2}{4\mu^4} \right) \frac{1}{k^2} + O(k^{-3}),
 $$
 where $\mu$ and $\mu_j$ are the expectation and the $j$-th central moment of $p(x|z_i) p(z_i) / q(z_i|x)$ with $z_i \sim q(z|x)$, respectively.&lt;/p&gt;
-
 &lt;p&gt;An interesting perspective on the IWAE is that, $\widehat{\mathcal{L}}_k^{\mathrm{IWAE}}$ can be regarded as an estimator of $\log p(x)$.
 As shown above, the estimator is &lt;a href=&#34;https://en.wikipedia.org/wiki/Consistent_estimator&#34;&gt;consistent&lt;/a&gt; but &lt;a href=&#34;https://en.wikipedia.org/wiki/Bias_of_an_estimator&#34;&gt;biased&lt;/a&gt;, and the bias is in the order of $O(k^{-1})$.
 The remaining sections try to reduce the bias to a higher/smaller order so that the estimator is closer to the marginal log-likelihood when $k$ is large.&lt;/p&gt;
-
 &lt;h2 id=&#34;jackknife-resampling&#34;&gt;Jackknife resampling&lt;/h2&gt;
-
 &lt;p&gt;The &lt;a href=&#34;https://en.wikipedia.org/wiki/Jackknife_resampling&#34;&gt;jackknife&lt;/a&gt; is a resampling technique that can be used to estimate the bias of an estimator and further to reduce the bias.
 Let $\widehat{T}_n$ be a consistent but biased estimator of $T$, evaluated on $n$ samples.
 Assume the expectation $\mathbb{E} (\widehat{T}_n)$ can be written as an asymptotic expansion as $n \to \infty$:
@@ -137,7 +126,6 @@ $$
 \mathbb{E} (\widehat{T}_n) = T + \frac{a_1}{n} + \frac{a_2}{n^2} + O(n^{-3}).
 $$
 Then the bias of $\widehat{T}_n$ is in the order of $O(n^{-1})$.&lt;/p&gt;
-
 &lt;p&gt;A debiased estimator $\widetilde{T}_{n,1}$ can be defined as follows:
 $$
 \widetilde{T}_{n,1} := n \widehat{T}_n - (n-1) \widehat{T}_{n-1}.
@@ -157,9 +145,7 @@ The idea is that the first order term is canceled by calculating the difference.
 \end{align}
 The bias of $\widetilde{T}_{n,1}$ is in the order of $O(n^{-2})$ instead of $O(n^{-1})$.
 When $n$ is large, $\widetilde{T}_{n,1}$ has a lower bias than $\widehat{T}_n$.&lt;/p&gt;
-
 &lt;p&gt;The estimator $\widehat{T}_{n-1}$ can be calculated on any $n-1$ samples. In practice, given $n$ samples, it is evaluated on the $n$ &amp;ldquo;leave-one-out&amp;rdquo; subsets of size $n-1$, and the average of the $n$ estimates is used in place of $\widehat{T}_{n-1}$, which reduces the variance of the estimator.&lt;/p&gt;
-
 &lt;p&gt;The above debiasing method can be further generalized to higher orders.
 For example, let
 $$
@@ -182,9 +168,7 @@ $$
 c(n, m, j) = (-1)^j \frac{(n-j)^m}{(m-j)! j!},
 $$
 the bias is in the order of $O(n^{-(m+1)})$.&lt;/p&gt;
-
 &lt;h2 id=&#34;jackknife-variational-inference&#34;&gt;Jackknife variational inference&lt;/h2&gt;
-
 &lt;p&gt;The application of the jackknife method to the IWAE estimator should be straightforward.
 The jackknife variational inference (JVI) estimator is defined as follows:
 $$
@@ -197,7 +181,6 @@ $$
 := \sum_{j=0}^m c(k, m, j) \widehat{\mathcal{L}}_{k-j}^{\mathrm{IWAE}}.
 $$
 The bias of $\widehat{\mathcal{L}}_{k,m}^{\mathrm{JVI}}$, as an estimator of $\log p(x)$, is thus in the order of $O(k^{-(m+1)})$.&lt;/p&gt;
-
 &lt;p&gt;Again, the IWAE estimator $\widehat{\mathcal{L}}_{k-j}^{\mathrm{IWAE}}$ can be evaluated on a single subset of samples of size $k-j$, or by the average of that on all subsets of size $k-j$.
 In the latter case, the computational cost is significant since $\sum_{j=0}^m {k \choose j}$ could be large; the time complexity is bounded by
 $$
@@ -205,17 +188,20 @@ O \left( k e^m \left( \frac{k}{m} \right)^m \right).
 $$
 In practice, the algorithm is feasible only for small values of $m$.
 Other variations of JVI are also provided by Nowozin (2018), at the cost of higher variance of the estimator.&lt;/p&gt;
-
 &lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Blei, D. M., Kucukelbir, A., &amp;amp; McAuliffe, J. D. (2017). Variational inference: A review for statisticians. Journal of the American Statistical Association, 112(518), 859-877.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Burda, Y., Grosse, R., &amp;amp; Salakhutdinov, R. (2015). Importance weighted autoencoders. International Conference on Learning Representations.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Nowozin, S. (2018). Debiasing evidence approximations: On importance-weighted autoencoders and jackknife variational inference. International Conference on Learning Representations.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Zhang, C., Butepage, J., Kjellstrom, H., &amp;amp; Mandt, S. (2018). Advances in variational inference. IEEE transactions on pattern analysis and machine intelligence.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Blei, D. M., Kucukelbir, A., &amp;amp; McAuliffe, J. D. (2017). Variational inference: A review for statisticians. Journal of the American Statistical Association, 112(518), 859-877.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Burda, Y., Grosse, R., &amp;amp; Salakhutdinov, R. (2015). Importance weighted autoencoders. International Conference on Learning Representations.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Nowozin, S. (2018). Debiasing evidence approximations: On importance-weighted autoencoders and jackknife variational inference. International Conference on Learning Representations.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Zhang, C., Butepage, J., Kjellstrom, H., &amp;amp; Mandt, S. (2018). Advances in variational inference. IEEE transactions on pattern analysis and machine intelligence.&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
@@ -226,29 +212,21 @@ Other variations of JVI are also provided by Nowozin (2018), at the cost of high
       <pubDate>Wed, 08 May 2019 00:00:00 +0000</pubDate>
       
       <guid>https://bochang.me/blog/posts/copula/</guid>
-      <description>
-
-&lt;p&gt;You might have seen the following true/false questions in the final exam of your first statistics course.&lt;/p&gt;
-
+      <description>&lt;p&gt;You might have seen the following true/false questions in the final exam of your first statistics course.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;If \( (Z_1, Z_2) \) follows a bivariate Gaussian distribution, do \( Z_1 \) and \( Z_2 \) follow univariate Gaussian distributions?&lt;/li&gt;
 &lt;li&gt;If \( Z_1 \) and \( Z_2 \) follow univariate Gaussian distributions, does \( (Z_1, Z_2) \) follow a bivariate Gaussian distribution?&lt;/li&gt;
 &lt;/ol&gt;
-
 &lt;p&gt;The answer to the first question is &lt;em&gt;true&lt;/em&gt; and to the second is &lt;em&gt;false&lt;/em&gt;.
 “What could the joint distribution of \( (Z_1, Z_2) \) be, if \( Z_1 \) and \( Z_2 \) are univariate Gaussians?”, you may ask.&lt;/p&gt;
-
 &lt;p&gt;Figure 1 shows the contour plots for different bivariate distributions where \(Z_1\) and \(Z_2\) follow standard Gaussian distributions. All of them are constructed using &lt;strong&gt;copulas&lt;/strong&gt;, which are a flexible tool to model the dependence among random variables.
 In this post, I give a short introduction to (bivariate) copulas.
 Other references on this topic include an introduction by &lt;a href=&#34;http://www.angelfire.com/falcon/isinotes/mult/cop1.pdf&#34;&gt;Schmidt (2007)&lt;/a&gt; and a monograph by my Ph.D. advisor &lt;a href=&#34;https://www.crcpress.com/Dependence-Modeling-with-Copulas/Joe/p/book/9781466583221&#34;&gt;Joe (2014)&lt;/a&gt;.&lt;/p&gt;
-
 &lt;figure&gt;
     &lt;img src=&#34;normal_plots.png&#34; alt=&#34;Contour plots of density function.&#34; width=&#34;600&#34;&gt;
     &lt;figcaption&gt;Figure 1: Contour plots of density functions.&lt;/figcaption&gt;
 &lt;/figure&gt;
-
-&lt;h2 id=&#34;1-copula-a-first-glance&#34;&gt;1. Copula&amp;ndash;a first glance&lt;/h2&gt;
-
+&lt;h2 id=&#34;1-copula--a-first-glance&#34;&gt;1. Copula&amp;ndash;a first glance&lt;/h2&gt;
 &lt;p&gt;Consider a continuous random vector \((X_1, X_2)\).
 Let \(F_j\) be the marginal cumulative distribution function (CDF) of \(X_j\) for \(j=1,2\), and \(F\) be the joint CDF.
 We apply the probability integral transform and define \(U_j := F_j(X_j)\).
@@ -264,11 +242,8 @@ F(x_1, x_2)
 \newline
 &amp;amp;= C(F_1(x_1), F_2(x_2)).
 \end{align}&lt;/p&gt;
-
 &lt;p&gt;The name &amp;ldquo;copula&amp;rdquo; comes from the Latin for &amp;ldquo;link&amp;rdquo;; it links the marginals to the joint distribution.&lt;/p&gt;
-
 &lt;p&gt;We first consider a few simple copulas.&lt;/p&gt;
-
 &lt;p&gt;&lt;strong&gt;Example 1&lt;/strong&gt; (Independence copula). Let \(X_1\) and \(X_2\) be independent random variables. The corresponding copula is
 \begin{align}
 C(u_1, u_2)
@@ -282,7 +257,6 @@ C(u_1, u_2)
 u_1 u_2.
 \end{align}
 The second equality is due to independence of \(U_1\) and \(U_2\), and the last equality is because \(U_1\) and \(U_2\) follow uniform distributions.&lt;/p&gt;
-
 &lt;p&gt;&lt;strong&gt;Example 2&lt;/strong&gt; (Comonotonicity copula). Let \(X_2 = 2X_1\); that is, \(X_1\) and \(X_2\) have a deterministic and positive relationship.
 We can derive the relation between the CDFs:
 $$F_1(x) = \mathbb{P}(X_1 \leq x) = \mathbb{P}(2 X_1 \leq 2 x) = \mathbb{P}(X_2 \leq 2x) = F_2(2x),$$
@@ -305,7 +279,6 @@ C(u_1, u_2)
 \end{align}
 The comonotonicity copula has perfect positive dependence.
 Note that \(X_2 = 2X_1\) can be replaced by \(X_2 = T(X_1)\) for any strictly increasing transformation \(T\).&lt;/p&gt;
-
 &lt;p&gt;&lt;strong&gt;Example 3&lt;/strong&gt; (Countermonotonicity copula).
 Similar to the previous example, we consider the perfect negative dependence.
 Let \(X_2 = -2X_1\), then
@@ -328,7 +301,6 @@ C(u_1, u_2)
 \max \{u_1 + u_2 - 1, 0\}.
 \end{align}
 The countermonotonicity copula is the copula of \(X_2 = T(X_1)\) for any strictly decreasing transformation \(T\).&lt;/p&gt;
-
 &lt;p&gt;&lt;strong&gt;Example 4&lt;/strong&gt; (Bivariate Gaussian copula).
 The previous examples are all extreme cases, with either perfect dependence or independence.
 We now introduce a copula that is derived from the bivariate Gaussian distribution.
@@ -357,24 +329,17 @@ C(u_1, u_2)
 \end{align}
 where \(\Phi\) is the CDF of a standard normal distribution and \(\Phi_2(\cdot; \rho)\) is the joint CDF of \((X_1, X_2)\).
 Also different from the previous example, this is the first parametric copula family we have introduced. The Gaussian copula has a parameter \(\rho\) controlling the strength of dependence.&lt;/p&gt;
-
 &lt;h2 id=&#34;2-common-parametric-copula-families&#34;&gt;2. Common parametric copula families&lt;/h2&gt;
-
 &lt;p&gt;We now give a more general definition of bivariate copulas.&lt;/p&gt;
-
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Definition 1.&lt;/strong&gt;
 A bivariate copula \(C: [0,1]^2 \to [0,1]\) is a function which is a bivariate cumulative distribution function with uniform marginals.&lt;/p&gt;
 &lt;/blockquote&gt;
-
 &lt;p&gt;The copulas we have introduced so far are all derived from bivariate distributions. In other words, it goes from the joint distribution \(F\) on the left-hand side of the following equation to the copula \(C\) and marginals \(F_j\) on the right-hand side.
 $$F(x_1, x_2) = C(F_1(x_1), F_2(x_2)).$$&lt;/p&gt;
-
 &lt;p&gt;Given the general definition of the copula, some copula families \(C\) can further be defined explicitly.
 This allows us to go from the right-hand side to the left-hand side; that is, linking two marginals using a copula to get a joint distribution.&lt;/p&gt;
-
 &lt;p&gt;Below are shown some commonly used parametric bivariate copula families, where \(\rho, \nu\) and \(\delta\) are the parameters.&lt;/p&gt;
-
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -382,61 +347,47 @@ This allows us to go from the right-hand side to the left-hand side; that is, li
 &lt;th&gt;Copula CDF&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
-
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;Gaussian&lt;/td&gt;
 &lt;td&gt;\(\Phi_2 \left( \Phi^{-1}(u_1), \Phi^{-1}(u_2); \rho \right)\)&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;t&lt;/td&gt;
 &lt;td&gt;\( T_{2, \nu} \left(T_{1, \nu}^{-1}(u_1), T_{1, \nu}^{-1}(u_2); \rho \right) \)&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;Frank&lt;/td&gt;
 &lt;td&gt;\( -\delta^{-1} \log \left( \frac{1 - e^{-\delta} - (1 - e^{-\delta u_1}) (1 - e^{-\delta u_2})} {1-e^{-\delta}} \right) \)&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;MTCJ&lt;/td&gt;
 &lt;td&gt;\( (u_1^{-\delta} + u_2^{-\delta} - 1)^{-1/\delta} \)&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;Joe&lt;/td&gt;
 &lt;td&gt;\( 1 - \left( (1-u_1)^{\delta} + (1-u_2)^{\delta} - (1-u_1)^{\delta} (1-u_2)^{\delta} \right)^{1/\delta} \)&lt;/td&gt;
 &lt;/tr&gt;
-
 &lt;tr&gt;
 &lt;td&gt;Gumbel&lt;/td&gt;
 &lt;td&gt;\( \exp \left( -\left( (-\log u_1)^{\delta} + (-\log u_2)^{\delta} \right)^{1/\delta} \right) \)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-
 &lt;p&gt;Figure 1 shows the constructed bivariate joint distributions using the copula families above and univariate standard normal distributions (i.e., \(F_1 = F_2 = \Phi\)).&lt;/p&gt;
-
-&lt;h2 id=&#34;3-fréchet-hoeffding-bounds&#34;&gt;3. Fréchet&amp;ndash;Hoeffding bounds&lt;/h2&gt;
-
+&lt;h2 id=&#34;3-fréchet--hoeffding-bounds&#34;&gt;3. Fréchet&amp;ndash;Hoeffding bounds&lt;/h2&gt;
 &lt;p&gt;As hinted before, the comonotonicity and countermonotonicity copulas are two extreme cases: perfect positive dependence and perfect negative dependence.
 This is formally stated by the following theorem.&lt;/p&gt;
-
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;Theorem 1&lt;/strong&gt; (Fréchet&amp;ndash;Hoeffding bounds).&lt;br /&gt;
+&lt;p&gt;&lt;strong&gt;Theorem 1&lt;/strong&gt; (Fréchet&amp;ndash;Hoeffding bounds).&lt;br&gt;
 For any copula \( C:[0,1]^2 \to [0,1] \) and any \( (u_1, u_2) \in [0,1]^2 \), the following bounds hold:
 $$\max \{ u_1+u_2-1, 0 \} \leq C(u_1, u_2) \leq \min \{ u_1, u_2 \}.$$&lt;/p&gt;
 &lt;/blockquote&gt;
-
 &lt;p&gt;Figure 2 shows the upper and lower bounds in green and blue respectively.
 By the theorem, every copula lies between the two surfaces.&lt;/p&gt;
-
-&lt;p&gt;&lt;div id=&#34;fh_bounds&#34;&gt;&lt;/div&gt;
-&lt;figcaption&gt;Figure 2: Fréchet&amp;ndash;Hoeffding bounds. The figure is interactive. &lt;/figcaption&gt;&lt;/p&gt;
-
+&lt;div id=&#34;fh_bounds&#34;&gt;&lt;/div&gt;
+&lt;figcaption&gt;Figure 2: Fréchet--Hoeffding bounds. The figure is interactive. &lt;/figcaption&gt;
 &lt;h2 id=&#34;4-reflected-copula&#34;&gt;4. Reflected copula&lt;/h2&gt;
-
 &lt;p&gt;Given \( (U_1, U_2) \sim C \), the reflected copula \(\widehat{C}\) is defined as the copula of \( (1-U_1, 1-U_2) \). That is,
 \begin{align}
 \widehat{C}(u_1, u_2) &amp;amp;=
@@ -445,7 +396,6 @@ By the theorem, every copula lies between the two surfaces.&lt;/p&gt;
 &amp;amp;=
 \mathbb{P}(U_1 \geq 1 - u_1, U_2 \geq 1 - u_2).
 \end{align}&lt;/p&gt;
-
 &lt;p&gt;The reflected copula \(\widehat{C}\) is handy when studying the upper and lower tail properties of a copula, as we will see later.
 To facilitate the analysis, we calculate the following probability (survival function):
 \begin{align}
@@ -462,42 +412,36 @@ To facilitate the analysis, we calculate the following probability (survival fun
 The second equality is due to the &lt;a href=&#34;https://en.wikipedia.org/wiki/Inclusion%E2%80%93exclusion_principle&#34;&gt;inclusion–exclusion principle&lt;/a&gt;.
 Finally, we have
 $$\widehat{C}(u_1, u_2) = u_1 + u_2 - 1 + C(1-u_1, 1-u_2).$$&lt;/p&gt;
-
 &lt;h2 id=&#34;5-rank-correlations&#34;&gt;5. Rank correlations&lt;/h2&gt;
-
 &lt;p&gt;Correlation coefficients are useful in summarizing the dependence structure between two variables using a single number.
 &lt;a href=&#34;https://en.wikipedia.org/wiki/Pearson_correlation_coefficient&#34;&gt;Pearson&amp;rsquo;s correlation&lt;/a&gt; is probably the most commonly used one.
 However, it is known that Pearson&amp;rsquo;s correlation between \(X\) and \(X^2\) is zero for \(X \sim \mathcal{N} (0, 1)\).
 This is often used as an example to illustrate that Pearson&amp;rsquo;s correlation only measures linear correlation; it is not invariant under increasing transformations.&lt;/p&gt;
-
 &lt;p&gt;In nonparametric statistics, rank correlations, such as &lt;a href=&#34;https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient&#34;&gt;Spearman&amp;rsquo;s rho&lt;/a&gt; and &lt;a href=&#34;https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient&#34;&gt;Kendall&amp;rsquo;s tau&lt;/a&gt;, are defined by the ranks of the data rather than the data itself.
 As a result, they are invariant under increasing transformations.
 Since copulas are also independent of marginals, there should be a natural connection between copulas and rank correlations.
 In fact, both Spearman&amp;rsquo;s rho and Kendall&amp;rsquo;s tau can be defined directly as functionals of a copula.&lt;/p&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Spearman&amp;rsquo;s rho:
+&lt;li&gt;
+&lt;p&gt;Spearman&amp;rsquo;s rho:
 $$
 \rho_S( C ) = \iint_{[0,1]^2}
-uv \, \mathrm{d} C(u, v)
+uv , \mathrm{d} C(u, v)
 -3.
-$$&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Kendall&amp;rsquo;s tau:
+$$&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Kendall&amp;rsquo;s tau:
 $$
 \rho_\tau( C ) = \iint_{[0,1]^2}
-C(u, v) \, \mathrm{d} C(u, v).
-$$&lt;/p&gt;&lt;/li&gt;
+C(u, v) , \mathrm{d} C(u, v).
+$$&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;The integrals are &lt;a href=&#34;https://en.wikipedia.org/wiki/Riemann%E2%80%93Stieltjes_integral&#34;&gt;Riemann&amp;ndash;Stieltjes integrals&lt;/a&gt;.&lt;/p&gt;
-
 &lt;p&gt;The parameters of bivariate copulas in Figure 1 are chosen such that their Kendall&amp;rsquo;s tau all equals 0.5.&lt;/p&gt;
-
 &lt;h2 id=&#34;6-tail-dependence&#34;&gt;6. Tail dependence&lt;/h2&gt;
-
 &lt;p&gt;Apart from correlation coefficients, the coefficient of tail dependence is also an essential measure of dependence. It characterizes the dependence of a bivariate distribution in the extremes, which is important in many financial applications.&lt;/p&gt;
-
 &lt;p&gt;Consider the following bivariate Gaussian distribution
 $$\begin{pmatrix}
 X_1 \newline
@@ -510,7 +454,6 @@ X_2
 0.5 &amp;amp; 1
 \end{pmatrix} \right).$$
 We are interested in the conditional probability \(\mathbb{P}(X_2&amp;gt;t | X_1&amp;gt;t)\); that is, given the event that \(X_1\) is greater than a threshold \(t\), what is the probability that \(X_2\) is also greater than \(t\).&lt;/p&gt;
-
 &lt;!-- ```r
 rmvnorm(10000, sigma = matrix(c(1, 0.5, 0.5, 1), nrow = 2)) %&gt;% 
     data.frame() %&gt;% 
@@ -522,36 +465,29 @@ rmvnorm(10000, sigma = matrix(c(1, 0.5, 0.5, 1), nrow = 2)) %&gt;%
     ylab(latex2exp::TeX(&#34;X_2&#34;))
 ggsave(&#34;gaussian_tail_dep.png&#34;, width = 4, height = 4)    
 ``` --&gt;
-
 &lt;figure&gt;
     &lt;img src=&#34;gaussian_tail_dep.png&#34; alt=&#34;Tail independence of bivariate Gaussian distributions.&#34; width=&#34;350&#34;/&gt;
     &lt;figcaption&gt;Figure 3: Tail independence of bivariate Gaussian distributions. Adapted from Donnelly and Embrechts (2010).&lt;/figcaption&gt;
 &lt;/figure&gt;
-
 &lt;!-- ```
 sigma &lt;- matrix(c(1, 0.5, 0.5, 1), nrow = 2)
 pmvnorm(lower = c(1, 1), sigma = sigma) / pnorm(1, lower.tail = F)
 pmvnorm(lower = c(2, 2), sigma = sigma) / pnorm(2, lower.tail = F)
 pmvnorm(lower = c(3, 3), sigma = sigma) / pnorm(3, lower.tail = F)
 ``` --&gt;
-
 &lt;p&gt;Figure 3 shows 10,000 random samples from the distribution.
 For \(t \in \{1,2,3\}\), the probability can be visually estimated: among the points to the right of \(x=t\), how many of them are above \(y=t\).
 It appears that the probability decreases as \(t\) increases.
 A further numerical calculation gives&lt;/p&gt;
-
 &lt;ul&gt;
 &lt;li&gt;\(\mathbb{P}(X_2&amp;gt;1 | X_1&amp;gt;1) = 0.39, \)&lt;/li&gt;
 &lt;li&gt;\(\mathbb{P}(X_2&amp;gt;2 | X_1&amp;gt;2) = 0.18, \)&lt;/li&gt;
 &lt;li&gt;\(\mathbb{P}(X_2&amp;gt;3 | X_1&amp;gt;3) = 0.06. \)&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;p&gt;It can be shown that
 $$\lim_{t \to +\infty}\mathbb{P}(X_2&amp;gt;t | X_1&amp;gt;t) = 0. $$&lt;/p&gt;
-
 &lt;p&gt;Interestingly, although \(X_1\) and \(X_2\) are correlated, they behave like independent random variables in the extremes.
 This behavior is called (upper) tail independence.&lt;/p&gt;
-
 &lt;p&gt;Formally, the coefficients of lower and upper tail dependence are defined as follows.
 \begin{align}
 \lambda_\ell &amp;amp;=
@@ -587,7 +523,6 @@ $$
 \frac{\widehat{C}(q, q)}{q}.
 $$
 In Figure 1, t, Joe, and Gumbel copulas have upper tail dependence; t and MTCJ copulas have lower tail dependence.&lt;/p&gt;
-
 &lt;p&gt;As a digression, the &lt;a href=&#34;https://en.wikipedia.org/wiki/Financial_crisis_of_2007%E2%80%932008&#34;&gt;2007&amp;ndash;2008 financial crisis&lt;/a&gt; is partially caused by the misuse of the Gaussian copula model.
 See &lt;a href=&#34;https://www.wired.com/2009/02/wp-quant/&#34;&gt;Salmon (2009)&lt;/a&gt; and &lt;a href=&#34;http://www.macs.hw.ac.uk/~cd134/2010/donemb.pdf&#34;&gt;Donnelly and Embrechts (2010)&lt;/a&gt; for details.
 One of the main disadvantages of the model is that it does not adequately model the occurrence
@@ -595,24 +530,25 @@ of defaults in the underlying portfolio of corporate bonds.
 In times of crisis, corporate defaults occur in clusters, so that if one company defaults then it is likely that other companies also default within a short period.
 However, under the Gaussian copula model, company defaults become
 independent as their size of default increases, which leads to model inadequacy.&lt;/p&gt;
-
 &lt;!-- ## Multivariate copula construction
 
 Multivariate Gaussian and t copulas, Archimedean copulas, and vine copulas.
  --&gt;
-
 &lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Donnelly, C., &amp;amp; Embrechts, P. (2010). The devil is in the tails: actuarial mathematics and the subprime mortgage crisis. ASTIN Bulletin: The Journal of the IAA, 40(1), 1-33.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Joe, H. (2014). Dependence modeling with copulas. Chapman and Hall/CRC.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Salmon, F. (2009). Recipe for disaster: the formula that killed Wall Street. February 23 2009, Wired Magazine.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Schmidt, T. (2007). Coping with copulas. Copulas-From theory to application in finance, 3-34.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Donnelly, C., &amp;amp; Embrechts, P. (2010). The devil is in the tails: actuarial mathematics and the subprime mortgage crisis. ASTIN Bulletin: The Journal of the IAA, 40(1), 1-33.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Joe, H. (2014). Dependence modeling with copulas. Chapman and Hall/CRC.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Salmon, F. (2009). Recipe for disaster: the formula that killed Wall Street. February 23 2009, Wired Magazine.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Schmidt, T. (2007). Coping with copulas. Copulas-From theory to application in finance, 3-34.&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
-
 &lt;script&gt;
    window.PlotlyConfig = {MathJaxConfig: &#39;local&#39;}
 &lt;/script&gt;
