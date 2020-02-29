@@ -16,34 +16,52 @@
       <pubDate>Sat, 10 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>https://bochang.me/blog/posts/latex/</guid>
-      <description>&lt;p&gt;LaTeX is a high-quality typesetting system and the de facto standard for the publication of scientific documents. However, I never got a chance to learn how to use it formally. Most of my LaTeX knowledge comes from learning by doing. As I&amp;rsquo;m working on my Ph.D. thesis, I would like to share a few LaTeX tips that I wish I had known earlier. I got most of them from working with my advisors, internship hosts, and collaborators. There is still a lot for me to learn about LaTeX. Any comments and suggestions are welcome!&lt;/p&gt;
+      <description>
+
+&lt;p&gt;LaTeX is a high-quality typesetting system and the de facto standard for the publication of scientific documents. However, I never got a chance to learn how to use it formally. Most of my LaTeX knowledge comes from learning by doing. As I&amp;rsquo;m working on my Ph.D. thesis, I would like to share a few LaTeX tips that I wish I had known earlier. I got most of them from working with my advisors, internship hosts, and collaborators. There is still a lot for me to learn about LaTeX. Any comments and suggestions are welcome!&lt;/p&gt;
+
 &lt;h2 id=&#34;1-non-breaking-spaces&#34;&gt;1. Non-breaking spaces&lt;/h2&gt;
+
 &lt;p&gt;In digital typesetting, a non-breaking space is a space character that prevents an automatic line break at its position. It is like an invisible glue between two words. There are various situations where a non-breaking space is used. For example, if the phrase &amp;ldquo;100 km&amp;rdquo; does not fit at the end of a line, the word processor may insert a line break between &amp;ldquo;100&amp;rdquo; and &amp;ldquo;km&amp;rdquo;, which is not desirable.&lt;/p&gt;
+
 &lt;p&gt;LaTeX uses the &lt;code&gt;~&lt;/code&gt; symbol as a non-breaking space. It is usually inserted before any numeric or alphabetic reference, for example, &lt;code&gt;Figure~\ref{fig:foo}&lt;/code&gt; and &lt;code&gt;Section~\ref{sec:bar}&lt;/code&gt;. Compare the following examples:&lt;/p&gt;
+
 &lt;ul&gt;
 &lt;li&gt;Without a non-breaking space: &lt;code&gt;Table 3&lt;/code&gt;
-&lt;img src=&#34;nonbreaking-1.png&#34; alt=&#34;without a non-breaking space&#34;&gt;&lt;/li&gt;
+&lt;img src=&#34;nonbreaking-1.png&#34; alt=&#34;without a non-breaking space&#34; /&gt;&lt;/li&gt;
 &lt;li&gt;With a non-breaking space: &lt;code&gt;Table~3&lt;/code&gt;
-&lt;img src=&#34;nonbreaking-2.png&#34; alt=&#34;with a non-breaking space&#34;&gt;&lt;/li&gt;
+&lt;img src=&#34;nonbreaking-2.png&#34; alt=&#34;with a non-breaking space&#34; /&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
 &lt;h2 id=&#34;2-citations-using-citet-and-citep&#34;&gt;2. Citations using &lt;code&gt;\citet&lt;/code&gt; and &lt;code&gt;\citep&lt;/code&gt;&lt;/h2&gt;
+
 &lt;p&gt;The &lt;code&gt;natbib&lt;/code&gt; package is commonly used for handling references in LaTeX. It is included in the style files by default for many conferences including ICML, NIPS, ICLR, etc. See &lt;a href=&#34;https://gking.harvard.edu/files/natnotes2.pdf&#34;&gt;here&lt;/a&gt; for a reference sheet for &lt;code&gt;natbib&lt;/code&gt;.&lt;/p&gt;
+
 &lt;p&gt;The two basic citation commands in &lt;code&gt;natbib&lt;/code&gt; are&lt;/p&gt;
+
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;\citet&lt;/code&gt; for &lt;strong&gt;textual&lt;/strong&gt; citations,&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;\citep&lt;/code&gt; for &lt;strong&gt;parenthetical&lt;/strong&gt; citations.&lt;/li&gt;
 &lt;/ul&gt;
+
 &lt;p&gt;The difference is that &lt;code&gt;\citet{jon90}&lt;/code&gt; prints &lt;em&gt;Jones et al. (1990)&lt;/em&gt;, while &lt;code&gt;\citep{jon90}&lt;/code&gt; prints &lt;em&gt;(Jones et al., 1990)&lt;/em&gt;. The choice depends on whether the authors are to be read as part of the sentence. According to the formatting instructions for ICLR 2019:&lt;/p&gt;
+
 &lt;blockquote&gt;
 &lt;p&gt;When the authors or the publication are included in the sentence, the citation should not be in parenthesis (as in “See Hinton et al. (2006) for more information.”). Otherwise, the citation should be in parenthesis (as in “Deep learning shows promise to make progress towards AI (Bengio &amp;amp; LeCun, 2007).”).&lt;/p&gt;
 &lt;/blockquote&gt;
+
 &lt;p&gt;The command &lt;code&gt;\cite&lt;/code&gt; should be avoided because its behavior depends on the citation format and might cause inconsistency. According to the &lt;code&gt;natbib&lt;/code&gt; documentation:&lt;/p&gt;
+
 &lt;blockquote&gt;
 &lt;p&gt;The standard LaTeX command &lt;code&gt;\cite&lt;/code&gt; should be avoided, because it behaves like &lt;code&gt;\citet&lt;/code&gt; for author-year citations, but like &lt;code&gt;\citep&lt;/code&gt; for numerical ones.&lt;/p&gt;
 &lt;/blockquote&gt;
+
 &lt;h2 id=&#34;3-mathematical-symbols&#34;&gt;3. Mathematical symbols&lt;/h2&gt;
+
 &lt;p&gt;When writing mathematical formulas, people follow certain conventions of notations. In fact, there is an ISO standard &lt;a href=&#34;https://people.engr.ncsu.edu/jwilson/files/mathsigns.pdf&#34;&gt;ISO 80000-2&lt;/a&gt; that defines mathematical signs and symbols. I found an article titled &lt;a href=&#34;https://tug.org/TUGboat/tb18-1/tb54becc.pdf&#34;&gt;Typesetting mathematics for science and technology according to ISO 31/XI&lt;/a&gt; by Claudio Beccari. (ISO 31/XI is the precursor of ISO 80000-2.) The recommendations below are excerpts of the article. The &amp;ldquo;roman type&amp;rdquo; refers to upright letters and the &amp;ldquo;italic type&amp;rdquo; refers to sloping letters.&lt;/p&gt;
+
 &lt;p&gt;&lt;strong&gt;a) Variables and functions are represented by one italic letter with modifiers such as subscripts, superscripts, primes, etc.&lt;/strong&gt;&lt;/p&gt;
+
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -52,27 +70,32 @@
 &lt;th&gt;Display&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
+
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;Correct&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;L(x)&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;\(L(x)\)&lt;/td&gt;
 &lt;/tr&gt;
+
 &lt;tr&gt;
 &lt;td&gt;Correct&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;L&#39;(x)&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;\(L&amp;rsquo;(x)\)&lt;/td&gt;
 &lt;/tr&gt;
+
 &lt;tr&gt;
 &lt;td&gt;Correct&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;L_{\mathrm{adversarial}}(x)&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;\(L_{\mathrm{adversarial}}(x)\)&lt;/td&gt;
 &lt;/tr&gt;
+
 &lt;tr&gt;
 &lt;td&gt;Incorrect&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;LOSS(x)&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;\(LOSS(x)\)&lt;/td&gt;
 &lt;/tr&gt;
+
 &lt;tr&gt;
 &lt;td&gt;Incorrect&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Loss(x)&lt;/code&gt;&lt;/td&gt;
@@ -80,8 +103,10 @@
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
+
 &lt;p&gt;&lt;strong&gt;b) Mathematical operators indicated with letters must be set in roman type.&lt;/strong&gt;
 This includes the predefined operators &lt;code&gt;\exp&lt;/code&gt;, &lt;code&gt;\log&lt;/code&gt;, &lt;code&gt;\sin&lt;/code&gt;, &lt;code&gt;\tanh&lt;/code&gt;, &lt;code&gt;\det&lt;/code&gt;, &lt;code&gt;\min&lt;/code&gt;, &lt;code&gt;\inf&lt;/code&gt;, as well as user-defined operators.&lt;/p&gt;
+
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -90,22 +115,26 @@ This includes the predefined operators &lt;code&gt;\exp&lt;/code&gt;, &lt;code&g
 &lt;th&gt;Display&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
+
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;Correct&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;\sin(2x) = 2 \sin(x) \cos(x)&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;\(\sin(2x) = 2 \sin(x) \cos(x)\)&lt;/td&gt;
 &lt;/tr&gt;
+
 &lt;tr&gt;
 &lt;td&gt;Incorrect&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;sin(2x) = 2 sin(x) cos(x)&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;\(sin(2x) = 2 sin(x) cos(x)\)&lt;/td&gt;
 &lt;/tr&gt;
+
 &lt;tr&gt;
 &lt;td&gt;Correct&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;\operatorname{softmax}(x)&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;\(\operatorname{softmax}(x)\)&lt;/td&gt;
 &lt;/tr&gt;
+
 &lt;tr&gt;
 &lt;td&gt;Incorrect&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;softmax(x)&lt;/code&gt;&lt;/td&gt;
@@ -113,8 +142,10 @@ This includes the predefined operators &lt;code&gt;\exp&lt;/code&gt;, &lt;code&g
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
+
 &lt;p&gt;&lt;strong&gt;c) A particular operator, the operator of differentiation, should be set in roman type.&lt;/strong&gt;
 This one is somewhat controversial. In some fields, italic type seems more common. I personally prefer roman type.&lt;/p&gt;
+
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -123,12 +154,14 @@ This one is somewhat controversial. In some fields, italic type seems more commo
 &lt;th&gt;Display&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
+
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;Correct&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;\int x \mathrm{d} x&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;\(\int x \mathrm{d} x\)&lt;/td&gt;
 &lt;/tr&gt;
+
 &lt;tr&gt;
 &lt;td&gt;Incorrect&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;\int x dx&lt;/code&gt;&lt;/td&gt;
@@ -136,8 +169,10 @@ This one is somewhat controversial. In some fields, italic type seems more commo
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
+
 &lt;p&gt;&lt;strong&gt;d) Sub and superscripts that do not represent mathematical variables should be set in roman type.&lt;/strong&gt;
 The first row is correct because \(n\) represents a variable here.&lt;/p&gt;
+
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -146,17 +181,20 @@ The first row is correct because \(n\) represents a variable here.&lt;/p&gt;
 &lt;th&gt;Display&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
+
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;Correct&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;S_n = \sum_{i=1}^n X_i&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;\( S_n = \sum_{i=1}^n X_i \)&lt;/td&gt;
 &lt;/tr&gt;
+
 &lt;tr&gt;
 &lt;td&gt;Correct&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;L_{\mathrm{adversarial}}(x)&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;\(L_{\mathrm{adversarial}}(x)\)&lt;/td&gt;
 &lt;/tr&gt;
+
 &lt;tr&gt;
 &lt;td&gt;Incorrect&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;L_{adversarial}(x)&lt;/code&gt;&lt;/td&gt;
@@ -164,12 +202,17 @@ The first row is correct because \(n\) represents a variable here.&lt;/p&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
+
 &lt;h2 id=&#34;4-avoid-vspace&#34;&gt;4. Avoid &lt;code&gt;\vspace&lt;/code&gt;&lt;/h2&gt;
+
 &lt;p&gt;Most conferences have strict page limits. More often than not, eight pages are not enough to adequately present a brilliant idea. If only Fermat got more space in the margin!&lt;/p&gt;
+
 &lt;p&gt;A common trick is to use &lt;code&gt;\vspace&lt;/code&gt;. It can reduce the length of vertical space before or after a section, figure or table. However, this essentially alters the style template. Many formatting instructions explicitly forbid the use of &lt;code&gt;\vspace&lt;/code&gt;. It might even result in the rejection of the paper. From the formatting instructions for AAAI 2019:&lt;/p&gt;
+
 &lt;blockquote&gt;
-&lt;p&gt;if your paper is obviously “squeezed” it is not going to be accepted.&lt;/p&gt;
+&lt;p&gt;if your paper is obviously &amp;ldquo;squeezed&amp;rdquo; it is not going to be accepted.&lt;/p&gt;
 &lt;/blockquote&gt;
+
 &lt;p&gt;Reducing the vertical spaces also makes the paper less readable for the reviewers, so it is definitely not advisable.
 Many conferences support the submission of supplementary material. If the paper is too long, consider reorganizing it and moving some sections to the supplementary material.&lt;/p&gt;
 </description>

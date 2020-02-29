@@ -44,21 +44,33 @@
   <p>
   <aside>tags: <a href="/blog/tags/machine-learning/">machine learning</a></a>&nbsp;&nbsp;&nbsp;</aside>
   </p>
-  <p><p>The <a href="https://pytorch.org/docs/1.3.0/distributions.html"><code>torch.distributions</code></a> package implements various probability distributions, as well as methods for sampling and computing statistics.
+  <p>
+
+<p>The <a href="https://pytorch.org/docs/1.3.0/distributions.html"><code>torch.distributions</code></a> package implements various probability distributions, as well as methods for sampling and computing statistics.
 It generally follows the design of the <a href="https://www.tensorflow.org/probability/api_docs/python/tfp/distributions/Distribution">TensorFlow distributions</a> package (Dillon et al. 2017).</p>
+
 <p>There are three types of &ldquo;shapes&rdquo;, sample shape, batch shape, and event shape, that are crucial to understanding the <code>torch.distributions</code> package.
 The same definition of shapes is also used in other packages, including <a href="https://gluon-ts.mxnet.io/api/gluonts/gluonts.distribution.html">GluonTS</a>, <a href="http://docs.pyro.ai/en/stable/distributions.html">Pyro</a>, etc.</p>
+
 <p>In this blog post, we describe the different types of shapes and illustrate the differences among them by code examples.
 On top of that, we try to answer a few questions related to the shapes in <code>torch.distributions</code>.
 All code examples are compatible with PyTorch v1.3.0.</p>
+
 <h2 id="three-types-of-shapes">Three types of shapes</h2>
-<p>The three types of shapes are defined as follows and illustrated in Figure 1.</p>
+
+<p>The three types of shapes are defined as follows and illustrated in Figure&nbsp;1.</p>
+
 <ol>
 <li><strong>Sample shape</strong> describes independent, identically distributed draws from the distribution.</li>
 <li><strong>Batch shape</strong> describes independent, not identically distributed draws. Namely, we may have a set of (different) parameterizations to the same distribution. This enables the common use case in machine learning of a batch of examples, each modeled by its own distribution.</li>
 <li><strong>Event shape</strong> describes the shape of a single draw (event space) from the distribution; it may be dependent across dimensions.</li>
 </ol>
-<!-- raw HTML omitted -->
+
+<figure>
+    <img src="shape_sementics.png" alt="Shape semantics." width="500">
+    <figcaption>Figure 1: Three groups of shapes. Reproduced from Dillon et al. (2017).</figcaption>
+</figure>
+
 <p>The definitions above might be difficult to understand.
 We take the Monte Carlo estimation of the evidence lower bound (ELBO) in the variational autoencoder (VAE) as an example to illustrate their differences.
 The average ELBO over a batch of $b$ observations, $x_i$ for $i=1,\ldots,b$, is
@@ -80,12 +92,15 @@ $$
 \log\left[ \frac{p(x_i | z_{ij}) p(z_{ij})}{q(z_{ij} | x_i)} \right].
 $$
 All the Monte Carlos samples $z_{ij}$ can be compactly represented as a tensor of shape $(n, b, s)$ or, correspondingly, <code>[sample_shape, batch_shape, event_shape]</code>.</p>
-<p>We also provide mathematical notations for a few combinations of shapes in Table 1, for Gaussian random variables/vectors.
+
+<p>We also provide mathematical notations for a few combinations of shapes in Table&nbsp;1, for Gaussian random variables/vectors.
 Ignoring subscripts, $X$ represents a random variable, $\mu$ and $\sigma$ are scalars;
 $\mathbf{X}$ denotes a two-dimensional random vector, $\boldsymbol\mu$ is a two-dimensional vector, and $\boldsymbol\Sigma$ is a $2 \times 2$ (not necessarily diagonal) matrix.
 Moreover, <code>[]</code> and <code>[2]</code> denote <code>torch.Size([])</code> and <code>torch.Size([2])</code>, respectively.
 For each row, the link to a PyTorch code example is also given.</p>
-<!-- raw HTML omitted -->
+
+<div id="table"></div>
+
 <table>
 <thead>
 <tr>
@@ -97,6 +112,7 @@ For each row, the link to a PyTorch code example is also given.</p>
 <th>code</th>
 </tr>
 </thead>
+
 <tbody>
 <tr>
 <td>1</td>
@@ -106,6 +122,7 @@ For each row, the link to a PyTorch code example is also given.</p>
 <td>$X \sim \mathcal{N}(\mu, \sigma^2)$</td>
 <td><a href="#row-1">link</a></td>
 </tr>
+
 <tr>
 <td>2</td>
 <td><code>[2]</code></td>
@@ -114,14 +131,16 @@ For each row, the link to a PyTorch code example is also given.</p>
 <td>$X_1, X_2 \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu, \sigma^2)$</td>
 <td><a href="#row-2">link</a></td>
 </tr>
+
 <tr>
 <td>3</td>
 <td><code>[]</code></td>
 <td><code>[2]</code></td>
 <td><code>[]</code></td>
-<td>$X_1 \sim \mathcal{N}(\mu_1, \sigma_1^2)$<!-- raw HTML omitted -->$X_2 \sim \mathcal{N}(\mu_2, \sigma_2^2)$</td>
+<td>$X_1 \sim \mathcal{N}(\mu_1, \sigma_1^2)$<br/>$X_2 \sim \mathcal{N}(\mu_2, \sigma_2^2)$</td>
 <td><a href="#row-3">link</a></td>
 </tr>
+
 <tr>
 <td>4</td>
 <td><code>[]</code></td>
@@ -130,14 +149,16 @@ For each row, the link to a PyTorch code example is also given.</p>
 <td>$\mathbf{X} \sim \mathcal{N}(\boldsymbol\mu, \boldsymbol\Sigma)$</td>
 <td><a href="#row-4">link</a></td>
 </tr>
+
 <tr>
 <td>5</td>
 <td><code>[]</code></td>
 <td><code>[2]</code></td>
 <td><code>[2]</code></td>
-<td>$\mathbf{X}_1 \sim \mathcal{N}(\boldsymbol\mu_1, \boldsymbol\Sigma_1)$<!-- raw HTML omitted -->$\mathbf{X}_2 \sim \mathcal{N}(\boldsymbol\mu_2, \boldsymbol\Sigma_2)$</td>
+<td>$\mathbf{X}_1 \sim \mathcal{N}(\boldsymbol\mu_1, \boldsymbol\Sigma_1)$<br/>$\mathbf{X}_2 \sim \mathcal{N}(\boldsymbol\mu_2, \boldsymbol\Sigma_2)$</td>
 <td><a href="#row-5">link</a></td>
 </tr>
+
 <tr>
 <td>6</td>
 <td><code>[2]</code></td>
@@ -146,52 +167,67 @@ For each row, the link to a PyTorch code example is also given.</p>
 <td>$\mathbf{X}_1, \mathbf{X}_2 \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\boldsymbol\mu, \boldsymbol\Sigma)$</td>
 <td><a href="#row-6">link</a></td>
 </tr>
+
 <tr>
 <td>7</td>
 <td><code>[2]</code></td>
 <td><code>[2]</code></td>
 <td><code>[]</code></td>
-<td>$X_{11}, X_{12} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu_1, \sigma_1^2)$<!-- raw HTML omitted -->$X_{21}, X_{22} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu_2, \sigma_2^2)$</td>
+<td>$X_{11}, X_{12} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu_1, \sigma_1^2)$<br/>$X_{21}, X_{22} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu_2, \sigma_2^2)$</td>
 <td><a href="#row-7">link</a></td>
 </tr>
+
 <tr>
 <td>8</td>
 <td><code>[2]</code></td>
 <td><code>[2]</code></td>
 <td><code>[2]</code></td>
-<td>$\mathbf{X}_{11}, \mathbf{X}_{12} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\boldsymbol\mu_1, \boldsymbol\Sigma_1)$<!-- raw HTML omitted -->$\mathbf{X}_{21}, \mathbf{X}_{22} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\boldsymbol\mu_2, \boldsymbol\Sigma_2)$</td>
+<td>$\mathbf{X}_{11}, \mathbf{X}_{12} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\boldsymbol\mu_1, \boldsymbol\Sigma_1)$<br/>$\mathbf{X}_{21}, \mathbf{X}_{22} \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\boldsymbol\mu_2, \boldsymbol\Sigma_2)$</td>
 <td><a href="#row-8">link</a></td>
 </tr>
 </tbody>
 </table>
-<!-- raw HTML omitted -->
+
+<figcaption>Table 1: Examples of various combinations of shapes.</figcaption>
+
 <p>This table is adapted from <a href="https://ericmjl.github.io/blog/2019/5/29/reasoning-about-shapes-and-probability-distributions/">this blog post</a>; you might find the visualization in that post helpful.</p>
+
 <p>Every <a href="https://pytorch.org/docs/1.3.0/distributions.html#torch.distributions.distribution.Distribution"><code>Distribution</code></a> class has instance attributes <code>batch_shape</code> and <code>event_shape</code>.
 Furthermore, each class also has a method <code>.sample</code>, which takes <code>sample_shape</code> as an argument and generates samples from the distribution.
 Note that <code>sample_shape</code> is not an instance attribute because, conceptually, it is not associated with a distribution.</p>
+
 <h2 id="what-is-the-difference-between-normal-and-multivariatenormal">What is the difference between <code>Normal</code> and <code>MultivariateNormal</code>?</h2>
+
 <p>There are two distribution classes that correspond to normal distributions: the univariate normal</p>
-<div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">torch.distributions.normal.Normal(loc, scale, validate_args=None)
-</code></pre></div><p>and the multivariate normal</p>
+<div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">torch.distributions.normal.Normal(loc, scale, validate_args=None)</code></pre></div>
+<p>and the multivariate normal</p>
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">torch.distributions.multivariate_normal.MultivariateNormal(loc, 
 covariance_matrix=None, precision_matrix=None, scale_tril=None, 
-validate_args=None)
-</code></pre></div><p>Since the <a href="https://pytorch.org/docs/1.3.0/distributions.html#normal"><code>Normal</code></a> class represents univariate normal distributions, the <code>event_shape</code> of a <code>Normal</code> instance is always <code>torch.Size([])</code>.
+validate_args=None)</code></pre></div>
+<p>Since the <a href="https://pytorch.org/docs/1.3.0/distributions.html#normal"><code>Normal</code></a> class represents univariate normal distributions, the <code>event_shape</code> of a <code>Normal</code> instance is always <code>torch.Size([])</code>.
 Even if the <code>loc</code> or <code>scale</code> arguments are high-order tensors, their &ldquo;shapes&rdquo; will go to <code>batch_shape</code>.
 For example,</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+
+<!-- ```
+normal = Normal(torch.randn(5, 3, 2), torch.ones(5, 3, 2))
+(normal.batch_shape, normal.event_shape)
+```
+ -->
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; normal = Normal(torch.randn(5, 3, 2), torch.ones(5, 3, 2))
 &gt;&gt;&gt; (normal.batch_shape, normal.event_shape)
-(torch.Size([5, 3, 2]), torch.Size([]))
-</code></pre></div><!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+(torch.Size([5, 3, 2]), torch.Size([]))</code></pre></div>
+<!-- ```
+mvn = MultivariateNormal(torch.randn(5, 3, 2), torch.eye(2))
+(mvn.batch_shape, mvn.event_shape)
+``` -->
+
 <p>In contrast, for <a href="https://pytorch.org/docs/1.3.0/distributions.html#multivariatenormal"><code>MultivariateNormal</code></a>, the <code>batch_shape</code> and <code>event_shape</code> can be inferred from the shape of <code>covariance_matrix</code>.
 In the following example, the covariance matrix <code>torch.eye(2)</code> is $2 \times 2$ matrix, so it can be inferred that the <code>event_shape</code> should be <code>[2]</code> and the <code>batch_shape</code> is <code>[5, 3]</code>.</p>
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; mvn = MultivariateNormal(torch.randn(5, 3, 2), torch.eye(2))
 &gt;&gt;&gt; (mvn.batch_shape, mvn.event_shape)
-(torch.Size([5, 3]), torch.Size([2]))
-</code></pre></div><h2 id="what-does-expand-do">What does <code>.expand</code> do?</h2>
+(torch.Size([5, 3]), torch.Size([2]))</code></pre></div>
+<h2 id="what-does-expand-do">What does <code>.expand</code> do?</h2>
+
 <p>Every <a href="https://pytorch.org/docs/1.3.0/distributions.html#torch.distributions.distribution.Distribution"><code>Distribution</code></a> instance has an <a href="https://pytorch.org/docs/1.3.0/distributions.html#torch.distributions.distribution.Distribution.expand"><code>.expand</code></a> method. Its docstring is as follows:</p>
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#008000;font-weight:bold">class</span> <span style="color:#00f;font-weight:bold">Distribution</span>(<span style="color:#008000">object</span>):
 
@@ -214,27 +250,37 @@ In the following example, the covariance matrix <code>torch.eye(2)</code> is $2 
 </span><span style="color:#ba2121"></span><span style="color:#ba2121">            New distribution instance with batch dimensions expanded to</span><span style="color:#ba2121">
 </span><span style="color:#ba2121"></span><span style="color:#ba2121">            `batch_size`.</span><span style="color:#ba2121">
 </span><span style="color:#ba2121"></span><span style="color:#ba2121">        </span><span style="color:#ba2121">&#34;&#34;&#34;</span>
-        <span style="color:#008000;font-weight:bold">raise</span> <span style="color:#d2413a;font-weight:bold">NotImplementedError</span>
-</code></pre></div><!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+        <span style="color:#008000;font-weight:bold">raise</span> <span style="color:#d2413a;font-weight:bold">NotImplementedError</span></code></pre></div>
+<!-- ```
+mvn = MultivariateNormal(torch.randn(2), torch.eye(2))
+(mvn.batch_shape, mvn.event_shape)
+new_batch_shape = torch.Size([5])
+expanded_mvn = mvn.expand(new_batch_shape)
+(expanded_mvn.batch_shape, expanded_mvn.event_shape)
+expanded_mvn.loc
+batched_mvn = MultivariateNormal(torch.randn(5, 2), torch.eye(2))
+(batched_mvn.batch_shape, batched_mvn.event_shape)
+batched_mvn.loc
+``` -->
+
 <p>It essentially creates a new distribution instance by expanding the <code>batch_shape</code>.
 For example, if we define a <code>MultivariateNormal</code> instance with a <code>batch_shape</code> of <code>[]</code> and an <code>event_shape</code> of <code>[2]</code>,</p>
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; mvn = MultivariateNormal(torch.randn(2), torch.eye(2))
 &gt;&gt;&gt; (mvn.batch_shape, mvn.event_shape)
-(torch.Size([]), torch.Size([2]))
-</code></pre></div><p>it can be expanded to a new instance that have a <code>batch_shape</code> of <code>[5]</code>:</p>
+(torch.Size([]), torch.Size([2]))</code></pre></div>
+<p>it can be expanded to a new instance that have a <code>batch_shape</code> of <code>[5]</code>:</p>
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; new_batch_shape = torch.Size([5])
 &gt;&gt;&gt; expanded_mvn = mvn.expand(new_batch_shape)
 &gt;&gt;&gt; (expanded_mvn.batch_shape, expanded_mvn.event_shape)
-(torch.Size([5]), torch.Size([2]))
-</code></pre></div><p>Note that no new memory is allocated in this process; therefore, all batch dimensions have the same location parameter.</p>
+(torch.Size([5]), torch.Size([2]))</code></pre></div>
+<p>Note that no new memory is allocated in this process; therefore, all batch dimensions have the same location parameter.</p>
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; expanded_mvn.loc
 tensor([[-2.2299,  0.0122],
         [-2.2299,  0.0122],
         [-2.2299,  0.0122],
         [-2.2299,  0.0122],
-        [-2.2299,  0.0122]])
-</code></pre></div><p>This can be compared with the following example with the same <code>batch_shape</code> of <code>[5]</code> and <code>event_shape</code> of <code>[2]</code>.
+        [-2.2299,  0.0122]])</code></pre></div>
+<p>This can be compared with the following example with the same <code>batch_shape</code> of <code>[5]</code> and <code>event_shape</code> of <code>[2]</code>.
 However, the batch dimensions have different location parameters.</p>
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; batched_mvn = MultivariateNormal(torch.randn(5, 2), torch.eye(2))
 &gt;&gt;&gt; (batched_mvn.batch_shape, batched_mvn.event_shape)
@@ -244,129 +290,196 @@ tensor([[-0.3935, -0.7844],
         [ 0.3310,  0.9311],
         [-0.8141, -0.2252],
         [ 2.4199, -0.5444],
-        [ 0.5586,  1.0157]])
-</code></pre></div><h2 id="what-is-the-independent-class">What is the <code>Independent</code> class?</h2>
+        [ 0.5586,  1.0157]])</code></pre></div>
+<h2 id="what-is-the-independent-class">What is the <code>Independent</code> class?</h2>
+
 <p>The <a href="https://pytorch.org/docs/1.3.0/distributions.html#independent"><code>Independent</code></a> class does not represent any probability distribution.
 Instead, it creates a new distribution instance by &ldquo;reinterpreting&rdquo; some of the batch shapes of an existing distribution as event shapes.</p>
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">torch.distributions.independent.Independent(base_distribution, 
-reinterpreted_batch_ndims, validate_args=None)
-</code></pre></div><p>The first argument <code>base_distribution</code> is self-explanatory; the second argument <code>reinterpreted_batch_ndims</code> is the number of batch shapes to be reinterpreted as event shapes.</p>
+reinterpreted_batch_ndims, validate_args=None)</code></pre></div>
+<p>The first argument <code>base_distribution</code> is self-explanatory; the second argument <code>reinterpreted_batch_ndims</code> is the number of batch shapes to be reinterpreted as event shapes.</p>
+
 <p>The usage of the <code>Independent</code> class can be illustrated by the following example.
 We start with a <code>Normal</code> instance with a <code>batch_shape</code> of <code>[5, 3, 2]</code> and an <code>event_shape</code> of <code>[]</code>.</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+
+<!-- ```
+loc = torch.zeros(5, 3, 2)
+scale = torch.ones(2)
+normal = Normal(loc, scale)
+[normal.batch_shape, normal.event_shape]
+``` -->
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; loc = torch.zeros(5, 3, 2)
 &gt;&gt;&gt; scale = torch.ones(2)
 &gt;&gt;&gt; normal = Normal(loc, scale)
 &gt;&gt;&gt; [normal.batch_shape, normal.event_shape]
-[torch.Size([5, 3, 2]), torch.Size([])]
-</code></pre></div><p>An <code>Independent</code> instance can reinterpret the last <code>batch_shape</code> as the <code>event_shape</code>.
+[torch.Size([5, 3, 2]), torch.Size([])]</code></pre></div>
+<p>An <code>Independent</code> instance can reinterpret the last <code>batch_shape</code> as the <code>event_shape</code>.
 As a result, the new <code>batch_shape</code> is <code>[5, 3]</code>, and the <code>event_shape</code> now becomes <code>[2]</code>.</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+
+<!-- ```
+normal_ind_1 = Independent(normal, 1)
+[normal_ind_1.batch_shape, normal_ind_1.event_shape]
+``` -->
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; normal_ind_1 = Independent(normal, 1)
 &gt;&gt;&gt; [normal_ind_1.batch_shape, normal_ind_1.event_shape]
-[torch.Size([5, 3]), torch.Size([2])]
-</code></pre></div><p>The instance <code>normal_ind_1</code> is essentially the same as the following <code>MultivariateNormal</code> instance:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+[torch.Size([5, 3]), torch.Size([2])]</code></pre></div>
+<p>The instance <code>normal_ind_1</code> is essentially the same as the following <code>MultivariateNormal</code> instance:</p>
+
+<!-- ```
+mvn = MultivariateNormal(loc, torch.diag(scale))
+[mvn.batch_shape, mvn.event_shape]
+``` -->
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; mvn = MultivariateNormal(loc, torch.diag(scale))
 &gt;&gt;&gt; [mvn.batch_shape, mvn.event_shape]
-[torch.Size([5, 3]), torch.Size([2])]
-</code></pre></div><p>We can further reinterpret more batch shapes as event shapes:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+[torch.Size([5, 3]), torch.Size([2])]</code></pre></div>
+<p>We can further reinterpret more batch shapes as event shapes:</p>
+
+<!-- ```
+normal_ind_1_ind_1 = Independent(normal_ind_1, 1)
+[normal_ind_1_ind_1.batch_shape, normal_ind_1_ind_1.event_shape]
+``` -->
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; normal_ind_1_ind_1 = Independent(normal_ind_1, 1)
 &gt;&gt;&gt; [normal_ind_1_ind_1.batch_shape, normal_ind_1_ind_1.event_shape]
-[torch.Size([5]), torch.Size([3, 2])
-</code></pre></div><p>or equivalently,</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+[torch.Size([5]), torch.Size([3, 2])</code></pre></div>
+<p>or equivalently,</p>
+
+<!-- ```
+normal_ind_2 = Independent(normal, 2)
+[normal_ind_2.batch_shape, normal_ind_2.event_shape]
+``` -->
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; normal_ind_2 = Independent(normal, 2)
 &gt;&gt;&gt; [normal_ind_2.batch_shape, normal_ind_2.event_shape]
-[torch.Size([5]), torch.Size([3, 2])]
-</code></pre></div><h2 id="pytorch-code-examples">PyTorch code examples</h2>
-<p>In this section, code examples for each row in the <a href="#table">Table 1</a> are provided.
+[torch.Size([5]), torch.Size([3, 2])]</code></pre></div>
+<h2 id="pytorch-code-examples">PyTorch code examples</h2>
+
+<p>In this section, code examples for each row in the <a href="#table">Table&nbsp;1</a> are provided.
 The following <code>import</code> statements are needed for the examples.</p>
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#008000;font-weight:bold">import</span> <span style="color:#00f;font-weight:bold">torch</span>
 <span style="color:#008000;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">torch.distributions.normal</span> <span style="color:#008000;font-weight:bold">import</span> Normal
-<span style="color:#008000;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">torch.distributions.multivariate_normal</span> <span style="color:#008000;font-weight:bold">import</span> MultivariateNormal
-</code></pre></div><h3 id="row-1">Row 1: <code>[], [], []</code></h3>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<span style="color:#008000;font-weight:bold">from</span> <span style="color:#00f;font-weight:bold">torch.distributions.multivariate_normal</span> <span style="color:#008000;font-weight:bold">import</span> MultivariateNormal</code></pre></div>
+<h3 id="row-1">Row 1: <code>[], [], []</code></h3>
+
+<!-- ```
+dist = Normal(0.0, 1.0)
+sample_shape = torch.Size([])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` -->
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; dist = Normal(0.0, 1.0)
 &gt;&gt;&gt; sample_shape = torch.Size([])
 &gt;&gt;&gt; dist.sample(sample_shape)
 tensor(-1.3349)
 &gt;&gt;&gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([]), torch.Size([]), torch.Size([]))
-</code></pre></div><p><a href="#table">back to Table 1</a></p>
+(torch.Size([]), torch.Size([]), torch.Size([]))</code></pre></div>
+<p><a href="#table">back to Table&nbsp;1</a></p>
+
 <h3 id="row-2">Row 2: <code>[2], [], []</code></h3>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+
+<!-- ```
+dist = Normal(0.0, 1.0)
+sample_shape = torch.Size([2])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` -->
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; dist = Normal(0.0, 1.0)
 &gt;&gt;&gt; sample_shape = torch.Size([2])
 &gt;&gt;&gt; dist.sample(sample_shape)
 tensor([ 0.2786, -1.4113])
 &gt;&gt;&gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([2]), torch.Size([]), torch.Size([]))
-</code></pre></div><p><a href="#table">back to Table 1</a></p>
+(torch.Size([2]), torch.Size([]), torch.Size([]))</code></pre></div>
+<p><a href="#table">back to Table&nbsp;1</a></p>
+
 <h3 id="row-3">Row 3: <code>[], [2], []</code></h3>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+
+<!-- ```
+dist = Normal(torch.zeros(2), torch.ones(2))
+sample_shape = torch.Size([])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` -->
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; dist = Normal(torch.zeros(2), torch.ones(2))
 &gt;&gt;&gt; sample_shape = torch.Size([])
 &gt;&gt;&gt; dist.sample(sample_shape)
 tensor([0.0101, 0.6976])
 &gt;&gt;&gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([]), torch.Size([2]), torch.Size([]))
-</code></pre></div><p><a href="#table">back to Table 1</a></p>
+(torch.Size([]), torch.Size([2]), torch.Size([]))</code></pre></div>
+<p><a href="#table">back to Table&nbsp;1</a></p>
+
 <h3 id="row-4">Row 4: <code>[], [], [2]</code></h3>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+
+<!-- ```
+dist = MultivariateNormal(torch.zeros(2), torch.eye(2))
+sample_shape = torch.Size([])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` -->
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; dist = MultivariateNormal(torch.zeros(2), torch.eye(2))
 &gt;&gt;&gt; sample_shape = torch.Size([])
 &gt;&gt;&gt; dist.sample(sample_shape)
 tensor([ 0.2880, -1.6795])
 &gt;&gt;&gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([]), torch.Size([]), torch.Size([2]))
-</code></pre></div><p><a href="#table">back to Table 1</a></p>
+(torch.Size([]), torch.Size([]), torch.Size([2]))</code></pre></div>
+<p><a href="#table">back to Table&nbsp;1</a></p>
+
 <h3 id="row-5">Row 5: <code>[], [2], [2]</code></h3>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+
+<!-- ```
+dist = MultivariateNormal(torch.zeros(2, 2), torch.eye(2))
+sample_shape = torch.Size([])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` -->
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; dist = MultivariateNormal(torch.zeros(2, 2), torch.eye(2))
 &gt;&gt;&gt; sample_shape = torch.Size([])
 &gt;&gt;&gt; dist.sample(sample_shape)
 tensor([[-0.4703,  0.4152],
         [-1.6471, -0.6276]])
 &gt;&gt;&gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([]), torch.Size([2]), torch.Size([2]))
-</code></pre></div><p><a href="#table">back to Table 1</a></p>
+(torch.Size([]), torch.Size([2]), torch.Size([2]))</code></pre></div>
+<p><a href="#table">back to Table&nbsp;1</a></p>
+
 <h3 id="row-6">Row 6: <code>[2], [], [2]</code></h3>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+
+<!-- ```
+dist = MultivariateNormal(torch.zeros(2), torch.eye(2))
+sample_shape = torch.Size([2])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` -->
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; dist = MultivariateNormal(torch.zeros(2), torch.eye(2))
 &gt;&gt;&gt; sample_shape = torch.Size([2])
 &gt;&gt;&gt; dist.sample(sample_shape)
 tensor([[ 2.2040, -0.7195],
         [-0.4787,  0.0895]])
 &gt;&gt;&gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([2]), torch.Size([]), torch.Size([2]))
-</code></pre></div><p><a href="#table">back to Table 1</a></p>
+(torch.Size([2]), torch.Size([]), torch.Size([2]))</code></pre></div>
+<p><a href="#table">back to Table&nbsp;1</a></p>
+
 <h3 id="row-7">Row 7: <code>[2], [2], []</code></h3>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+
+<!-- ```
+dist = Normal(torch.zeros(2), torch.ones(2))
+sample_shape = torch.Size([2])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` -->
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; dist = Normal(torch.zeros(2), torch.ones(2))
 &gt;&gt;&gt; sample_shape = torch.Size([2])
 &gt;&gt;&gt; dist.sample(sample_shape)
 tensor([[ 0.2639,  0.9083],
         [-0.7536,  0.5296]])
 &gt;&gt;&gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([2]), torch.Size([2]), torch.Size([]))
-</code></pre></div><p><a href="#table">back to Table 1</a></p>
+(torch.Size([2]), torch.Size([2]), torch.Size([]))</code></pre></div>
+<p><a href="#table">back to Table&nbsp;1</a></p>
+
 <h3 id="row-8">Row 8: <code>[2], [2], [2]</code></h3>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+
+<!-- ```
+dist = MultivariateNormal(torch.zeros(2, 2), torch.eye(2))
+sample_shape = torch.Size([2])
+dist.sample(sample_shape)
+(sample_shape, dist.batch_shape, dist.event_shape)
+``` -->
 <div class="highlight"><pre style=";-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&gt;&gt;&gt; dist = MultivariateNormal(torch.zeros(2, 2), torch.eye(2))
 &gt;&gt;&gt; sample_shape = torch.Size([2])
 &gt;&gt;&gt; dist.sample(sample_shape)
@@ -376,9 +489,11 @@ tensor([[[ 0.4683,  0.6118],
         [[-1.3001, -0.1734],
          [ 0.4705, -0.0404]]])
 &gt;&gt;&gt; (sample_shape, dist.batch_shape, dist.event_shape)
-(torch.Size([2]), torch.Size([2]), torch.Size([2]))
-</code></pre></div><p><a href="#table">back to Table 1</a></p>
+(torch.Size([2]), torch.Size([2]), torch.Size([2]))</code></pre></div>
+<p><a href="#table">back to Table&nbsp;1</a></p>
+
 <h2 id="references">References</h2>
+
 <ul>
 <li>Dillon, J. V., Langmore, I., Tran, D., Brevdo, E., Vasudevan, S., Moore, D., &hellip; &amp; Saurous, R. A. (2017). Tensorflow distributions. arXiv preprint arXiv:1711.10604.</li>
 </ul>
