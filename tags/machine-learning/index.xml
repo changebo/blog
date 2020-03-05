@@ -5,10 +5,273 @@
     <description>Recent content in machine learning on Bo&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 20 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 05 Mar 2020 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="https://bochang.me/blog/tags/machine-learning/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Measure-Valued Gradient Estimator and Application to Variational Autoencoder</title>
+      <link>https://bochang.me/blog/posts/measure-val-grad/</link>
+      <pubDate>Thu, 05 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bochang.me/blog/posts/measure-val-grad/</guid>
+      <description>&lt;p&gt;In machine learning, the gradient estimation problem lies at the core of various problems.
+Mohamed et al. (2019) give a comprehensive survey of this topic, from which I learned more about an intriguing approach called the &lt;em&gt;measure-valued gradient estimator&lt;/em&gt;.
+In this post, we give a brief review of the measure-valued gradient estimator and use it to train a variational autoencoder.&lt;/p&gt;
+&lt;h2 id=&#34;1-monte-carlo-gradient-estimation&#34;&gt;1. Monte Carlo gradient estimation&lt;/h2&gt;
+&lt;p&gt;Given a random variable $\boldsymbol{x} \in \mathbb{R}^d$, its density function $p(\boldsymbol{x}; \boldsymbol\theta)$ parametrized by $\boldsymbol\theta \in \Theta \subset \mathbb{R}^m$, and a function $f: \mathbb{R}^d \to \mathbb{R}$, the problem of gradient esitmation pertains to the gradient of the expectation of $f(\boldsymbol{x})$ with respect to the parameters $\boldsymbol\theta$:
+$$
+\boldsymbol\eta := \nabla_\boldsymbol\theta \mathbb{E}_{\boldsymbol{x} \sim p(\boldsymbol{x}; \boldsymbol\theta)} f(\boldsymbol{x}).
+$$
+Estimating this quantity is crucial to the policy gradient methods in reinforcement learning, learning the approximate posterior distribution in variational inference, and sensitivity analysis in other fields.&lt;/p&gt;
+&lt;p&gt;Monte Carlo gradient estimation methods try to estimate $\boldsymbol\eta$ using Monte Carlo samples.
+There are two well-known methods: the &lt;em&gt;score function estimator&lt;/em&gt; and the &lt;em&gt;pathwise estimator&lt;/em&gt;.
+The &lt;em&gt;score function estimator&lt;/em&gt; is also known as the &lt;em&gt;REINFORCE estimator&lt;/em&gt;.
+It rewrites $\boldsymbol\eta$ using the &amp;ldquo;log-derivative trick&amp;rdquo;:
+\begin{align}
+\boldsymbol\eta &amp;amp;=
+\nabla_\boldsymbol\theta \mathbb{E}_{\boldsymbol{x} \sim p(\boldsymbol{x}; \boldsymbol\theta)} f(\boldsymbol{x})
+\newline
+&amp;amp;= \nabla_\boldsymbol\theta \int f(\boldsymbol{x}) p(\boldsymbol{x}; \boldsymbol\theta) \mathrm{d} \boldsymbol{x}
+\newline
+&amp;amp;= \int f(\boldsymbol{x}) \nabla_\theta p(\boldsymbol{x}; \boldsymbol\theta) \mathrm{d} \boldsymbol{x}
+\newline
+&amp;amp;= \int f(\boldsymbol{x}) p(\boldsymbol{x}; \boldsymbol\theta) \nabla_\boldsymbol\theta \log p(\boldsymbol{x}; \boldsymbol\theta) \mathrm{d} \boldsymbol{x}
+\newline
+&amp;amp;= \mathbb{E}_{\boldsymbol{x} \sim p(\boldsymbol{x}; \boldsymbol\theta)} [ f(\boldsymbol{x}) \nabla_\boldsymbol\theta \log p(\boldsymbol{x}; \boldsymbol\theta)].
+\end{align}
+It is obvious that this expectation can be estimated by the sample mean:
+$$
+\widehat{\boldsymbol\eta} = \frac{1}{k} \sum_{i=1}^k f(\widehat{\boldsymbol{x}}_i) \nabla_\boldsymbol\theta \log p(\widehat{\boldsymbol{x}}_i; \boldsymbol\theta),
+\quad \widehat{\boldsymbol{x}}_i \overset{\mathrm{iid}}{\sim} p(\boldsymbol{x}; \boldsymbol\theta).
+$$
+Another commonly used estimator is the &lt;em&gt;pathwise estimator&lt;/em&gt;; it is also known as the &lt;em&gt;reparametrization trick&lt;/em&gt;. The idea is to rewrite $\boldsymbol{x}$ as a function of another random variable following a base distribution.
+Specifically, if $\boldsymbol{x} \overset{d}{=} g(\boldsymbol\epsilon; \boldsymbol\theta)$, where $\boldsymbol\epsilon \sim p(\boldsymbol\epsilon)$ that does not depend on $\boldsymbol\theta$, then
+\begin{align}
+\boldsymbol\eta &amp;amp;=
+\nabla_\boldsymbol\theta \mathbb{E}_{\boldsymbol{x} \sim p(\boldsymbol{x}; \boldsymbol\theta)} f(\boldsymbol{x})
+\newline
+&amp;amp;= \nabla_\boldsymbol\theta \int p(\boldsymbol{x}; \boldsymbol\theta) f(\boldsymbol{x}) \mathrm{d} \boldsymbol{x}
+\newline
+&amp;amp;= \nabla_\boldsymbol\theta \int p(\boldsymbol\epsilon) f(g(\boldsymbol\epsilon; \boldsymbol\theta)) \mathrm{d} \boldsymbol\epsilon
+\newline
+&amp;amp;= \int p(\boldsymbol\epsilon) \nabla_\boldsymbol\theta f(g(\boldsymbol\epsilon; \boldsymbol\theta)) \mathrm{d} \boldsymbol\epsilon
+\newline
+&amp;amp;= \mathbb{E}_{\boldsymbol\epsilon \sim p(\boldsymbol\epsilon)} [ \nabla_\boldsymbol\theta f(g(\boldsymbol\epsilon; \boldsymbol\theta)) ].
+\end{align}
+Again, the above quantity can be estimated by Monte Carlo samples from the base distribution $p(\boldsymbol\epsilon)$:
+$$
+\widehat{\boldsymbol\eta} = \frac{1}{k} \sum_{i=1}^k \nabla_\boldsymbol\theta f(g(\widehat{\boldsymbol\epsilon}_i; \boldsymbol\theta)),
+\quad \widehat{\boldsymbol\epsilon}_i \overset{\mathrm{iid}}{\sim} p(\boldsymbol\epsilon).
+$$&lt;/p&gt;
+&lt;p&gt;We refer the interested readers to Mohamed et al. (2019) for a more detailed exposition of the two estimators.&lt;/p&gt;
+&lt;h2 id=&#34;2-measure-valued-gradient-estimator&#34;&gt;2. Measure-valued gradient estimator&lt;/h2&gt;
+&lt;p&gt;There exists another estimator that is less familiar to the machine learning community called the &lt;em&gt;measure-valued gradient estimator&lt;/em&gt;.
+We first define the estimator, then provide two simple examples.
+Finally, the pros and cons of it are briefly discussed.&lt;/p&gt;
+&lt;h3 id=&#34;21-definition&#34;&gt;2.1. Definition&lt;/h3&gt;
+&lt;p&gt;We only consider a distribution with a scalar parameter $\theta \in \mathbb{R}$ for now.
+It can be shown that the derivative of the density $\nabla_\theta p(\boldsymbol{x}; \theta)$ can always be decomposed into a difference of two densities multiplied by a constant:
+$$
+\nabla_\theta p(\boldsymbol{x}; \theta) = c_\theta \left(p^+ (\boldsymbol{x}; \theta) - p^- (\boldsymbol{x}; \theta) \right),
+$$
+where $p^+$ and $p^-$ are probability densities, referred to as the positive and negative components, respectively, and $c_\theta \in \mathbb{R}$ is a constant.
+The triplet $(c_\theta, p^+, p^-)$ is called the &lt;em&gt;weak derivative&lt;/em&gt; of $p(\boldsymbol{x}; \theta)$.
+This decomposition applies to discrete distributions as well.&lt;/p&gt;
+&lt;p&gt;Using the weak derivative, the gradient $\eta$ can be rewritten as follows:
+\begin{align}
+\eta
+&amp;amp;= \nabla_{\theta} \mathbb{E}_{\boldsymbol{x} \sim p(\boldsymbol{x}; \theta)} f(\boldsymbol{x})
+\newline
+&amp;amp;= \nabla_\theta \int f(\boldsymbol{x}) p(\boldsymbol{x}; \theta) \mathrm{d} \boldsymbol{x}
+\newline
+&amp;amp;= \int f(\boldsymbol{x}) \nabla_\theta p(\boldsymbol{x}; \theta) \mathrm{d} \boldsymbol{x}
+\newline
+&amp;amp;= c_\theta \left( \int f(\boldsymbol{x}) p^+ (\boldsymbol{x}; \theta) \mathrm{d} \boldsymbol{x} - \int f(\boldsymbol{x}) p^- (\boldsymbol{x}; \theta) \mathrm{d} \boldsymbol{x} \right)
+\newline
+&amp;amp;= c_\theta \left( \mathbb{E}_{\boldsymbol{x}^+ \sim p^+(\boldsymbol{x}; \theta)} f(\boldsymbol{x}^+) - \mathbb{E}_{\boldsymbol{x}^- \sim p^-(\boldsymbol{x}; \theta)} f(\boldsymbol{x}^-)  \right).
+\end{align}&lt;/p&gt;
+&lt;p&gt;The corresponding estimator is
+$$
+\widehat{\eta} = \frac{c_\theta}{k} \sum_{i=1}^k \left[ f(\widehat{\boldsymbol{x}}_i^+) - f(\widehat{\boldsymbol{x}}_i^-) \right],
+\quad \widehat{\boldsymbol{x}}_i^+ \overset{\mathrm{iid}}{\sim} p^+(\boldsymbol{x}; \theta) \mbox{ and } \widehat{\boldsymbol{x}}_i^- \overset{\mathrm{iid}}{\sim} p^-(\boldsymbol{x}; \theta).
+$$&lt;/p&gt;
+&lt;p&gt;Note that $\boldsymbol{x}_i^+$ and $\boldsymbol{x}_i^-$ do not need to be independent. In fact, it is a common trick to make $f(\boldsymbol{x}_i^+)$ and $f(\boldsymbol{x}_i^-)$ positively correlated in order to reduce the variance of the estimator; this is known as &lt;em&gt;coupling&lt;/em&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;22-two-examples&#34;&gt;2.2. Two examples&lt;/h3&gt;
+&lt;p&gt;Before introducing the examples, we first review a few relevant distribution families and their density functions.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Normal_distribution&#34;&gt;Normal distribution&lt;/a&gt; $\mathcal{N}(\mu, \sigma^2)$:
+$$
+p_{\mathcal{N}}(x; \mu, \sigma) = \frac{1}{\sigma \sqrt{2\pi}} \exp\left(- \frac{(x - \mu)^2}{2\sigma^2}\right).
+$$&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Weibull_distribution&#34;&gt;Weibull distribution&lt;/a&gt; $\mathcal{W}(\lambda, k)$:
+$$
+p_{\mathcal{W}}(x; \lambda, k)
+= \frac{k}{\lambda} \left( \frac{x}{\lambda} \right)^{k-1} \exp \left( -\left( \frac{x}{\lambda} \right)^k \right) \mathbb{I}_{x \geq 0}.
+$$&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Double-sided &lt;a href=&#34;https://en.wikipedia.org/wiki/Maxwell%E2%80%93Boltzmann_distribution&#34;&gt;Maxwell distribution&lt;/a&gt; $\mathcal{M}(\mu, \sigma^2)$:
+$$
+p_{\mathcal{M}}(x; \mu, \sigma) =
+\frac{(x-\mu)^2}{\sigma^3\sqrt{2 \pi}} \exp\left( -\frac{(x-\mu)^2}{2 \sigma^2} \right).
+$$&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Example 1&lt;/strong&gt; (Normal distribution with respect to the location parameter).
+Consider the derivative of the density function of $\mathcal{N}(\mu, \sigma^2)$ with respect to $\mu$.
+We would like to show that
+\begin{equation}
+\nabla_\mu p_{\mathcal{N}}(x; \mu, \sigma) = c_\mu \left(p^+ (x; \mu, \sigma) - p^- (x; \mu, \sigma) \right),
+\label{eq:gaussian-mean}
+\tag{1}
+\end{equation}
+where&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;$c_\mu = (\sigma \sqrt{2\pi})^{-1} $;&lt;/li&gt;
+&lt;li&gt;$p^+$ is the density function of $\mu + \sigma \mathcal{W}(\lambda=\sqrt{2}, k=2)$;&lt;/li&gt;
+&lt;li&gt;$p^-$ is the density function of $\mu - \sigma \mathcal{W}(\lambda=\sqrt{2}, k=2)$.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The notation $\mu \pm \sigma \mathcal{W}(\lambda=\sqrt{2}, k=2)$ represents a random variable $\mu \pm \sigma Y$, where $Y \sim \mathcal{W}(\lambda=\sqrt{2}, k=2)$, the Weibull distribution.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Proof.&lt;/strong&gt; For the left-hand side of Equation \ref{eq:gaussian-mean}, basic calculus shows that
+$$
+\nabla_{\mu}
+p_{\mathcal{N}}(x; \mu, \sigma) = \frac{x-\mu}{\sigma^3 \sqrt{2\pi}} \exp\left(- \frac{(x - \mu)^2}{2\sigma^2}\right).
+$$&lt;/p&gt;
+&lt;p&gt;Recall that the density function of a Weibull random variable $\mathcal{W}(\lambda=\sqrt{2}, k=2)$ is
+$$
+p_\mathcal{W}(x; \lambda=\sqrt{2}, k=2) = x \exp\left( -\frac{x^2}{2} \right) \mathbb{I}_{x \geq 0}.
+$$
+Using the &lt;a href=&#34;https://en.wikipedia.org/wiki/Probability_density_function#Function_of_random_variables_and_change_of_variables_in_the_probability_density_function&#34;&gt;change of variables formula&lt;/a&gt;, we have
+$$
+p^+(x; \mu, \sigma) = \frac{x-\mu}{\sigma^2} \exp\left( -\frac{(x-\mu)^2}{2\sigma^2} \right) \mathbb{I}_{x \geq \mu}
+$$
+and
+$$
+p^-(x; \mu, \sigma) = -\frac{x-\mu}{\sigma^2} \exp\left( -\frac{(x-\mu)^2}{2\sigma^2} \right) \mathbb{I}_{x \leq \mu}.
+$$
+Therefore, the right-hand side of Equation \ref{eq:gaussian-mean} is&lt;/p&gt;
+&lt;p&gt;$$
+c_\mu \left(p^+ (x; \mu, \sigma) - p^- (x; \mu, \sigma) \right)=
+\frac{x-\mu}{\sigma^3 \sqrt{2\pi}} \exp\left(- \frac{(x - \mu)^2}{2\sigma^2}\right),
+$$
+which equals the left-hand side.&lt;/p&gt;
+&lt;p&gt;Figure 1 gives an illustration of this example with $\mu=\sigma=1$.
+The first row shows the density function $p_{\mathcal{N}}(x; \mu, \sigma)$ (the solid line) and how it changes when $\mu$ increases by 0.1 (the dashed line); the change (divided by 0.1) is approximately the gradient of interest.
+The second row is the gradient $\nabla_{\mu} p_{\mathcal{N}}(x; \mu, \sigma)$.
+The last two rows are the positive and negative components multiplied by the constant $c_\mu$, respectively; it indicates that the difference between them matches the curve in the second row.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;norm_mu.png&#34; alt=&#34;Derivative of a normal density with respect to the location parameter.&#34; width=&#34;450&#34;/&gt;
+    &lt;figcaption&gt;Figure 1: Derivative of a normal density with respect to the location parameter.&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;Example 2&lt;/strong&gt; (Normal distribution with respect to the scale parameter).
+Consider the derivative of the density function of $\mathcal{N}(\mu, \sigma^2)$ with respect to $\sigma$.
+We would like to show that
+\begin{equation}
+\nabla_\sigma p_{\mathcal{N}}(x; \mu, \sigma) = c_\sigma \left(p^+ (x; \mu, \sigma) - p^- (x; \mu, \sigma) \right),
+\label{eq:gaussian-std}
+\tag{2}
+\end{equation}
+where&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;$c_\sigma = \sigma^{-1}$;&lt;/li&gt;
+&lt;li&gt;$p^+ = p_\mathcal{M}(x; \mu, \sigma)$;&lt;/li&gt;
+&lt;li&gt;$p^-= p_\mathcal{N}(x; \mu, \sigma)$.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Proof.&lt;/strong&gt; The proof is similar to that of Example 1 using basic calculus:
+\begin{align}
+&amp;amp;\quad \nabla_{\sigma}
+p_{\mathcal{N}}(x; \mu, \sigma)
+\newline
+&amp;amp; = \frac{1}{\sigma} \left[ \frac{(x-\mu)^2}{\sigma^3 \sqrt{2\pi}} \exp\left(- \frac{(x - \mu)^2}{2\sigma^2}\right) - \frac{1}{\sigma \sqrt{2\pi}} \exp\left(- \frac{(x - \mu)^2}{2\sigma^2}\right) \right]
+\newline
+&amp;amp; = \sigma^{-1} \left( p_\mathcal{M}(x; \mu, \sigma) - p_\mathcal{N}(x; \mu, \sigma) \right).
+\end{align}&lt;/p&gt;
+&lt;p&gt;Figure 2 is the corresponding illustration.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;norm_sigma.png&#34; alt=&#34;Derivative of a normal density with respect to the scale parameter.&#34; width=&#34;500&#34;/&gt;
+    &lt;figcaption&gt;Figure 2: Derivative of a normal density with respect to the scale parameter.&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h3 id=&#34;23-pros-and-cons&#34;&gt;2.3. Pros and cons&lt;/h3&gt;
+&lt;p&gt;The advantage of the measure-valued gradient estimator is its flexibility.
+It is applicable to both continuous and discrete random variables.
+Unlike the pathwise estimator, it does not assume the function $f$ to be differentiable.
+Furthermore, there are distributions where the measure-valued gradient estimator is applicable, but the score function estimator is not, for example, the uniform distribution $\mathcal{U}(0, \theta)$.&lt;/p&gt;
+&lt;p&gt;One major disadvantage is its computational cost.
+The estimator only applies to a single parameter.
+For distributions with many parameters, it requires two forward passes of the function $f$ for each parameter, which might be computationally prohibitive.&lt;/p&gt;
+&lt;h2 id=&#34;3-application-to-variational-autoencoder&#34;&gt;3. Application to variational autoencoder&lt;/h2&gt;
+&lt;p&gt;As mentioned before, the pathwise estimator or reparametrization trick is commonly used in variation inference, in particular, the variational autoencoder (VAE).
+The objective of VAE is to maximize the &lt;em&gt;evidence lower bound&lt;/em&gt; (ELBO),
+$$
+\mathcal{L} = \mathbb{E}_{\boldsymbol{z} \sim q_{\boldsymbol\phi}(\boldsymbol{z} | \boldsymbol{x})}
+\log ( p_{\boldsymbol\theta}(\boldsymbol{x} | \boldsymbol{z})  ) - D_{\mathrm{KL}} ( q_{\boldsymbol\phi}(\boldsymbol{z} | \boldsymbol{x}) \parallel p(\boldsymbol{z}) ),
+$$
+where $D_{\mathrm{KL}}$ denotes the &lt;a href=&#34;https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence&#34;&gt;Kullback–Leibler divergence&lt;/a&gt;;
+$\boldsymbol{x}$ and $\boldsymbol{z}$ are the observed and latent variables, respectively;
+$p(\boldsymbol{z})$ is the prior distribution of $\boldsymbol{z}$;
+$p_{\boldsymbol\theta}(\boldsymbol{x} | \boldsymbol{z})$ is the generative distribution and is implemented by a decoding network parametrized by $\boldsymbol\theta$;
+$q_{\boldsymbol\phi}(\boldsymbol{z} | \boldsymbol{x})$ is the variational distribution and is implemented by an encoding network parametrized by $\boldsymbol\phi$.&lt;/p&gt;
+&lt;p&gt;Given a sample $\boldsymbol{z} \sim q_{\boldsymbol\phi}(\boldsymbol{z} | \boldsymbol{x})$, the gradient with respect to the decoder parameters $\nabla_{\boldsymbol\theta} \mathcal{L}$ can be easily obtained by automatic differentiation.
+Furthermore, if $p(\boldsymbol{z})$ and $q_{\boldsymbol\phi}(\boldsymbol{z} | \boldsymbol{x})$ are both diagonal Gaussians, the KL divergence has a closed-form expression, and $\nabla_{\boldsymbol\phi} D_{\mathrm{KL}} ( q_{\boldsymbol\phi}(\boldsymbol{z} | \boldsymbol{x}) \parallel p(\boldsymbol{z}) )$ can also be computed via automatic differentiation.
+However, to estimate $\nabla_{\boldsymbol\phi} \mathbb{E}_{\boldsymbol{z} \sim q_{\boldsymbol\phi}(\boldsymbol{z} | \boldsymbol{x})} \log ( p_{\boldsymbol\theta}(\boldsymbol{x} | \boldsymbol{z})  )$, a Monte Carlo gradient estimator is necessary.
+In this section, we demonstrate how to estimate it using the measure-valued gradient estimator.
+The code is adapted from the &lt;a href=&#34;https://github.com/pytorch/examples/tree/master/vae&#34;&gt;PyTorch VAE example&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;We first define the &lt;code&gt;VAE&lt;/code&gt; module. The encoder and decoder are both two-layer fully connected networks, with default arguments &lt;code&gt;args.hidden_dim = 400&lt;/code&gt; and &lt;code&gt;args.z_dim = 20&lt;/code&gt;.
+The only difference from the original code is the line &lt;code&gt;z = z.detach()&lt;/code&gt; in &lt;code&gt;reparameterize()&lt;/code&gt;. This is to prevent the gradient $\nabla_{\boldsymbol\phi} \mathbb{E}_{\boldsymbol{z} \sim q_{\boldsymbol\phi}(\boldsymbol{z} | \boldsymbol{x})} \log ( p_{\boldsymbol\theta}(\boldsymbol{x} | \boldsymbol{z}) )$ from flowing into the encoder network.&lt;/p&gt;
+&lt;div data-gist-id=&#34;b28902f41f8d4500c599dad15f1fc278&#34; data-gist-line=&#34;69-98&#34;&gt;&lt;/div&gt;
+&lt;p&gt;Assuming $p_{\boldsymbol\theta}(\boldsymbol{x} | \boldsymbol{z})$ is a Bernoulli distribution,  $\log p_{\boldsymbol\theta}(\boldsymbol{x} | \boldsymbol{z})$ is the binary cross entropy function and it is the integrand.&lt;/p&gt;
+&lt;div data-gist-id=&#34;b28902f41f8d4500c599dad15f1fc278&#34; data-gist-line=&#34;101-107&#34;&gt;&lt;/div&gt;
+&lt;p&gt;Next, we need to be able to sample from the Weibull distribution and double-sided Maxwell distribution.
+PyTorch has a built-in Weibull distribution class, and we can directly sample from an instance of that class.
+For the double-sided Maxwell distribution, we can use the following property to sample from $\mathcal{M}(0, 1)$:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If $X \sim \mathrm{Bernoulli}(1/2)$, $Y \sim \mathrm{Gamma}(3/2, 1/2)$, and $X$ and $Y$ are independent, then $(2X - 1) \sqrt{Y} \sim \mathcal{M}(0, 1)$.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div data-gist-id=&#34;b28902f41f8d4500c599dad15f1fc278&#34; data-gist-line=&#34;110-126&#34;&gt;&lt;/div&gt;
+&lt;p&gt;Now we are ready to introduce the most crucial function &lt;code&gt;get_mu_std_grad()&lt;/code&gt;. It returns the estimated gradient of $\mathbb{E}_{\boldsymbol{z} \sim q_{\boldsymbol\phi}(\boldsymbol{z} | \boldsymbol{x})} \log ( p_{\boldsymbol\theta}(\boldsymbol{x} | \boldsymbol{z}) )$ with respect to &lt;code&gt;mu&lt;/code&gt; and &lt;code&gt;std&lt;/code&gt;, the output of &lt;code&gt;encode()&lt;/code&gt; in the &lt;code&gt;VAE&lt;/code&gt; class.&lt;/p&gt;
+&lt;p&gt;The idea is to draw two samples &lt;code&gt;z1&lt;/code&gt; and &lt;code&gt;z2&lt;/code&gt; from the variational distribution first.
+Then, we loop through all the latent dimensions; in the $i$-th iteration, &lt;code&gt;z1&lt;/code&gt; and &lt;code&gt;z2&lt;/code&gt; are cloned to &lt;code&gt;z1_copy&lt;/code&gt; and &lt;code&gt;z2_copy&lt;/code&gt;, then the $i$-th elements of &lt;code&gt;z1_copy&lt;/code&gt; and &lt;code&gt;z2_copy&lt;/code&gt; are substituted with samples from $p^+$ and $p^-$, respectively.
+Finally, the updated &lt;code&gt;z1_copy&lt;/code&gt; and &lt;code&gt;z2_copy&lt;/code&gt; are passed to the function &lt;code&gt;f_integrand&lt;/code&gt;, and the difference divided by the constant is the resulting gradient estimate for the $i$-th parameter.&lt;/p&gt;
+&lt;p&gt;It is worth mentioning that when estimating the gradient with respect to the standard deviation $\sigma$, the two samples from $p_\mathcal{M}(x; \mu, \sigma)$ and $p_\mathcal{N}(x; \mu, \sigma)$ are not independent.
+We first draw a sample from the positive component
+$\hat{x}^+ \sim p_\mathcal{M}(x; \mu, \sigma)$,
+then draw a uniform sample $\hat{u} \sim \mathcal{U}(0, 1)$,
+finally set $\hat{x}^- := \hat{u} \cdot \hat{x}^+$.
+It can be shown that $\hat{x}^- \sim \mathcal{N}(x; \mu, \sigma)$, the negative component.
+This is a variance reduction method known as the Maxwell-Gaussian coupling.&lt;/p&gt;
+&lt;div data-gist-id=&#34;b28902f41f8d4500c599dad15f1fc278&#34; data-gist-line=&#34;129-168&#34;&gt;&lt;/div&gt;
+&lt;p&gt;Finally, everything is put together to the &lt;code&gt;train()&lt;/code&gt; function.
+The gradients of the decoder come from the binary cross-entropy loss; the gradients of the encoder come from two sources: the KL divergence and the measure-valued gradient estimator.&lt;/p&gt;
+&lt;div data-gist-id=&#34;b28902f41f8d4500c599dad15f1fc278&#34; data-gist-line=&#34;171-196&#34;&gt;&lt;/div&gt;
+&lt;p&gt;Complete code can be found in the next section.&lt;/p&gt;
+&lt;p&gt;Figures 3 and 4 show the reconstructed images and the generated images with a model trained for 10 epochs.
+Qualitatively, the results seem reasonable.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;reconstruction_10.png&#34; alt=&#34;Reconstruction&#34; width=&#34;300&#34;/&gt;
+    &lt;figcaption&gt;Figure 3: Reconstructed images after 10 epochs.&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;sample_10.png&#34; alt=&#34;Sample&#34; width=&#34;300&#34;/&gt;
+    &lt;figcaption&gt;Figure 4: Generated images after 10 epochs.&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h2 id=&#34;4-complete-code&#34;&gt;4. Complete code&lt;/h2&gt;
+&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/changebo/b28902f41f8d4500c599dad15f1fc278.js&#34;&gt;&lt;/script&gt;
+
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Mohamed, S., Rosca, M., Figurnov, M., &amp;amp; Mnih, A. (2019). Monte Carlo gradient estimation in machine learning. arXiv preprint arXiv:1906.10652.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script
+  type=&#34;text/javascript&#34;
+  src=&#34;https://cdn.jsdelivr.net/npm/gist-embed@1.0.3/dist/gist-embed.min.js&#34;
+&gt;&lt;/script&gt; 
+</description>
+    </item>
     
     <item>
       <title>Understanding Shapes in PyTorch Distributions Package</title>
@@ -176,24 +439,24 @@ In the following example, the covariance matrix &lt;code&gt;torch.eye(2)&lt;/cod
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#00f;font-weight:bold&#34;&gt;Distribution&lt;/span&gt;(&lt;span style=&#34;color:#008000&#34;&gt;object&lt;/span&gt;):
 
     &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#00f&#34;&gt;expand&lt;/span&gt;(self, batch_shape, _instance&lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt;None):
-        &lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Returns a new distribution instance (or populates an existing instance&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        provided by a derived class) with batch dimensions expanded to&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        `batch_shape`. This method calls :class:`~torch.Tensor.expand` on&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        the distribution&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;s parameters. As such, this does not allocate new&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        memory for the expanded distribution instance. Additionally,&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        this does not repeat any args checking or parameter broadcasting in&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        `__init__.py`, when an instance is first created.&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Args:&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            batch_shape (torch.Size): the desired expanded size.&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            _instance: new instance provided by subclasses that&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;                need to override `.expand`.&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Returns:&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            New distribution instance with batch dimensions expanded to&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            `batch_size`.&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Returns a new distribution instance (or populates an existing instance
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        provided by a derived class) with batch dimensions expanded to
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        `batch_shape`. This method calls :class:`~torch.Tensor.expand` on
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        the distribution&amp;#39;s parameters. As such, this does not allocate new
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        memory for the expanded distribution instance. Additionally,
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        this does not repeat any args checking or parameter broadcasting in
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        `__init__.py`, when an instance is first created.
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Args:
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            batch_shape (torch.Size): the desired expanded size.
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            _instance: new instance provided by subclasses that
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;                need to override `.expand`.
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Returns:
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            New distribution instance with batch dimensions expanded to
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            `batch_size`.
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
         &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;raise&lt;/span&gt; &lt;span style=&#34;color:#d2413a;font-weight:bold&#34;&gt;NotImplementedError&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- ```
 mvn = MultivariateNormal(torch.randn(2), torch.eye(2))
