@@ -45,7 +45,7 @@
   <aside>tags: <a href="/blog/tags/machine-learning/">machine learning</a></a>&nbsp;&nbsp;&nbsp;</aside>
   </p>
   <p><p>In machine learning, the gradient estimation problem lies at the core of various problems.
-Mohamed et al. (2019) give a comprehensive survey of this topic, from which I learned more about an intriguing approach called the <em>measure-valued gradient estimator</em>.
+Mohamed et al. (2019) give a comprehensive survey of this topic, from which I learned an intriguing approach called the <em>measure-valued gradient estimator</em>.
 In this post, we give a brief review of the measure-valued gradient estimator and use it to train a variational autoencoder.</p>
 <h2 id="1-monte-carlo-gradient-estimation">1. Monte Carlo gradient estimation</h2>
 <p>Given a random variable $\boldsymbol{x} \in \mathbb{R}^d$, its density function $p(\boldsymbol{x}; \boldsymbol\theta)$ parametrized by $\boldsymbol\theta \in \Theta \subset \mathbb{R}^m$, and a function $f: \mathbb{R}^d \to \mathbb{R}$, the problem of gradient esitmation pertains to the gradient of the expectation of $f(\boldsymbol{x})$ with respect to the parameters $\boldsymbol\theta$:
@@ -100,7 +100,7 @@ We first define the estimator, then provide two simple examples.
 Finally, the pros and cons of it are briefly discussed.</p>
 <h3 id="21-definition">2.1. Definition</h3>
 <p>We only consider a distribution with a scalar parameter $\theta \in \mathbb{R}$ for now.
-It can be shown that the derivative of the density $\nabla_\theta p(\boldsymbol{x}; \theta)$ can always be decomposed into a difference of two densities multiplied by a constant:
+It can be shown that the derivative of the density $\nabla_\theta p(\boldsymbol{x}; \theta)$ can always be decomposed into the difference of two densities multiplied by a constant:
 $$
 \nabla_\theta p(\boldsymbol{x}; \theta) = c_\theta \left(p^+ (\boldsymbol{x}; \theta) - p^- (\boldsymbol{x}; \theta) \right),
 $$
@@ -189,7 +189,7 @@ c_\mu \left(p^+ (x; \mu, \sigma) - p^- (x; \mu, \sigma) \right)=
 $$
 which equals the left-hand side.</p>
 <p>Figure 1 gives an illustration of this example with $\mu=\sigma=1$.
-The first row shows the density function $p_{\mathcal{N}}(x; \mu, \sigma)$ (the solid line) and how it changes when $\mu$ increases by 0.1 (the dashed line); the change (divided by 0.1) is approximately the gradient of interest.
+The first row shows the density function $p_{\mathcal{N}}(x; \mu, \sigma)$ (the solid line) and how it changes when $\mu$ increases by 0.1 (the dashed line); the difference (divided by 0.1) is approximately the gradient of interest.
 The second row is the gradient $\nabla_{\mu} p_{\mathcal{N}}(x; \mu, \sigma)$.
 The last two rows are the positive and negative components multiplied by the constant $c_\mu$, respectively; it indicates that the difference between them matches the curve in the second row.</p>
 <figure>
@@ -227,7 +227,7 @@ p_{\mathcal{N}}(x; \mu, \sigma)
 <h3 id="23-pros-and-cons">2.3. Pros and cons</h3>
 <p>The advantage of the measure-valued gradient estimator is its flexibility.
 It is applicable to both continuous and discrete random variables.
-Unlike the pathwise estimator, it does not assume the function $f$ to be differentiable.
+Also, unlike the pathwise estimator, it does not assume the function $f$ to be differentiable.
 Furthermore, there are distributions where the measure-valued gradient estimator is applicable, but the score function estimator is not, for example, the uniform distribution $\mathcal{U}(0, \theta)$.</p>
 <p>One major disadvantage is its computational cost.
 The estimator only applies to a single parameter.
