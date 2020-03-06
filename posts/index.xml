@@ -46,7 +46,7 @@ $$
 \widehat{\boldsymbol\eta} = \frac{1}{k} \sum_{i=1}^k f(\widehat{\boldsymbol{x}}_i) \nabla_\boldsymbol\theta \log p(\widehat{\boldsymbol{x}}_i; \boldsymbol\theta),
 \quad \widehat{\boldsymbol{x}}_i \overset{\mathrm{iid}}{\sim} p(\boldsymbol{x}; \boldsymbol\theta).
 $$
-Another commonly used estimator is the &lt;em&gt;pathwise estimator&lt;/em&gt;; it is also known as the &lt;em&gt;reparametrization trick&lt;/em&gt;. The idea is to rewrite $\boldsymbol{x}$ as a function of another random variable following a base distribution.
+Another commonly used estimator is the &lt;em&gt;pathwise estimator&lt;/em&gt;, also known as the &lt;em&gt;reparametrization trick&lt;/em&gt;. The idea is to rewrite $\boldsymbol{x}$ as a function of another random variable following a base distribution.
 Specifically, if $\boldsymbol{x} \overset{d}{=} g(\boldsymbol\epsilon; \boldsymbol\theta)$, where $\boldsymbol\epsilon \sim p(\boldsymbol\epsilon)$ that does not depend on $\boldsymbol\theta$, then
 \begin{align}
 \boldsymbol\eta &amp;amp;=
@@ -237,9 +237,9 @@ For the double-sided Maxwell distribution, we can use the following property to 
 &lt;p&gt;The idea is to draw two samples &lt;code&gt;z1&lt;/code&gt; and &lt;code&gt;z2&lt;/code&gt; from the variational distribution first.
 Then, we loop through all the latent dimensions; in the $i$-th iteration, &lt;code&gt;z1&lt;/code&gt; and &lt;code&gt;z2&lt;/code&gt; are cloned to &lt;code&gt;z1_copy&lt;/code&gt; and &lt;code&gt;z2_copy&lt;/code&gt;, then the $i$-th elements of &lt;code&gt;z1_copy&lt;/code&gt; and &lt;code&gt;z2_copy&lt;/code&gt; are substituted with samples from $p^+$ and $p^-$, respectively.
 Finally, the updated &lt;code&gt;z1_copy&lt;/code&gt; and &lt;code&gt;z2_copy&lt;/code&gt; are passed to the function &lt;code&gt;f_integrand&lt;/code&gt;, and the difference divided by the constant is the resulting gradient estimate for the $i$-th parameter.&lt;/p&gt;
-&lt;p&gt;It is worth mentioning that when estimating the gradient with respect to the standard deviation $\sigma$, the two samples from $p_\mathcal{M}(x; \mu, \sigma)$ and $p_\mathcal{N}(x; \mu, \sigma)$ are not independent.
+&lt;p&gt;It is worth mentioning that when estimating the gradient with respect to the standard deviation $\sigma$, the two samples from $\mathcal{M}(x; \mu, \sigma)$ and $\mathcal{N}(x; \mu, \sigma)$ are not independent.
 We first draw a sample from the positive component
-$\hat{x}^+ \sim p_\mathcal{M}(x; \mu, \sigma)$,
+$\hat{x}^+ \sim \mathcal{M}(x; \mu, \sigma)$,
 then draw a uniform sample $\hat{u} \sim \mathcal{U}(0, 1)$,
 finally set $\hat{x}^- := \hat{u} \cdot \hat{x}^+$.
 It can be shown that $\hat{x}^- \sim \mathcal{N}(x; \mu, \sigma)$, the negative component.
