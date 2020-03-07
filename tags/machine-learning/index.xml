@@ -5,7 +5,7 @@
     <description>Recent content in machine learning on Bo&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 05 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 07 Mar 2020 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="https://bochang.me/blog/tags/machine-learning/index.xml" rel="self" type="application/rss+xml" />
     
@@ -13,7 +13,7 @@
     <item>
       <title>Measure-Valued Gradient Estimator and Application to Variational Autoencoder</title>
       <link>https://bochang.me/blog/posts/measure-val-grad/</link>
-      <pubDate>Thu, 05 Mar 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 07 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>https://bochang.me/blog/posts/measure-val-grad/</guid>
       <description>&lt;p&gt;In machine learning, the gradient estimation problem lies at the core of various problems.
@@ -439,24 +439,24 @@ In the following example, the covariance matrix &lt;code&gt;torch.eye(2)&lt;/cod
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#00f;font-weight:bold&#34;&gt;Distribution&lt;/span&gt;(&lt;span style=&#34;color:#008000&#34;&gt;object&lt;/span&gt;):
 
     &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#00f&#34;&gt;expand&lt;/span&gt;(self, batch_shape, _instance&lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt;None):
-        &lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Returns a new distribution instance (or populates an existing instance&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        provided by a derived class) with batch dimensions expanded to&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        `batch_shape`. This method calls :class:`~torch.Tensor.expand` on&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        the distribution&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;s parameters. As such, this does not allocate new&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        memory for the expanded distribution instance. Additionally,&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        this does not repeat any args checking or parameter broadcasting in&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        `__init__.py`, when an instance is first created.&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Args:&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            batch_shape (torch.Size): the desired expanded size.&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            _instance: new instance provided by subclasses that&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;                need to override `.expand`.&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Returns:&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            New distribution instance with batch dimensions expanded to&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            `batch_size`.&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#ba2121&#34;&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Returns a new distribution instance (or populates an existing instance
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        provided by a derived class) with batch dimensions expanded to
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        `batch_shape`. This method calls :class:`~torch.Tensor.expand` on
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        the distribution&amp;#39;s parameters. As such, this does not allocate new
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        memory for the expanded distribution instance. Additionally,
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        this does not repeat any args checking or parameter broadcasting in
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        `__init__.py`, when an instance is first created.
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Args:
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            batch_shape (torch.Size): the desired expanded size.
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            _instance: new instance provided by subclasses that
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;                need to override `.expand`.
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        Returns:
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            New distribution instance with batch dimensions expanded to
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;            `batch_size`.
+&lt;/span&gt;&lt;span style=&#34;color:#ba2121&#34;&gt;        &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
         &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;raise&lt;/span&gt; &lt;span style=&#34;color:#d2413a;font-weight:bold&#34;&gt;NotImplementedError&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;!-- ```
 mvn = MultivariateNormal(torch.randn(2), torch.eye(2))
