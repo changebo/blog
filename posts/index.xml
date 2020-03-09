@@ -165,7 +165,7 @@ The first row shows the density function $p_{\mathcal{N}}(x; \mu, \sigma)$ (the 
 The second row is the gradient $\nabla_{\mu} p_{\mathcal{N}}(x; \mu, \sigma)$.
 The last two rows are the positive and negative components multiplied by the constant $c_\mu$, respectively; it indicates that the difference between them matches the curve in the second row.&lt;/p&gt;
 &lt;figure&gt;
-    &lt;img src=&#34;norm_mu.png&#34; alt=&#34;Derivative of a normal density with respect to the location parameter.&#34; width=&#34;450&#34;/&gt;
+    &lt;img src=&#34;norm_mu.png&#34; alt=&#34;Derivative of a normal density with respect to the location parameter.&#34; width=&#34;500&#34;/&gt;
     &lt;figcaption&gt;Figure 1: Derivative of a normal density with respect to the location parameter.&lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;p&gt;&lt;strong&gt;Example 2&lt;/strong&gt; (Normal distribution with respect to the scale parameter).
