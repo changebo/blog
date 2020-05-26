@@ -172,6 +172,21 @@ The first row is correct because \(n\) represents a variable here.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Reducing the vertical spaces also makes the paper less readable for the reviewers, so it is definitely not advisable.
 Many conferences support the submission of supplementary material. If the paper is too long, consider reorganizing it and moving some sections to the supplementary material.&lt;/p&gt;
+&lt;script type=&#34;application/ld+json&#34;&gt;
+{
+  &#34;@context&#34;: &#34;http://schema.org&#34;,
+  &#34;@type&#34;: &#34;BlogPosting&#34;,
+  &#34;url&#34;: &#34;https://bochang.me/blog/posts/latex&#34;,
+  &#34;headline&#34;: &#34;A Few LaTeX Tips&#34;,
+  &#34;datePublished&#34;: &#34;2018-11-10&#34;,
+  &#34;author&#34;: {
+    &#34;@type&#34;: &#34;Person&#34;,
+    &#34;name&#34;: &#34;Bo Chang&#34;,
+    &#34;url&#34;: &#34;https://bochang.me&#34;
+  }
+}
+&lt;/script&gt;&lt;blockquote&gt;
+&lt;/blockquote&gt;
 </description>
     </item>
     
