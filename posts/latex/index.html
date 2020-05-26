@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>A Few LaTeX Tips</title>
+  
+  <meta name="description" content="A few LaTeX tips that I wish I had known earlier.">
+  
+  <meta name="image" content="https://bochang.me/blog/posts/latex/nonbreaking-1.png">
+  
+  <meta name="keywords" content="LaTeX, citet, citep, cite, natbib, citation, reference">
+  
+  <meta itemprop="name" content="A Few LaTeX Tips">
+  <meta itemprop="description" content="A few LaTeX tips that I wish I had known earlier.">
+  
+  <meta itemprop="image" content="https://bochang.me/blog/posts/latex/nonbreaking-1.png">
+  
+  <meta name="og:title" content="A Few LaTeX Tips">
+  <meta name="og:description" content="A few LaTeX tips that I wish I had known earlier.">
+  
+  <meta name="og:image" content="https://bochang.me/blog/posts/latex/nonbreaking-1.png">
+  <meta name="og:url" content="https://bochang.me/blog/posts/latex/">
+  <meta name="og:site_name" content="A Few LaTeX Tips">
+  <meta name="og:type" content="article">
+  
+  <meta name="article:tag" content="academic writing ">
+  <link rel="stylesheet" type="text/css" href="https://bochang.me/blog/css/style.css">
+  <link rel="icon" type="image/png" href="https://bochang.me/blog/icons/dice-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="https://bochang.me/blog/icons/dice-32x32.png" sizes="32x32">  
+</head>
+
+<body>
+  <header>
+    
+    <a href="https://bochang.me/blog/" style="float: left;color:#ff3b30;">Bo&#39;s Blog</a>
+    
+    <a href="https://bochang.me/" style="color:#777;">&nbsp;&nbsp;About</a>
+    &nbsp;&nbsp;
+    
+    
+
+    <script type="application/ld+json">
+    
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "A Few LaTeX Tips",
+      "image": "https://bochang.me/blog/posts/latex/nonbreaking-1.png",
+      "datePublished": "2018-11-10T00:00:00Z",
+      "dateModified": "2018-11-10T00:00:00Z",
+      "author": {
+        "@type": "Person",
+        "name": "Bo Chang",
+        "url": "https://bochang.me"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Bo Chang",
+        "url": "https://bochang.me"
+      },
+      "mainEntityOfPage": { "@type": "WebPage" },      
+      "description": "LaTeX is a high-quality typesetting system and the de facto standard for the publication of scientific documents. However, I never got a chance to learn how to use it formally. Most of my LaTeX knowledge comes from learning by doing. As I\u0026rsquo;m working on my Ph.D. thesis, I would like to share a few LaTeX tips that I wish I had known earlier. I got most of them from working with my advisors, internship hosts, and collaborators.",
+      "keywords": ["academic writing"]
+    }
+    
+    </script>    
+  </header>
+<div class="content">
+  <h1>A Few LaTeX Tips</h1>
+  <p>
+  <aside>tags: <a href="/blog/tags/academic-writing/">academic writing</a></a>&nbsp;&nbsp;&nbsp;</aside>
+  </p>
+  <p><p>LaTeX is a high-quality typesetting system and the de facto standard for the publication of scientific documents. However, I never got a chance to learn how to use it formally. Most of my LaTeX knowledge comes from learning by doing. As I&rsquo;m working on my Ph.D. thesis, I would like to share a few LaTeX tips that I wish I had known earlier. I got most of them from working with my advisors, internship hosts, and collaborators. There is still a lot for me to learn about LaTeX. Any comments and suggestions are welcome!</p>
+<h2 id="1-non-breaking-spaces">1. Non-breaking spaces</h2>
+<p>In digital typesetting, a non-breaking space is a space character that prevents an automatic line break at its position. It is like an invisible glue between two words. There are various situations where a non-breaking space is used. For example, if the phrase &ldquo;100 km&rdquo; does not fit at the end of a line, the word processor may insert a line break between &ldquo;100&rdquo; and &ldquo;km&rdquo;, which is not desirable.</p>
+<p>LaTeX uses the <code>~</code> symbol as a non-breaking space. It is usually inserted before any numeric or alphabetic reference, for example, <code>Figure~\ref{fig:foo}</code> and <code>Section~\ref{sec:bar}</code>. Compare the following examples:</p>
+<ul>
+<li>Without a non-breaking space: <code>Table 3</code>
+<img src="nonbreaking-1.png" alt="without a non-breaking space"></li>
+<li>With a non-breaking space: <code>Table~3</code>
+<img src="nonbreaking-2.png" alt="with a non-breaking space"></li>
+</ul>
+<h2 id="2-citations-using-citet-and-citep">2. Citations using <code>\citet</code> and <code>\citep</code></h2>
+<p>The <code>natbib</code> package is commonly used for handling references in LaTeX. It is included in the style files by default for many conferences including ICML, NIPS, ICLR, etc. See <a href="https://gking.harvard.edu/files/natnotes2.pdf">here</a> for a reference sheet for <code>natbib</code>.</p>
+<p>The two basic citation commands in <code>natbib</code> are</p>
+<ul>
+<li><code>\citet</code> for <strong>textual</strong> citations,</li>
+<li><code>\citep</code> for <strong>parenthetical</strong> citations.</li>
+</ul>
+<p>The difference is that <code>\citet{jon90}</code> prints <em>Jones et al. (1990)</em>, while <code>\citep{jon90}</code> prints <em>(Jones et al., 1990)</em>. The choice depends on whether the authors are to be read as part of the sentence. According to the formatting instructions for ICLR 2019:</p>
+<blockquote>
+<p>When the authors or the publication are included in the sentence, the citation should not be in parenthesis (as in “See Hinton et al. (2006) for more information.”). Otherwise, the citation should be in parenthesis (as in “Deep learning shows promise to make progress towards AI (Bengio &amp; LeCun, 2007).”).</p>
+</blockquote>
+<p>The command <code>\cite</code> should be avoided because its behavior depends on the citation format and might cause inconsistency. According to the <code>natbib</code> documentation:</p>
+<blockquote>
+<p>The standard LaTeX command <code>\cite</code> should be avoided, because it behaves like <code>\citet</code> for author-year citations, but like <code>\citep</code> for numerical ones.</p>
+</blockquote>
+<h2 id="3-mathematical-symbols">3. Mathematical symbols</h2>
+<p>When writing mathematical formulas, people follow certain conventions of notations. In fact, there is an ISO standard <a href="https://people.engr.ncsu.edu/jwilson/files/mathsigns.pdf">ISO 80000-2</a> that defines mathematical signs and symbols. I found an article titled <a href="https://tug.org/TUGboat/tb18-1/tb54becc.pdf">Typesetting mathematics for science and technology according to ISO 31/XI</a> by Claudio Beccari. (ISO 31/XI is the precursor of ISO 80000-2.) The recommendations below are excerpts of the article. The &ldquo;roman type&rdquo; refers to upright letters and the &ldquo;italic type&rdquo; refers to sloping letters.</p>
+<p><strong>a) Variables and functions are represented by one italic letter with modifiers such as subscripts, superscripts, primes, etc.</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>LaTeX</th>
+<th>Display</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correct</td>
+<td><code>L(x)</code></td>
+<td>\(L(x)\)</td>
+</tr>
+<tr>
+<td>Correct</td>
+<td><code>L'(x)</code></td>
+<td>\(L&rsquo;(x)\)</td>
+</tr>
+<tr>
+<td>Correct</td>
+<td><code>L_{\mathrm{adversarial}}(x)</code></td>
+<td>\(L_{\mathrm{adversarial}}(x)\)</td>
+</tr>
+<tr>
+<td>Incorrect</td>
+<td><code>LOSS(x)</code></td>
+<td>\(LOSS(x)\)</td>
+</tr>
+<tr>
+<td>Incorrect</td>
+<td><code>Loss(x)</code></td>
+<td>\(Loss(x)\)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>b) Mathematical operators indicated with letters must be set in roman type.</strong>
+This includes the predefined operators <code>\exp</code>, <code>\log</code>, <code>\sin</code>, <code>\tanh</code>, <code>\det</code>, <code>\min</code>, <code>\inf</code>, as well as user-defined operators.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>LaTeX</th>
+<th>Display</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correct</td>
+<td><code>\sin(2x) = 2 \sin(x) \cos(x)</code></td>
+<td>\(\sin(2x) = 2 \sin(x) \cos(x)\)</td>
+</tr>
+<tr>
+<td>Incorrect</td>
+<td><code>sin(2x) = 2 sin(x) cos(x)</code></td>
+<td>\(sin(2x) = 2 sin(x) cos(x)\)</td>
+</tr>
+<tr>
+<td>Correct</td>
+<td><code>\operatorname{softmax}(x)</code></td>
+<td>\(\operatorname{softmax}(x)\)</td>
+</tr>
+<tr>
+<td>Incorrect</td>
+<td><code>softmax(x)</code></td>
+<td>\(softmax(x)\)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>c) A particular operator, the operator of differentiation, should be set in roman type.</strong>
+This one is somewhat controversial. In some fields, italic type seems more common. I personally prefer roman type.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>LaTeX</th>
+<th>Display</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correct</td>
+<td><code>\int x \mathrm{d} x</code></td>
+<td>\(\int x \mathrm{d} x\)</td>
+</tr>
+<tr>
+<td>Incorrect</td>
+<td><code>\int x dx</code></td>
+<td>\(\int x dx\)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>d) Sub and superscripts that do not represent mathematical variables should be set in roman type.</strong>
+The first row is correct because \(n\) represents a variable here.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>LaTeX</th>
+<th>Display</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correct</td>
+<td><code>S_n = \sum_{i=1}^n X_i</code></td>
+<td>\( S_n = \sum_{i=1}^n X_i \)</td>
+</tr>
+<tr>
+<td>Correct</td>
+<td><code>L_{\mathrm{adversarial}}(x)</code></td>
+<td>\(L_{\mathrm{adversarial}}(x)\)</td>
+</tr>
+<tr>
+<td>Incorrect</td>
+<td><code>L_{adversarial}(x)</code></td>
+<td>\(L_{adversarial}(x)\)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-avoid-vspace">4. Avoid <code>\vspace</code></h2>
+<p>Most conferences have strict page limits. More often than not, eight pages are not enough to adequately present a brilliant idea. If only Fermat got more space in the margin!</p>
+<p>A common trick is to use <code>\vspace</code>. It can reduce the length of vertical space before or after a section, figure or table. However, this essentially alters the style template. Many formatting instructions explicitly forbid the use of <code>\vspace</code>. It might even result in the rejection of the paper. From the formatting instructions for AAAI 2019:</p>
+<blockquote>
+<p>if your paper is obviously “squeezed” it is not going to be accepted.</p>
+</blockquote>
+<p>Reducing the vertical spaces also makes the paper less readable for the reviewers, so it is definitely not advisable.
+Many conferences support the submission of supplementary material. If the paper is too long, consider reorganizing it and moving some sections to the supplementary material.</p>
+</p>
+</div>
+
+
+<p>Written on Nov 10, 2018.</p>
+
+<footer>
+	<p>&copy; 2020 All rights reserved.</p>
+</footer>
+</body>
+</html>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    "HTML-CSS": { fonts: ["TeX"] }
+  });
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-129064600-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
