@@ -30,6 +30,37 @@
   <link rel="stylesheet" type="text/css" href="https://bochang.me/blog/css/style.css">
   <link rel="icon" type="image/png" href="https://bochang.me/dice-16x16.png" sizes="16x16">
   <link rel="icon" type="image/png" href="https://bochang.me/dice-32x32.png" sizes="32x32">  
+  <script type="application/ld+json">
+  
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Measure-Valued Gradient Estimator and Application to Variational Autoencoder",
+    "image": "https://bochang.me/blog/posts/measure-val-grad/norm_mu.png",
+    "datePublished": "2020-03-07T00:00:00Z",
+    "dateModified": "2020-03-07T00:00:00Z",
+    "author": {
+      "@type": "Person",
+      "name": "Bo Chang",
+      "url": "https://bochang.me"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Bo's Blog",
+      "url": "https://bochang.me/blog",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://bochang.me/dice-512x512.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    "mainEntityOfPage": { "@type": "WebPage" },
+    "description": "In machine learning, the gradient estimation problem lies at the core of various problems. Mohamed et al. (2019) give a comprehensive survey of this topic, from which I learned an intriguing approach called the measure-valued gradient estimator. In this post, we give a brief review of the measure-valued gradient estimator and use it to train a variational autoencoder.\n1. Monte Carlo gradient estimation Given a random variable $\\boldsymbol{x} \\in \\mathbb{R}^d$, its density function $p(\\boldsymbol{x}; \\boldsymbol\\theta)$ parametrized by $\\boldsymbol\\theta \\in \\Theta \\subset \\mathbb{R}^m$, and a function $f: \\mathbb{R}^d \\to \\mathbb{R}$, the problem of gradient esitmation pertains to the gradient of the expectation of $f(\\boldsymbol{x})$ with respect to the parameters $\\boldsymbol\\theta$: $$ \\boldsymbol\\eta := \\nabla_\\boldsymbol\\theta \\mathbb{E}_{\\boldsymbol{x} \\sim p(\\boldsymbol{x}; \\boldsymbol\\theta)} f(\\boldsymbol{x}).",
+    "keywords": ["Monte", "Carlo", "Gradient", "Estimator,", "Variational", "Autoencoders,", "Measure-Valued", "Gradient", "Estimator,", "Score", "Function", "Estimator,", "REINFORCE", "Estimator,", "Pathwise", "estimator,", "Reparametrization", "Trick"]
+  }
+  
+  </script>
 </head>
 
 <body>
@@ -40,38 +71,7 @@
     <a href="https://bochang.me/" style="color:#777;">&nbsp;&nbsp;About</a>
     &nbsp;&nbsp;
     
-    
-    
-    <script type="application/ld+json">    
-    {
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
-      "headline": "Measure-Valued Gradient Estimator and Application to Variational Autoencoder",
-      "image": "https://bochang.me/blog/posts/measure-val-grad/norm_mu.png",
-      "datePublished": "2020-03-07T00:00:00Z",
-      "dateModified": "2020-03-07T00:00:00Z",
-      "author": {
-        "@type": "Person",
-        "name": "Bo Chang",
-        "url": "https://bochang.me"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "Bo's Blog",
-        "url": "https://bochang.me/blog",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://bochang.me/dice-512x512.png",
-          "width": 512,
-          "height": 512
-        }
-      },
-      "mainEntityOfPage": { "@type": "WebPage" },      
-      "description": "In machine learning, the gradient estimation problem lies at the core of various problems. Mohamed et al. (2019) give a comprehensive survey of this topic, from which I learned an intriguing approach called the measure-valued gradient estimator. In this post, we give a brief review of the measure-valued gradient estimator and use it to train a variational autoencoder.\n1. Monte Carlo gradient estimation Given a random variable $\\boldsymbol{x} \\in \\mathbb{R}^d$, its density function $p(\\boldsymbol{x}; \\boldsymbol\\theta)$ parametrized by $\\boldsymbol\\theta \\in \\Theta \\subset \\mathbb{R}^m$, and a function $f: \\mathbb{R}^d \\to \\mathbb{R}$, the problem of gradient esitmation pertains to the gradient of the expectation of $f(\\boldsymbol{x})$ with respect to the parameters $\\boldsymbol\\theta$: $$ \\boldsymbol\\eta := \\nabla_\\boldsymbol\\theta \\mathbb{E}_{\\boldsymbol{x} \\sim p(\\boldsymbol{x}; \\boldsymbol\\theta)} f(\\boldsymbol{x}).",
-      "keywords": ["Monte", "Carlo", "Gradient", "Estimator,", "Variational", "Autoencoders,", "Measure-Valued", "Gradient", "Estimator,", "Score", "Function", "Estimator,", "REINFORCE", "Estimator,", "Pathwise", "estimator,", "Reparametrization", "Trick"]
-    }
-    </script>    
-    
+       
   </header>
 <div class="content">
   <h1>Measure-Valued Gradient Estimator and Application to Variational Autoencoder</h1>
