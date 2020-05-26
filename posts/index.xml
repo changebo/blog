@@ -1879,13 +1879,23 @@ Many conferences support the submission of supplementary material. If the paper 
 {
   &#34;@context&#34;: &#34;http://schema.org&#34;,
   &#34;@type&#34;: &#34;BlogPosting&#34;,
+  &#34;image&#34;: &#34;https://bochang.me/pic.jpg&#34;,
   &#34;url&#34;: &#34;https://bochang.me/blog/posts/latex&#34;,
   &#34;headline&#34;: &#34;A Few LaTeX Tips&#34;,
   &#34;datePublished&#34;: &#34;2018-11-10&#34;,
+  &#34;dateModified&#34;: &#34;2018-11-10&#34;,
   &#34;author&#34;: {
     &#34;@type&#34;: &#34;Person&#34;,
     &#34;name&#34;: &#34;Bo Chang&#34;,
     &#34;url&#34;: &#34;https://bochang.me&#34;
+  },
+  &#34;publisher&#34;: {
+    &#34;@type&#34;: &#34;Person&#34;,
+    &#34;name&#34;: &#34;Bo Chang&#34;,
+    &#34;url&#34;: &#34;https://bochang.me&#34;
+  },
+  &#34;mainEntityOfPage&#34;: {
+    &#34;@type&#34;: &#34;WebPage&#34;
   }
 }
 &lt;/script&gt;&lt;blockquote&gt;
