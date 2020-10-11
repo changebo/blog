@@ -1097,7 +1097,7 @@ In fact, both Spearman&amp;rsquo;s rho and Kendall&amp;rsquo;s tau can be define
 &lt;p&gt;Spearman&amp;rsquo;s rho:
 $$
 \rho_S( C ) = \iint_{[0,1]^2}
-uv , \mathrm{d} C(u, v)
+uv \, \mathrm{d} C(u, v)
 -3.
 $$&lt;/p&gt;
 &lt;/li&gt;
@@ -1105,7 +1105,7 @@ $$&lt;/p&gt;
 &lt;p&gt;Kendall&amp;rsquo;s tau:
 $$
 \rho_\tau( C ) = \iint_{[0,1]^2}
-C(u, v) , \mathrm{d} C(u, v).
+C(u, v) \, \mathrm{d} C(u, v).
 $$&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
