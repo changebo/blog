@@ -1194,10 +1194,9 @@ $$
 \frac{\widehat{C}(q, q)}{q}.
 $$
 In Figure 1, t, Joe, and Gumbel copulas have upper tail dependence; t and MTCJ copulas have lower tail dependence.&lt;/p&gt;
-&lt;p&gt;As a digression, the &lt;a href=&#34;https://en.wikipedia.org/wiki/Financial_crisis_of_2007%E2%80%932008&#34;&gt;2007&amp;ndash;2008 financial crisis&lt;/a&gt; is partially caused by the misuse of the Gaussian copula model.
+&lt;p&gt;As a digression, the &lt;a href=&#34;https://en.wikipedia.org/wiki/Financial_crisis_of_2007%E2%80%932008&#34;&gt;2007&amp;ndash;2008 financial crisis&lt;/a&gt; was partially caused by the misuse of the Gaussian copula model.
 See &lt;a href=&#34;https://www.wired.com/2009/02/wp-quant/&#34;&gt;Salmon (2009)&lt;/a&gt; and &lt;a href=&#34;http://www.macs.hw.ac.uk/~cd134/2010/donemb.pdf&#34;&gt;Donnelly and Embrechts (2010)&lt;/a&gt; for details.
-One of the main disadvantages of the model is that it does not adequately model the occurrence
-of defaults in the underlying portfolio of corporate bonds.
+One of the main disadvantages of the model is that it does not adequately model the occurrence of defaults in the underlying portfolio of corporate bonds.
 In times of crisis, corporate defaults occur in clusters, so that if one company defaults then it is likely that other companies also default within a short period.
 However, under the Gaussian copula model, company defaults become
 independent as their size of default increases, which leads to model inadequacy.&lt;/p&gt;
