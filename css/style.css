@@ -126,13 +126,15 @@ p {
 }
 
 ul {
-	margin-bottom: 1em;
+	/*margin-top: 0.5em;*/
+	/*margin-bottom: 0.5em;*/
 	padding-left: 1em;
 	list-style-type: circle;
 }
 
 ol {
-	margin-bottom: 1em;
+	/*margin-top: 0.5em;*/
+	/*margin-bottom: 0.5em;*/
 	padding-left: 1em;
 	list-style-type: decimal;
 }
