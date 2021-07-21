@@ -1,0 +1,19 @@
+<div class="content">
+    <h1>{{ title .Data.Term  }} Posts</h1>
+    {{ if .Data.Term }}
+        {{ range .Data.Pages }}
+        <p>
+            <aside>{{ .Date.Format "January 2, 2006"}}</aside>
+            <a href="{{ .Permalink }}">{{ .Title }}</a>{{ if .Draft }} <span style="color:#FF4136;">(unpublished)</span>{{ end }}
+        </p>
+        {{ end }}
+    {{ else }}
+        {{ range .Site.RegularPages }}
+        <p>
+            <aside>{{ .Date.Format "January 2, 2006"}}</aside>
+            <a href="{{ .Permalink }}">{{ .Title }}</a>{{ if .Draft }} <span style="color:#FF4136;">(unpublished)</span>{{ end }}
+        </p>
+        {{ end }}
+    {{ end }}
+</div>
+

@@ -1,0 +1,18 @@
+baseURL = "https://bochang.me/blog/"
+languageCode = "en-us"
+title = "Bo's Blog"
+theme = "one"
+googleAnalytics = "UA-129064600-1"
+
+# Chroma Syntax Highlighting
+pygmentsCodefences = true
+pygmentsCodefencesGuessSyntax = true
+pygmentsStyle = "pygments"
+
+[params]
+    navigation = ["about.md"]
+[markup]
+  defaultMarkdownHandler = "goldmark"
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true

@@ -1,0 +1,15 @@
+{{ partial "header.html" . }}
+<div class="content">
+  <h1>{{ .Title }}</h1>
+  <p>
+  <aside>tags: {{ range .Params.tags }}<a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}/">{{ . }}</a></a>&nbsp;&nbsp;&nbsp;{{end}}</aside>
+  </p>
+  <p>{{ .Content }}</p>
+</div>
+<!-- Google Analytics -->
+{{ if (eq .Type "posts") }}
+<p>Written on {{ .Date.Format "Jan 2, 2006"}}.</p>
+{{ end }}
+{{ partial "footer.html" . }}
+{{ partial "mathjax_support.html" . }}
+{{ template "_internal/google_analytics_async.html" . }}
